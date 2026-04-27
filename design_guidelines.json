@@ -1,0 +1,225 @@
+{
+  "project_name": "Bite — Restaurant Operating System",
+  "theme_strategy": {
+    "primary_theme": "light",
+    "archetype": "1 (Organic & Earthy)",
+    "rationale": "A restaurant ecosystem requires an appetizing, warm, and inviting aesthetic for consumer pages, fostering trust and appetite. Operational dashboards will use a dense, high-contrast variant of this palette to ensure legibility and functional efficiency without losing the brand's warmth."
+  },
+  "colors": {
+    "brand": {
+      "primary": "#C8553D",
+      "primary_hover": "#A8432D",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#E4883A",
+      "secondary_foreground": "#FFFFFF"
+    },
+    "backgrounds": {
+      "page_base": "#FAFAF8",
+      "surface_elevated": "#FFFFFF",
+      "surface_subtle": "#F2EFEB",
+      "dark_mode_kds": "#1C1917",
+      "dark_mode_surface": "#292524"
+    },
+    "text": {
+      "heading": "#2C221E",
+      "body": "#5C534D",
+      "muted": "#8A817C",
+      "dark_mode_text": "#F5F5F4"
+    },
+    "borders": {
+      "default": "#E8E4DF",
+      "focus": "#C8553D"
+    },
+    "status": {
+      "ready_success": "#437E55",
+      "ready_success_bg": "#EDF5F0",
+      "prep_warning": "#E4883A",
+      "prep_warning_bg": "#FDF3EB",
+      "void_error": "#D14949",
+      "void_error_bg": "#FCECEC"
+    }
+  },
+  "typography": {
+    "font_families": {
+      "display_heading": "Playfair Display",
+      "functional_heading": "Outfit",
+      "body": "Figtree",
+      "monospace": "JetBrains Mono"
+    },
+    "hierarchy": {
+      "h1_hero": "text-5xl md:text-6xl+ tracking-tighter font-display_heading text-heading",
+      "h2_section": "text-3xl md:text-4xl tracking-tight font-display_heading text-heading",
+      "h3_card": "text-xl font-functional_heading font-semibold text-heading",
+      "body_large": "text-lg font-body leading-relaxed text-body",
+      "body_standard": "text-base font-body leading-relaxed text-body",
+      "labels": "text-xs font-functional_heading uppercase tracking-[0.2em] text-muted",
+      "pos_numbers": "text-2xl font-monospace font-bold"
+    }
+  },
+  "spacing_and_layout": {
+    "consumer_pages": {
+      "container_padding": "p-6 md:p-12 lg:p-24",
+      "section_gap": "gap-16 md:gap-32",
+      "grid_strategy": "MODE A: Tetris Grid (asymmetrical, overlapping)",
+      "border_radius": "rounded-3xl"
+    },
+    "operational_dashboards": {
+      "container_padding": "p-4 md:p-6",
+      "grid_gap": "gap-4 md:gap-6",
+      "grid_strategy": "MODE B: Control Room Grid (dense, fully utilized cells)",
+      "border_radius": "rounded-lg"
+    }
+  },
+  "components_strategy": {
+    "buttons": {
+      "primary": "bg-primary text-primary_foreground hover:bg-primary_hover transition-colors rounded-full px-8 py-3 font-functional_heading font-medium",
+      "outline": "border-2 border-primary text-primary hover:bg-primary/5 transition-colors rounded-full px-8 py-3 font-functional_heading font-medium",
+      "pos_action": "bg-surface_subtle hover:bg-primary/10 text-heading rounded-lg px-4 py-3 font-medium border border-border"
+    },
+    "cards": {
+      "menu_item": "bg-surface_elevated rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow",
+      "kds_ticket": "bg-white border-t-4 border-t-prep_warning rounded-lg p-4 shadow-sm",
+      "dashboard_widget": "bg-white rounded-xl border border-border p-6"
+    },
+    "navigation": {
+      "consumer_header": "sticky top-0 z-50 backdrop-blur-xl bg-page_base/70 border-b border-border/50",
+      "admin_sidebar": "fixed left-0 top-0 h-full w-64 bg-surface_elevated border-r border-border"
+    },
+    "forms": {
+      "inputs": "bg-surface_subtle border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary",
+      "guideline": "Use customized Shadcn UI forms. No native select or date inputs."
+    }
+  },
+  "pages": [
+    {
+      "name": "Public Landing",
+      "type": "consumer",
+      "features": ["Hero Section with Glassmorphism Search/Booking", "Featured Menu highlights", "Image-heavy Tetris grid", "Reviews marquee"]
+    },
+    {
+      "name": "Restaurant Menu",
+      "type": "consumer",
+      "features": ["Category sticky nav", "Large appealing food photography", "Allergen badges", "Add to cart interactions"]
+    },
+    {
+      "name": "Auth (Login / Register)",
+      "type": "consumer",
+      "features": ["Split screen: Abstract warm texture left, clean form right", "Single field email/username auto-detect"]
+    },
+    {
+      "name": "Customer Dashboard",
+      "type": "consumer",
+      "features": ["My Reservations card", "Order History timeline", "Loyalty Points balance (large bold numbers)", "Profile quick-links"]
+    },
+    {
+      "name": "Reservation System",
+      "type": "consumer",
+      "features": ["Date/Time picker (Shadcn Calendar)", "Party size selector", "Visual table layout selection"]
+    },
+    {
+      "name": "Cart & Delivery Checkout",
+      "type": "consumer",
+      "features": ["Drawer/Sidebar cart", "Address input", "Map preview placeholder", "Balance/Payment summary"]
+    },
+    {
+      "name": "Loyalty Catalogue",
+      "type": "consumer",
+      "features": ["Grid of redeemable items", "Progress bar towards next tier", "Coin/Points aesthetic"]
+    },
+    {
+      "name": "Chef KDS (Kitchen Display)",
+      "type": "operational",
+      "features": ["Dark mode optimized (high contrast)", "Horizontal scrolling Kanban of order tickets", "Timers in monospace", "Tap to mark READY"]
+    },
+    {
+      "name": "Waiter Dashboard",
+      "type": "operational",
+      "features": ["Mobile-first grid of assigned tables", "Color coded table status", "Push notification styled alerts for 'Food Ready'"]
+    },
+    {
+      "name": "Cashier POS",
+      "type": "operational",
+      "features": ["Dense table floorplan view", "Quick-action payment numpad", "Split bill interface"]
+    },
+    {
+      "name": "Courier App",
+      "type": "operational",
+      "features": ["Mobile layout", "Map-centric", "Large 'Accept Order' and 'Delivered' swipeable/tappable buttons", "GPS checkpoint list"]
+    },
+    {
+      "name": "Admin / Director Dashboard",
+      "type": "operational",
+      "features": ["Multi-branch selector", "Sales charts (Recharts)", "Staff roster table", "Reviews moderation feed"]
+    }
+  ],
+  "image_urls": [
+    {
+      "category": "logo",
+      "url": "https://static.prod-images.emergentagent.com/jobs/d78e7132-dd0c-4247-aef3-70a3e1819389/images/6a66c426fc9dfea8b4def610ca4e613f6fc1d25ba980e6184fc9291bd39da038.png",
+      "description": "Bite Restaurant minimalist brand logo"
+    },
+    {
+      "category": "abstract_background",
+      "url": "https://static.prod-images.emergentagent.com/jobs/d78e7132-dd0c-4247-aef3-70a3e1819389/images/b9361a2768fec277e17d528c557bc9f993367982ad19c889094a78f7daf3538a.png",
+      "description": "Warm terracotta abstract texture for login and hero backgrounds"
+    },
+    {
+      "category": "hero_interior",
+      "url": "https://images.pexels.com/photos/35505245/pexels-photo-35505245.jpeg",
+      "description": "Elegant rustic restaurant interior"
+    },
+    {
+      "category": "hero_interior_alternate",
+      "url": "https://images.pexels.com/photos/29692582/pexels-photo-29692582.jpeg",
+      "description": "Warm and inviting dining room"
+    },
+    {
+      "category": "staff_chef",
+      "url": "https://images.pexels.com/photos/32742915/pexels-photo-32742915.jpeg",
+      "description": "Chef cooking in kitchen, use for about or admin pages"
+    },
+    {
+      "category": "menu_burger",
+      "url": "https://images.pexels.com/photos/29368033/pexels-photo-29368033.jpeg",
+      "description": "Gourmet burger for menu items"
+    },
+    {
+      "category": "menu_pasta",
+      "url": "https://images.unsplash.com/photo-1611270629569-8b357cb88da9",
+      "description": "Pasta dish for menu items"
+    },
+    {
+      "category": "menu_salad",
+      "url": "https://images.pexels.com/photos/36442209/pexels-photo-36442209.jpeg",
+      "description": "Healthy salad bowl for menu items"
+    },
+    {
+      "category": "menu_dessert",
+      "url": "https://images.pexels.com/photos/34952057/pexels-photo-34952057.jpeg",
+      "description": "Slice of cake for dessert menu"
+    }
+  ],
+  "motion_and_interactions": {
+    "hover_states": "All buttons and cards must lift slightly (-translate-y-1) and increase shadow opacity.",
+    "page_transitions": "Framer motion fade and slight slide-up (y: 10 to 0).",
+    "glassmorphism": "Used strictly on sticky navigation and overlapping modal sheets (backdrop-blur-xl bg-white/70)."
+  },
+  "icons_and_assets": {
+    "library": "lucide-react",
+    "stroke_width": 1.5,
+    "size_standard": 20
+  },
+  "testing_attributes": {
+    "guideline": "All interactive elements MUST include data-testid. Format: kebab-case, role-based.",
+    "examples": ["login-submit-button", "menu-add-to-cart", "kds-mark-ready-btn", "pos-checkout-trigger"]
+  },
+  "instructions_to_main_agent": [
+    "Build the application as a React SPA with mock data simulating a full backend.",
+    "Ensure the router clearly separates consumer pages from operational dashboards (/app, /kds, /pos, /admin).",
+    "Install and use Playfair Display and Outfit fonts via Google Fonts.",
+    "Apply Shadcn UI components but override their default borders and radiuses to match this guideline's warm, organic (rounded-3xl for consumer, rounded-lg for admin) aesthetic.",
+    "Follow the EXACT color palette specified. Avoid pure black/white unless specified. Use the 'page_base' (#FAFAF8) for the main app background to give it a creamy, premium feel.",
+    "Implement data-testids on all buttons and actionable elements.",
+    "Do not use dummy image placeholders. Use only the exact image URLs provided in this file."
+  ]
+}
