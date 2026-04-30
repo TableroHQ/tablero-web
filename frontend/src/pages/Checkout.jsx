@@ -94,8 +94,8 @@ export default function Checkout() {
             <Row k="Delivery fee" v={`$${fee.toFixed(2)}`} dark/>
             <Row k="Loyalty bonus" v="− $4.50" dark accent/>
             <hr className="my-4 border-cream/20"/>
-            <Row k="Total" v={`$${(total-4.5).toFixed(2)}`} dark big/>
-            <button className="mt-6 w-full bg-primary hover:bg-terracotta-dark py-4 rounded-full font-fn font-semibold transition" data-testid="place-order">Place order →</button>
+            <Row k="Total" v={`$${total.toFixed(2)}`} dark big/>
+            <button onClick={placeOrder} className="mt-6 w-full bg-primary hover:bg-terracotta-dark py-4 rounded-full font-fn font-semibold transition" data-testid="place-order">Place order →</button>
             <p className="mt-3 text-[10px] font-mono text-cream/50 text-center uppercase">{pay==='balance'?'Balance held until delivery confirmed':'Card charged on Stripe'}</p>
           </div>
         </aside>

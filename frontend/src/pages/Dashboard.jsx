@@ -2,22 +2,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Coins, Receipt, ArrowRight, Wallet, Star, Bell, ChevronRight } from 'lucide-react';
 import { RESERVATIONS, ORDERS, IMG } from '@/lib/mock';
+import { useStore } from '@/lib/store';
 
 export default function Dashboard() {
+  const [state] = useStore();
+  const { user } = state;
   return (
     <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <div className="label-eyebrow">My Bite</div>
-          <h1 className="font-display text-5xl md:text-6xl mt-2">Hello, Sofia.</h1>
+          <h1 className="font-display text-5xl md:text-6xl mt-2">Hello, {user.name.split(' ')[0]}.</h1>
           <p className="text-ink-body mt-2">Here's what's on your plate this week.</p>
         </div>
         <Link to="/menu" className="btn-primary inline-flex items-center gap-2" data-testid="dashboard-order-cta">Start an order <ArrowRight size={16}/></Link>
       </div>
 
       <div className="grid lg:grid-cols-12 gap-5 mt-10">
-        <Stat label="Loyalty points" value="1,240" sub="+50 last visit" icon={Coins} accent="primary" testid="stat-loyalty"/>
-        <Stat label="Account balance" value="$84.00" sub="$0 held" icon={Wallet} accent="ink" testid="stat-balance"/>
+        <Stat label="Loyalty points" value={user.loyaltyPoints.toLocaleString()} sub="+50 last visit" icon={Coins} accent="primary" testid="stat-loyalty"/>
+        <Stat label="Account balance" value={`$${user.balance.toFixed(2)}`} sub={`$${user.heldBalance.toFixed(2)} held`} icon={Wallet} accent="ink" testid="stat-balance"/>
         <Stat label="Avg. visit rating" value="4.9" sub="From 12 reviews" icon={Star} accent="amber" testid="stat-rating"/>
         <Stat label="Reservations" value="2 upcoming" sub="Next: Feb 4, 19:30" icon={Calendar} accent="ok" testid="stat-reservations"/>
       </div>
@@ -73,7 +76,7 @@ export default function Dashboard() {
                   <div className="text-sm text-ink-body">{o.date}</div>
                 </div>
                 <div className="font-mono text-sm font-semibold">${o.total.toFixed(2)}</div>
-                <Link to="/reviews" className="text-xs text-primary font-fn">Review</Link>
+                <Link to={o.type==='DELIVERY'?`/delivery/${o.id}`:`/orders/${o.id}`} className="text-xs text-primary font-fn">{o.type==='DELIVERY'?'Track':'View'}</Link>
               </div>
             ))}
           </div>

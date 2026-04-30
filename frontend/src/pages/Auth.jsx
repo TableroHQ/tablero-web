@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IMG } from '@/lib/mock';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Auth() {
   const [mode, setMode] = React.useState('login');
@@ -9,7 +10,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const isEmail = identifier.includes('@');
 
-  const submit = (e) => { e.preventDefault(); navigate('/dashboard'); };
+  const submit = (e) => { e.preventDefault(); toast.success(mode==='login'?'Welcome back, Sofia':'Account created · check your email'); navigate('/dashboard'); };
 
   return (
     <div className="min-h-[calc(100vh-72px)] grid lg:grid-cols-2">
@@ -40,7 +41,7 @@ export default function Auth() {
               <input value={identifier} onChange={e=>setIdentifier(e.target.value)} className="auth-input" placeholder="sofia@bite.com or @sofia" autoComplete="username"/>
             </Field>
             <Field label="Password" testid="auth-password"><input type="password" className="auth-input" placeholder="••••••••" autoComplete="current-password"/></Field>
-            {mode==='login' && <button type="button" className="text-xs font-mono text-primary hover:underline" data-testid="forgot-pw">Forgot password? OTP via email →</button>}
+            {mode==='login' && <Link to="/forgot-password" className="text-xs font-mono text-primary hover:underline" data-testid="forgot-pw">Forgot password? OTP via email →</Link>}
             <button type="submit" className="btn-primary w-full inline-flex items-center justify-center gap-2 mt-4" data-testid="auth-submit">
               {mode==='login'?'Sign in':'Create account'} <ArrowRight size={16}/>
             </button>
