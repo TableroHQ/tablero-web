@@ -1,11 +1,15 @@
 import React from 'react';
 import { MENU, CATS } from '@/lib/mock';
 import { Plus, Search, AlertTriangle } from 'lucide-react';
+import { useStore } from '@/lib/store';
+import { toast } from 'sonner';
 
 export default function Menu() {
   const [cat, setCat] = React.useState('All');
   const [q, setQ] = React.useState('');
+  const [, s] = useStore();
   const list = MENU.filter(m => (cat==='All' || m.cat===cat) && m.name.toLowerCase().includes(q.toLowerCase()));
+  const add = (m) => { s.addToCart(m); toast.success(`${m.name} added to your order`); };
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12 md:py-16">
@@ -51,7 +55,7 @@ export default function Menu() {
               <div className="mt-3 flex items-center gap-1 flex-wrap">
                 {m.allergens.map(a => <span key={a} className="text-[10px] font-mono uppercase tracking-wide bg-cream-sub px-2 py-0.5 rounded-full text-ink-muted">{a}</span>)}
               </div>
-              <button disabled={!m.available} data-testid={`menu-add-${m.id}`}
+              <button disabled={!m.available} onClick={()=>add(m)} data-testid={`menu-add-${m.id}`}
                 className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-white font-fn font-medium hover:bg-terracotta-dark transition disabled:bg-cream-sub disabled:text-ink-muted">
                 <Plus size={16}/> Add to order
               </button>

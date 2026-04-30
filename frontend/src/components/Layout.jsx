@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ShoppingBag, User, Menu as MenuIcon, X } from 'lucide-react';
 import { IMG } from '@/lib/mock';
+import NotificationBell from '@/components/NotificationBell';
+import { useStore } from '@/lib/store';
 
 const NAV = [
   { to: '/', label: 'Home' },
@@ -14,6 +16,8 @@ const NAV = [
 export default function Layout({ children }) {
   const [open, setOpen] = React.useState(false);
   const loc = useLocation();
+  const [state] = useStore();
+  const cartCount = state.cart.reduce((s,i)=>s+i.qty,0);
   React.useEffect(() => { setOpen(false); }, [loc.pathname]);
 
   return (
@@ -33,11 +37,13 @@ export default function Layout({ children }) {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <Link to="/checkout" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition" data-testid="cart-button">
+            <NotificationBell/>
+            <Link to="/checkout" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
               <ShoppingBag size={16} /><span className="text-sm font-fn">Cart</span>
+              {cartCount > 0 && <span className="h-5 w-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">{cartCount}</span>}
             </Link>
-            <Link to="/login" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body transition" data-testid="login-cta">
-              <User size={16} /><span className="text-sm font-fn">Sign in</span>
+            <Link to="/profile" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body transition" data-testid="profile-cta">
+              <User size={16} /><span className="text-sm font-fn">{state.user.name.split(' ')[0]}</span>
             </Link>
             <button className="md:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
               {open ? <X size={22} /> : <MenuIcon size={22} />}
