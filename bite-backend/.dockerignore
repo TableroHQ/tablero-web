@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.git/
+**/Dockerfile
+**/docker-compose*.yml
+**/.dockerignore
+**/.gitignore
+**/README.md
+**/azure-pipelines.yml
+**/charts/**
+LICENSE

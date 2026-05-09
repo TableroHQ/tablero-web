@@ -1,0 +1,193 @@
+version: "3.9"
+
+# Bite — full local development stack
+# Run: docker compose up -d
+
+services:
+  # ──────────────── INFRASTRUCTURE ────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: bite-postgres
+    environment:
+      POSTGRES_USER: bite
+      POSTGRES_PASSWORD: bite
+      POSTGRES_MULTIPLE_DATABASES: identity_db,restaurant_db,reservation_db,order_db,payment_db,delivery_db,notify_db
+    ports: ["5432:5432"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bite"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: bite-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: bite
+      RABBITMQ_DEFAULT_PASS: bite
+    ports: ["5672:5672", "15672:15672"]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: bite-redis
+    ports: ["6379:6379"]
+    command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  consul:
+    image: hashicorp/consul:1.18
+    container_name: bite-consul
+    command: agent -dev -client=0.0.0.0 -ui
+    ports: ["8500:8500"]
+
+  # ──────────────── OBSERVABILITY ────────────────
+  tempo:
+    image: grafana/tempo:latest
+    container_name: bite-tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./scripts/observability/tempo.yaml:/etc/tempo.yaml:ro
+    ports: ["3200:3200", "4317:4317"]
+
+  loki:
+    image: grafana/loki:latest
+    container_name: bite-loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports: ["3100:3100"]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: bite-grafana
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports: ["3000:3000"]
+    volumes:
+      - ./scripts/observability/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+    depends_on: [tempo, loki]
+
+  # ──────────────── APPLICATION ────────────────
+  gateway:
+    build:
+      context: .
+      dockerfile: src/Gateway/Bite.Gateway/Dockerfile
+    container_name: bite-gateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Consul: http://consul:8500
+      Jwt__Issuer: bite-identity
+      Jwt__Audience: bite-clients
+      Jwt__SigningKey: dev-signing-key-change-in-production-256-bits-min!!
+    ports: ["5000:8080"]
+    depends_on: [consul]
+
+  identity:
+    build:
+      context: .
+      dockerfile: src/Identity/Bite.Identity.Api/Dockerfile
+    container_name: bite-identity
+    environment: &svc-env
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: Host=postgres;Database=identity_db;Username=bite;Password=bite
+      ConnectionStrings__RabbitMq: amqp://bite:bite@rabbitmq:5672
+      ConnectionStrings__Redis: redis:6379
+      ConnectionStrings__Consul: http://consul:8500
+      OpenTelemetry__OtlpEndpoint: http://tempo:4317
+      Jwt__Issuer: bite-identity
+      Jwt__Audience: bite-clients
+      Jwt__SigningKey: dev-signing-key-change-in-production-256-bits-min!!
+      ApplyMigrationsOnStartup: "true"
+    ports: ["5001:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  restaurant:
+    build: { context: ., dockerfile: src/Restaurant/Bite.Restaurant.Api/Dockerfile }
+    container_name: bite-restaurant
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=restaurant_db;Username=bite;Password=bite
+    ports: ["5002:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+  reservation:
+    build: { context: ., dockerfile: src/Reservation/Bite.Reservation.Api/Dockerfile }
+    container_name: bite-reservation
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=reservation_db;Username=bite;Password=bite
+    ports: ["5003:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+  orderkitchen:
+    build: { context: ., dockerfile: src/OrderKitchen/Bite.OrderKitchen.Api/Dockerfile }
+    container_name: bite-orderkitchen
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=order_db;Username=bite;Password=bite
+    ports: ["5004:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+  payment:
+    build: { context: ., dockerfile: src/Payment/Bite.Payment.Api/Dockerfile }
+    container_name: bite-payment
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=payment_db;Username=bite;Password=bite
+      Stripe__SecretKey: ${STRIPE_SECRET_KEY:-sk_test_changeme}
+      Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-whsec_changeme}
+    ports: ["5005:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+  delivery:
+    build: { context: ., dockerfile: src/Delivery/Bite.Delivery.Api/Dockerfile }
+    container_name: bite-delivery
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=delivery_db;Username=bite;Password=bite
+    ports: ["5006:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  notification:
+    build: { context: ., dockerfile: src/Notification/Bite.Notification.Api/Dockerfile }
+    container_name: bite-notification
+    environment:
+      <<: *svc-env
+      ConnectionStrings__Postgres: Host=postgres;Database=notify_db;Username=bite;Password=bite
+      SendGrid__ApiKey: ${SENDGRID_API_KEY:-SG.changeme}
+      Twilio__AccountSid: ${TWILIO_ACCOUNT_SID:-AC_changeme}
+      Twilio__AuthToken: ${TWILIO_AUTH_TOKEN:-changeme}
+      Twilio__From: ${TWILIO_FROM:-+15551234567}
+    ports: ["5007:8080"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+
+volumes:
+  postgres-data:
