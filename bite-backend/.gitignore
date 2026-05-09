@@ -1,0 +1,18 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+
+## docker
+**/Dockerfile.dev
+
+## env
+.env
+.env.local
+
+## logs
+*.log
+logs/
