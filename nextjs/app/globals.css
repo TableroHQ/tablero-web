@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html.dark {
+    --background: 20 15% 9%;
+    --foreground: 35 25% 90%;
+    --card: 22 13% 13%;
+    --card-foreground: 35 25% 90%;
+    --popover: 22 13% 13%;
+    --popover-foreground: 35 25% 90%;
+    --primary: 9 56% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 26 60% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 22 10% 18%;
+    --muted-foreground: 30 12% 55%;
+    --accent: 22 10% 18%;
+    --accent-foreground: 35 25% 90%;
+    --destructive: 0 65% 52%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 22 10% 22%;
+    --input: 22 10% 20%;
+    --ring: 9 56% 51%;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 40 30% 97%;
+    --foreground: 20 25% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 25% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 25% 13%;
+    --primary: 9 56% 51%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 26 76% 56%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 30 20% 93%;
+    --muted-foreground: 20 8% 49%;
+    --accent: 30 20% 93%;
+    --accent-foreground: 20 25% 13%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 20% 88%;
+    --input: 30 20% 92%;
+    --ring: 9 56% 51%;
+    --radius: 1rem;
+    --kds-bg: 24 14% 10%;
+    --kds-surface: 25 9% 15%;
+    --kds-text: 30 20% 96%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  html, body { height: 100%; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Figtree', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection { background: hsl(var(--primary) / 0.2); color: hsl(var(--foreground)); }
+}
+
+.font-display { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
+.font-fn { font-family: 'Outfit', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+.label-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 11px;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+}
+
+.glass-nav { backdrop-filter: blur(20px); background: hsl(40 30% 97% / 0.72); }
+html.dark .glass-nav { background: hsl(20 15% 9% / 0.82); }
+
+/* ─── DARK MODE PALETTE OVERRIDES ─── */
+
+/* Text */
+html.dark .text-ink       { color: hsl(35 25% 88%); }
+html.dark .text-ink-body  { color: hsl(35 15% 66%); }
+html.dark .text-ink-muted { color: hsl(35 10% 48%); }
+
+/* White surfaces → dark card surface */
+html.dark .bg-white       { background-color: hsl(var(--card)); }
+html.dark .bg-white\/80   { background-color: hsl(22 13% 16% / 0.92); }
+html.dark .bg-white\/90   { background-color: hsl(22 13% 16% / 0.94); }
+
+/* Cream backgrounds → dark equivalents */
+html.dark .bg-cream-sub       { background-color: hsl(22 10% 17%); }
+html.dark .bg-cream-warm      { background-color: hsl(22 12% 21%); }
+html.dark .bg-cream-sub\/50   { background-color: hsl(22 10% 17% / 0.55); }
+html.dark .bg-cream-sub\/60   { background-color: hsl(22 10% 17% / 0.65); }
+
+/* Hover states */
+html.dark .hover\:bg-cream-sub:hover  { background-color: hsl(22 10% 22%); }
+html.dark .hover\:bg-cream-warm:hover { background-color: hsl(22 12% 26%); }
+
+/* Ink border (used on pricing plan outline button) */
+html.dark .border-ink { border-color: hsl(35 20% 55%); }
+
+.kds-shell { background: hsl(var(--kds-bg)); color: hsl(var(--kds-text)); }
+.kds-card { background: hsl(var(--kds-surface)); color: hsl(var(--kds-text)); }
+
+@keyframes pulse-soft { 0%,100% { opacity: 1 } 50% { opacity: 0.55 } }
+.animate-pulse-soft { animation: pulse-soft 1.6s ease-in-out infinite; }
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
+.fade-up { animation: fade-up 0.5s ease-out both; }
+
+.btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-radius: 9999px;
+  padding: 12px 28px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover { background: hsl(9 56% 43%); transform: translateY(-1px); box-shadow: 0 10px 25px -10px hsl(9 56% 51% / 0.5); }
+
+.btn-outline {
+  border: 2px solid hsl(var(--primary));
+  color: hsl(var(--primary));
+  border-radius: 9999px;
+  padding: 10px 26px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+.btn-outline:hover { background: hsl(var(--primary) / 0.06); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { scrollbar-width: none; }
