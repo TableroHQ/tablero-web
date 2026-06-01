@@ -106,7 +106,7 @@ export default function Admin() {
         <Kpi icon={Star} n="4.74" l={t('ratingLabel')} trend="+0.06" />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-5">
         <div className="lg:col-span-2 bg-white rounded-2xl border border-border p-5">
           <div className="flex justify-between items-center">
             <div>
@@ -152,7 +152,7 @@ export default function Admin() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <div className="bg-white rounded-2xl border border-border overflow-hidden">
           <div className="p-5 flex items-center justify-between border-b border-border">
             <div>
@@ -161,6 +161,7 @@ export default function Admin() {
             </div>
             <button className="text-xs font-mono text-primary uppercase tracking-widest" data-testid="manage-staff">{t('manage')}</button>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-cream-sub/50">
               <tr className="text-[10px] font-mono uppercase tracking-widest text-ink-muted">
@@ -187,6 +188,7 @@ export default function Admin() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl border border-border p-5">
