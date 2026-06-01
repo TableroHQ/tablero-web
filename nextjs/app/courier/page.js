@@ -26,7 +26,7 @@ export default function Courier() {
           <Power size={14} /> {online ? t('online') : t('offline')}
         </button>
       }>
-      <div className="grid lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div className="lg:col-span-7 space-y-4">
           <div className="aspect-[16/10] rounded-2xl overflow-hidden relative bg-ink">
             <div className="absolute inset-0 opacity-40 [background-image:radial-gradient(circle_at_30%_40%,#E4883A,transparent_40%),radial-gradient(circle_at_70%_60%,#C8553D,transparent_50%)]" />
