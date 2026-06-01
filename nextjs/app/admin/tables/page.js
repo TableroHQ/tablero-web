@@ -99,7 +99,7 @@ export default function TablesMgmt() {
         <div className="py-20 flex justify-center"><Loader2 size={28} className="animate-spin text-ink-muted" /></div>
       ) : (
         <>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {list.map(tb => {
               const status = tb.status || 'EMPTY';
               const label = tb.label || tb.tableNumber || tb.id;

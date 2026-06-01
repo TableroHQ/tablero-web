@@ -91,7 +91,7 @@ export default function ReviewsModeration() {
           {reviews.length === 0 ? t('emptyNone') : t('emptyFilter')}
         </div>
       ) : (
-        <div className="grid lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {list.map(r => (
             <div key={r.id}
               className={`bg-white rounded-2xl border p-5 ${r.modStatus === 'pending' ? 'border-warn/30' : r.modStatus === 'approved' ? 'border-ok/30' : 'border-err/30'}`}
