@@ -42,7 +42,7 @@ export default function Landing() {
     <div>
       {/* HERO */}
       <section className="relative">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 pt-12 pb-16 md:pt-20 md:pb-24 grid lg:grid-cols-12 gap-10 items-center">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 pt-12 pb-16 md:pt-20 md:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
             <div className="label-eyebrow mb-5">{t('eyebrow')}</div>
             <h1 className="font-display text-5xl md:text-7xl font-semibold text-ink leading-[0.95]">
@@ -94,7 +94,7 @@ export default function Landing() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="label-eyebrow">{t('whyTablero')}</div>
           <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-2xl">{t('platformTitle')}</h2>
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { icon: ChefHat, title: t('feature1Title'), text: t('feature1Text') },
               { icon: Clock, title: t('feature2Title'), text: t('feature2Text') },
@@ -143,7 +143,7 @@ export default function Landing() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="label-eyebrow !text-cream/60">{t('wordOfMouth')}</div>
           <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-3xl">{t('famousQuote')}</h2>
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {REVIEWS.map(r => (
               <div key={r.id} className="bg-white/5 backdrop-blur rounded-3xl p-6 border border-white/10">
                 <div className="flex items-center gap-1 text-secondary mb-3">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
@@ -163,7 +163,7 @@ export default function Landing() {
             <h2 className="font-display text-4xl md:text-5xl mt-2">{t('pricingTitle')}</h2>
             <p className="mt-4 text-ink-body max-w-xl mx-auto">{t('pricingSubtitle')}</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
               {
                 name: 'Plus',
@@ -221,7 +221,7 @@ export default function Landing() {
 
       {/* FIND US */}
       <section className="py-16 md:py-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-10 items-center">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <div className="aspect-[4/3] rounded-[2rem] overflow-hidden">
             <img src={IMG.interior2} alt={t('diningRoom')} className="w-full h-full object-cover" />
           </div>

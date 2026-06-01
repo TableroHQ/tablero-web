@@ -15,12 +15,25 @@ export default function Loyalty() {
   const points = user.loyaltyPoints;
   const [redeeming, setRedeeming] = React.useState(null);
 
+  // Load the server-side loyalty balance so points survive refreshes and reflect spend.
+  React.useEffect(() => {
+    if (!user.id) return;
+    api.get('/api/loyalty/balance')
+      .then(data => {
+        if (typeof data?.points === 'number') {
+          s.setBalance(user.balance, user.heldBalance, data.points);
+        }
+      })
+      .catch(() => {});
+  }, [user.id]);
+
   const redeem = async (b) => {
     if (b.cost > points) return toast.error(t('needMorePoints', { n: b.cost - points }));
     setRedeeming(b.id);
     try {
-      await api.post('/api/loyalty/redeem', { bonusId: b.id, bonusName: b.name, cost: b.cost });
-      s.setBalance(user.balance, user.heldBalance, points - b.cost);
+      const res = await api.post('/api/loyalty/redeem', { bonusId: b.id, bonusName: b.name, cost: b.cost });
+      const newPoints = typeof res?.points === 'number' ? res.points : points - b.cost;
+      s.setBalance(user.balance, user.heldBalance, newPoints);
       toast.success(t('redeemSuccessToast', { name: b.name }));
     } catch (err) {
       toast.error(err.response?.data?.message || t('couldNotRedeem'));
@@ -35,7 +48,7 @@ export default function Loyalty() {
       <h1 className="font-display text-5xl md:text-6xl mt-2 max-w-3xl">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-xl">{t('subtitle')}</p>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
         <div className="lg:col-span-2 bg-gradient-to-br from-primary to-terracotta-dark text-white rounded-3xl p-8 md:p-10 relative overflow-hidden">
           <Sparkles className="absolute top-6 right-6 opacity-20" size={120} />
           <div className="label-eyebrow !text-white/70">{t('yourBalance')}</div>
@@ -57,7 +70,7 @@ export default function Loyalty() {
       </div>
 
       <h2 className="font-display text-3xl mt-14">{t('availableRewards')}</h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
         {BONUSES.map(b => {
           const locked = b.cost > points;
           return (

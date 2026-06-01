@@ -52,7 +52,7 @@ export default function TopUp() {
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-md">{t('intro')}</p>
 
-      <div className="grid md:grid-cols-5 gap-6 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mt-10">
         <div className="md:col-span-3 space-y-5">
           <div className="bg-white rounded-3xl border border-border p-7">
             <div className="label-eyebrow">{t('amount')}</div>

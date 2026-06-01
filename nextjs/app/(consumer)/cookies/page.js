@@ -46,7 +46,7 @@ export default function Cookies() {
             </div>
             <div className="mt-5 divide-y divide-border">
               {cat.items.map(item => (
-                <div key={item.name} className="py-3 grid sm:grid-cols-[1fr_auto] gap-2">
+                <div key={item.name} className="py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
                   <div>
                     <code className="text-xs font-mono bg-cream-sub px-2 py-0.5 rounded text-ink">{item.name}</code>
                     <p className="mt-2 text-sm text-ink-body">{t(`${cat.slug}${item.key}Purpose`)}</p>
