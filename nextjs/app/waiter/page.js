@@ -154,9 +154,9 @@ function FloorTab({ tables, alerts, setAlerts, restaurantId, onAddOrder, onSeat 
   const statusLabel = (s) => { const k = tableStatusKey(s); return k ? t(k) : s.replace('_', ' '); };
   const map = { EMPTY: 'border-border bg-white text-ink-muted', AVAILABLE: 'border-border bg-white text-ink-muted', OCCUPIED: 'border-warn/40 bg-warn-bg', BILL_REQUESTED: 'border-primary bg-primary/5' };
   return (
-    <div className="grid lg:grid-cols-12 gap-5">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
       <div className="lg:col-span-8">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {tables.map(tbl => {
             const status = tbl.status || 'EMPTY';
             const label = tbl.label || tbl.tableNumber || tbl.id;
@@ -327,7 +327,7 @@ function SubmitTab({ menuItems, tables, restaurantId, initialTableId, cart, onCa
   };
 
   return (
-    <div className="grid lg:grid-cols-12 gap-5">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
       <div className="lg:col-span-8">
         <div className="bg-white rounded-2xl border border-border p-5">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
@@ -344,7 +344,7 @@ function SubmitTab({ menuItems, tables, restaurantId, initialTableId, cart, onCa
               </select>
             </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {menuItems.map(m => {
               const ex = cart.find(c => c.id === m.id);
               const img = m.imageUrl || m.image || m.img;
