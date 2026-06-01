@@ -21,6 +21,8 @@ node_modules/
 
 # Next.js
 /.next/
+nextjs/.next/
+nextjs/out/
 /out/
 next-env.d.ts
 *.tsbuildinfo
@@ -85,6 +87,7 @@ frontend/node_modules/.cache/default-development/0.pack
 .env
 .env.*
 *.env
+!.env.*.example
 credentials.json
 *.key
 .credentials
