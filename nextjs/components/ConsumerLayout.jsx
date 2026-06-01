@@ -46,29 +46,29 @@ export default function ConsumerLayout({ children }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="glass-nav sticky top-0 z-50 border-b border-border/60" data-testid="consumer-header">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 h-[72px] flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3" data-testid="brand-link">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 h-[72px] flex items-center justify-between gap-2">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0" data-testid="brand-link">
             <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
-            <span className="font-display text-2xl font-semibold text-ink">Tablero</span>
+            <span className="font-display text-2xl font-semibold text-ink hidden min-[360px]:inline">Tablero</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-2">
             {NAV.map(n => {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
                 <Link key={n.to} href={n.to} data-testid={`nav-${n.label.toLowerCase()}`}
-                  className={`px-4 py-2 rounded-full text-sm font-fn font-medium transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
+                  className={`px-3 xl:px-4 py-2 rounded-full text-sm font-fn font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
                   {n.label}
                 </Link>
               );
             })}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <LanguageSwitcher />
             <ThemeToggle />
             <NotificationBell />
             {isCustomer && (
-              <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
-                <ShoppingBag size={16} /><span className="text-sm font-fn">{t('cart')}</span>
+              <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-3 xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
+                <ShoppingBag size={16} /><span className="hidden xl:inline text-sm font-fn">{t('cart')}</span>
                 {cartCount > 0 && <span className="h-5 w-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">{cartCount}</span>}
               </Link>
             )}
@@ -77,20 +77,20 @@ export default function ConsumerLayout({ children }) {
                 <User size={16} /><span className="text-sm font-fn">{t('signIn')}</span>
               </Link>
             ) : (
-              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="profile-cta">
+              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-3 xl:px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="profile-cta">
                 {state.user.avatar
                   ? <img src={state.user.avatar} alt="" className="h-5 w-5 rounded-full object-cover" />
                   : <User size={16} />}
-                <span className="text-sm font-fn">{state.user.firstName || (state.user.name || '').split(' ')[0] || state.user.username || t('myProfile')}</span>
+                <span className="hidden xl:inline text-sm font-fn whitespace-nowrap max-w-[120px] truncate">{state.user.firstName || (state.user.name || '').split(' ')[0] || state.user.username || t('myProfile')}</span>
               </Link>
             )}
-            <button className="md:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
+            <button className="lg:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
               {open ? <X size={22} /> : <MenuIcon size={22} />}
             </button>
           </div>
         </div>
         {open && (
-          <div className="md:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2">
+          <div className="lg:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2">
             {NAV.map(n => {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
@@ -106,7 +106,7 @@ export default function ConsumerLayout({ children }) {
       </header>
       <main className="fade-up">{children}</main>
       <footer className="mt-24 border-t border-border/60 bg-ink text-cream">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-14 grid sm:grid-cols-2 lg:grid-cols-6 gap-10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
@@ -195,7 +195,7 @@ export default function ConsumerLayout({ children }) {
         </div>
 
         <div className="border-t border-white/10 py-5">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-xs text-cream/40 font-mono">{tf('copyright')}</span>
             <div className="flex items-center gap-5">
               {[['/privacy', tf('privacy')], ['/terms', tf('terms')], ['/cookies', tf('cookies')]].map(([to, label]) => (

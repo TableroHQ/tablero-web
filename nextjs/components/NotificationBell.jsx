@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Bell, CheckCheck } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useStore } from '@/lib/store';
 
 const typeIcon = {
@@ -11,15 +12,16 @@ const typeIcon = {
   'payment.succeeded': '$', 'review.submitted': '✎',
 };
 
-function timeAgo(ts) {
+function timeAgo(ts, t) {
   const s = Math.floor((Date.now() - ts) / 1000);
-  if (s < 60) return `${s}s ago`;
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-  return `${Math.floor(s / 86400)}d ago`;
+  if (s < 60) return t('secondsAgo', { n: s });
+  if (s < 3600) return t('minutesAgo', { n: Math.floor(s / 60) });
+  if (s < 86400) return t('hoursAgo', { n: Math.floor(s / 3600) });
+  return t('daysAgo', { n: Math.floor(s / 86400) });
 }
 
 export default function NotificationBell({ dark = false }) {
+  const t = useTranslations('notifications');
   const [, s] = useStore();
   const { notifications } = s.get();
   const unread = notifications.filter(n => !n.read).length;
@@ -34,7 +36,7 @@ export default function NotificationBell({ dark = false }) {
 
   return (
     <div className="relative" ref={ref}>
-      <button onClick={() => setOpen(o => !o)} data-testid="notification-bell" aria-label={`Notifications${unread > 0 ? `, ${unread} unread` : ''}`} aria-expanded={open} aria-haspopup="dialog"
+      <button onClick={() => setOpen(o => !o)} data-testid="notification-bell" aria-label={unread > 0 ? t('bellLabelUnread', { n: unread }) : t('bellLabel')} aria-expanded={open} aria-haspopup="dialog"
         className={`relative h-10 w-10 rounded-full flex items-center justify-center transition ${dark ? 'bg-kds-surface2 hover:bg-kds-bg text-cream' : 'bg-cream-sub hover:bg-cream-warm text-ink'}`}>
         <Bell size={18} />
         {unread > 0 && <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary text-white text-[9px] font-bold flex items-center justify-center">{unread}</span>}
@@ -44,16 +46,16 @@ export default function NotificationBell({ dark = false }) {
         <div className={`absolute right-0 top-12 w-[380px] max-w-[calc(100vw-32px)] rounded-2xl shadow-2xl border overflow-hidden z-[60] ${dark ? 'bg-kds-surface text-cream border-kds-surface2' : 'bg-white text-ink border-border'}`} data-testid="notification-panel">
           <div className={`flex items-center justify-between px-5 py-4 border-b ${dark ? 'border-kds-surface2' : 'border-border'}`}>
             <div>
-              <div className="label-eyebrow">Inbox</div>
-              <div className="font-display text-lg">{unread ? `${unread} unread` : 'All caught up'}</div>
+              <div className="label-eyebrow">{t('eyebrow')}</div>
+              <div className="font-display text-lg">{unread ? t('unreadShort', { n: unread }) : t('allCaughtUp')}</div>
             </div>
             <button onClick={s.markAllRead} className="text-xs font-mono uppercase text-primary flex items-center gap-1" data-testid="mark-all-read">
-              <CheckCheck size={12} /> Mark all
+              <CheckCheck size={12} /> {t('markAll')}
             </button>
           </div>
           <div className="max-h-[420px] overflow-auto">
             {notifications.length === 0 ? (
-              <div className="p-10 text-center text-ink-muted text-sm">Silence is golden.</div>
+              <div className="p-10 text-center text-ink-muted text-sm">{t('empty')}</div>
             ) : notifications.map(n => (
               <button key={n.id} onClick={() => { s.markRead(n.id); setOpen(false); }} data-testid={`notif-${n.id}`}
                 className={`w-full text-left px-5 py-4 flex gap-3 border-b ${dark ? 'border-kds-surface2 hover:bg-kds-bg' : 'border-border/50 hover:bg-cream-sub/50'} ${!n.read ? 'bg-primary/5' : ''}`}>
@@ -64,13 +66,13 @@ export default function NotificationBell({ dark = false }) {
                     {!n.read && <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />}
                   </div>
                   <div className={`text-xs mt-0.5 line-clamp-2 ${dark ? 'text-cream/70' : 'text-ink-body'}`}>{n.body}</div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-ink-muted mt-1">{timeAgo(n.at)} · {n.type}</div>
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-ink-muted mt-1">{timeAgo(n.at, t)} · {n.type}</div>
                 </div>
               </button>
             ))}
           </div>
           <Link href="/notifications" onClick={() => setOpen(false)} className={`block text-center py-3 text-sm font-fn font-medium border-t ${dark ? 'border-kds-surface2 text-cream/80 hover:bg-kds-bg' : 'border-border text-primary hover:bg-cream-sub/50'}`} data-testid="view-all-notifs">
-            View all notifications →
+            {t('viewAll')}
           </Link>
         </div>
       )}
