@@ -189,7 +189,7 @@ export default function Auth() {
 
   // ─── render ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-[calc(100vh-72px)] grid lg:grid-cols-2">
+    <div className="min-h-[calc(100vh-72px)] grid grid-cols-1 lg:grid-cols-2">
       {/* Left panel */}
       <div className="relative hidden lg:block">
         <img src={IMG.texture} alt="" className="absolute inset-0 w-full h-full object-cover" />

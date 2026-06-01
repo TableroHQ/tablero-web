@@ -60,6 +60,7 @@ export default function Reservations() {
   const [party, setParty] = React.useState(2);
   const [zone, setZone] = React.useState('Indoor');
   const [tableId, setTableId] = React.useState('');
+  const [phone, setPhone] = React.useState('');
 
   const [slots, setSlots] = React.useState([]);
   const [tables, setTables] = React.useState([]);
@@ -109,22 +110,37 @@ export default function Reservations() {
     }).catch(() => {});
   }, [user.id]);
 
+  // Prefill the contact phone from the signed-in profile when available
+  React.useEffect(() => {
+    if (user.phone && !phone) setPhone(user.phone);
+  }, [user.phone]);
+
   const confirm = async () => {
     if (!slot) return toast.error(t('errSelectSlot'));
     if (!RESTAURANT_ID) return toast.error('Restaurant not configured');
+    if (!phone.trim()) return toast.error('Please enter a contact phone number');
     setConfirming(true);
     try {
       const customerName = (user.firstName && user.lastName)
         ? `${user.firstName} ${user.lastName}`.trim()
-        : user.name || undefined;
-      // Build ISO datetime from selected date + time slot (e.g. "2026-05-29T19:30:00")
-      const reservationStartAt = `${fmt(selectedDate)}T${slot.length === 5 ? slot + ':00' : slot}`;
+        : user.name || user.username || 'Guest';
+      // Use the selected slot's real start/end from the availability API when present,
+      // otherwise build them from the picked date + time (defaulting to a 2h window).
+      const picked = slots.find(s => fmtSlotTime(s.startAt) === slot);
+      const reservationStartAt = (picked?.startAt && String(picked.startAt).includes('T'))
+        ? picked.startAt
+        : `${fmt(selectedDate)}T${slot.length === 5 ? slot + ':00' : slot}`;
+      const reservationEndAt = (picked?.endAt && String(picked.endAt).includes('T'))
+        ? picked.endAt
+        : new Date(new Date(reservationStartAt).getTime() + 120 * 60000).toISOString();
       const body = {
         reservationStartAt,
+        reservationEndAt,
         partySize: party,
         tableId: tableId || undefined,
         customerName,
-        customerPhoneNumber: user.phone || undefined,
+        customerPhoneNumber: phone.trim(),
+        customerEmail: user.email || undefined,
       };
       const res = await api.post(`/api/restaurants/${RESTAURANT_ID}/reservations`, body);
       toast.success(t('confirmedToast', { date: fmtLabel(selectedDate), time: slot }));
@@ -154,8 +170,8 @@ export default function Reservations() {
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-xl">{t('subtitle')}</p>
 
-      <div className="grid lg:grid-cols-12 gap-6 mt-12">
-        <div className="lg:col-span-8 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-12">
+        <div className="lg:col-span-8 space-y-6 min-w-0">
           {/* DATE */}
           <Card title={t('date')} icon={Calendar}>
             <div className="grid grid-cols-7 gap-2 mt-4">
@@ -197,6 +213,22 @@ export default function Reservations() {
               <div className="font-display text-5xl text-ink min-w-[80px] text-center" data-testid="party-count">{party}</div>
               <button onClick={() => setParty(Math.min(MAX_PARTY_SIZE, party + 1))} className="h-12 w-12 rounded-full bg-cream-sub text-xl" data-testid="party-plus">+</button>
               <span className="ml-4 text-ink-body text-sm">{party === 1 ? t('guest') : t('guests')}</span>
+            </div>
+          </Card>
+
+          {/* CONTACT */}
+          <Card title="Contact">
+            <div className="mt-4">
+              <label className="text-xs font-mono text-ink-muted tracking-wide">Phone number</label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+1 555 000 0000"
+                data-testid="reservation-phone"
+                className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 text-sm font-mono focus:border-primary focus:outline-none"
+                maxLength={30}
+              />
             </div>
           </Card>
 
@@ -268,7 +300,7 @@ export default function Reservations() {
         </div>
 
         {/* SUMMARY SIDEBAR */}
-        <aside className="lg:col-span-4">
+        <aside className="lg:col-span-4 min-w-0">
           <div className="sticky top-[88px] bg-white rounded-3xl border border-border p-7">
             <div className="label-eyebrow">{t('bookingSummary')}</div>
             <Row k={t('date')} v={fmtLabel(selectedDate)} />
