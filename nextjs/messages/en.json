@@ -20,7 +20,11 @@
     "noData": "No data",
     "active": "Active",
     "suspended": "Suspended",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "tryAgain": "Try again",
+    "unexpectedError": "An unexpected error occurred on this page.",
+    "lightMode": "Switch to light mode",
+    "nightMode": "Switch to night mode"
   },
   "nav": {
     "home": "Home",
@@ -319,7 +323,17 @@
     "pushNotifications": "Push notifications",
     "pushNotificationsHint": "In-app and mobile",
     "promotions": "Promotions",
-    "promotionsHint": "Monthly food drops"
+    "promotionsHint": "Monthly food drops",
+    "unreadShort": "{n} unread",
+    "markAll": "Mark all",
+    "empty": "Silence is golden.",
+    "viewAll": "View all notifications →",
+    "secondsAgo": "{n}s ago",
+    "minutesAgo": "{n}m ago",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago",
+    "bellLabel": "Notifications",
+    "bellLabelUnread": "Notifications, {n} unread"
   },
   "profile": {
     "eyebrow": "Profile",
