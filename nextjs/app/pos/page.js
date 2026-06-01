@@ -119,7 +119,7 @@ export default function POS() {
       {loading ? (
         <div className="py-20 flex justify-center"><Loader2 size={28} className="animate-spin text-ink-muted" /></div>
       ) : (
-        <div className="grid lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-7">
             <div className="bg-white rounded-2xl border border-border p-5">
               <div className="flex items-center justify-between mb-4">
@@ -159,7 +159,7 @@ export default function POS() {
               )}
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-3 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
               <Kpi n={`$${openBillsTotal.toFixed(0)}`} l={t('openBills')} />
               <Kpi n={String(pendingBills.length)} l={t('awaitingPayment')} />
               <Kpi n={String(orders.length)} l={t('activeOrders')} />

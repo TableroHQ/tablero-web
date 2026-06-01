@@ -107,7 +107,7 @@ export default function RevenueReport() {
             <Kpi n={`$${avgTicket.toFixed(2)}`} l={t('kpiAvgTicket')} />
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-5 mt-5">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-5">
             <div className="lg:col-span-2 bg-white rounded-2xl border border-border p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
