@@ -19,7 +19,7 @@ export default function About() {
   return (
     <div>
       {/* Hero */}
-      <section className="max-w-[1400px] mx-auto px-6 md:px-12 pt-16 pb-20 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="max-w-[1400px] mx-auto px-6 md:px-12 pt-16 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="label-eyebrow">{t('eyebrow')}</div>
           <h1 className="font-display text-5xl md:text-7xl mt-3 leading-[0.95]">
@@ -44,7 +44,7 @@ export default function About() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <div className="label-eyebrow">{t('valuesEyebrow')}</div>
           <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-2xl">{t('valuesTitle')}</h2>
-          <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map(v => (
               <div key={v.key} className="bg-white rounded-3xl p-7 shadow-sm">
                 <div className="h-11 w-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5">

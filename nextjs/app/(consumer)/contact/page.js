@@ -34,7 +34,7 @@ export default function Contact() {
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-xl">{t('intro')}</p>
 
-      <div className="grid lg:grid-cols-3 gap-8 mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
         {/* Form */}
         <div className="lg:col-span-2 bg-white rounded-3xl border border-border p-7 md:p-8">
           {sent ? (
@@ -48,7 +48,7 @@ export default function Contact() {
           ) : (
             <form onSubmit={submit} className="space-y-5">
               <h2 className="font-display text-2xl mb-6">{t('formTitle')}</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="label-eyebrow">{t('nameLabel')}</label>
                   <input value={form.name} onChange={e => set('name', e.target.value)} placeholder={t('namePlaceholder')}
