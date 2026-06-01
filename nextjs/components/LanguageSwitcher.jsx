@@ -7,6 +7,9 @@ const LANGS = [
   { code: 'en', label: 'English', flag: '🇬🇧' },
   { code: 'ru', label: 'Русский', flag: '🇷🇺' },
   { code: 'az', label: 'Azərbaycan', flag: '🇦🇿' },
+  { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
+  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 
 export default function LanguageSwitcher({ dark = false }) {
