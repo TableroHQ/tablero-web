@@ -100,13 +100,13 @@ export default function Menu() {
       </div>
 
       {loading ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
           {[0,1,2,3,4,5].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : list.length === 0 ? (
         <div className="mt-20 text-center text-ink-muted font-fn">{t('noItems')}</div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
           {list.map(m => (
             <article key={m.id} className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group">
               <div className="aspect-[4/3] relative overflow-hidden">

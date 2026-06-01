@@ -121,7 +121,7 @@ export default function Profile() {
       <div className="label-eyebrow">{t('eyebrow')}</div>
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
         <div className="lg:col-span-2 space-y-6">
           <Card title={t('identity')}>
             <div className="flex items-center gap-5">
@@ -141,7 +141,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
               <Field icon={User}   label={t('firstName')} value={draft.firstName} onChange={v => { setDraft(d => ({ ...d, firstName: v })); setDirty(true); setFieldErrors(e => ({ ...e, firstName: '' })); }} testid="profile-first-name" fieldId="profile-first-name" error={fieldErrors.firstName} />
               <Field icon={User}   label={t('lastName')}  value={draft.lastName}  onChange={v => { setDraft(d => ({ ...d, lastName: v }));  setDirty(true); setFieldErrors(e => ({ ...e, lastName: '' })); }}  testid="profile-last-name"  fieldId="profile-last-name"  error={fieldErrors.lastName} />
               <Field icon={AtSign} label={t('username')}  value={draft.username}  onChange={v => { setDraft(d => ({ ...d, username: v }));  setDirty(true); setFieldErrors(e => ({ ...e, username: '' })); }}  testid="profile-username"   fieldId="profile-username"   error={fieldErrors.username} />
@@ -155,7 +155,7 @@ export default function Profile() {
               <span className="ml-auto text-[10px] font-mono uppercase tracking-wide">{t('readOnly')}</span>
             </div>
 
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <button onClick={save} disabled={loading} className="btn-primary disabled:opacity-50" data-testid="save-profile">
                 {loading ? tc('saving') : t('saveChanges')}
               </button>
@@ -166,7 +166,7 @@ export default function Profile() {
           </Card>
 
           <Card title={t('security')}>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Info label={t('role')}         value={user.role || '—'} />
               <Info label={t('restaurant')}   value={user.restaurantId || '—'} />
               <Info label={t('jwtRotation')}  value={t('jwtValue')} />
