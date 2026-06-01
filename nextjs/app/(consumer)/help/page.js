@@ -60,7 +60,7 @@ export default function Help() {
 
       {/* Quick links */}
       {!q && (
-        <div className="mt-10 grid sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {sections.map(s => (
             <a key={s.slug} href={`#${s.slug}`}
               className="bg-white rounded-2xl border border-border p-5 flex flex-col items-center gap-3 hover:-translate-y-1 transition text-center shadow-sm">

@@ -20,13 +20,12 @@ export default function Notifications() {
   const listRef = React.useRef(null);
   const PAGE_SIZE = 20;
 
-  // Directors/Admins can see server-side notification logs
-  const isAdmin = ['ADMIN', 'DIRECTOR'].includes(user.role);
-
+  // Every authenticated user can see their own notifications via the user-scoped
+  // endpoint; the backend derives the recipient from the JWT, never a query param.
   const fetchServerNotifs = React.useCallback((pageNum = 1) => {
-    if (!isAdmin || !user.id) return;
+    if (!user.id) return;
     setLoading(true);
-    api.get('/api/notifications', { params: { recipientUserId: user.id, pageSize: PAGE_SIZE, page: pageNum } })
+    api.get('/api/notifications/me', { params: { pageSize: PAGE_SIZE, page: pageNum } })
       .then(data => {
         const list = Array.isArray(data) ? data : data?.items ?? [];
         const mapped = list.map(n => ({
@@ -43,9 +42,26 @@ export default function Notifications() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [isAdmin, user.id]);
+  }, [user.id]);
 
   React.useEffect(() => { fetchServerNotifs(1); }, [fetchServerNotifs]);
+
+  // Load persisted notification preferences so the toggles reflect server state.
+  React.useEffect(() => {
+    if (!user.id) return;
+    api.get('/api/users/me/preferences')
+      .then(data => {
+        if (data && typeof data === 'object') {
+          store.setPrefs({
+            email: !!data.email,
+            sms: !!data.sms,
+            push: !!data.push,
+            marketing: !!data.marketing,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [user.id]);
 
   // Infinite scroll: load next page when bottom of list is visible
   React.useEffect(() => {
@@ -111,7 +127,7 @@ export default function Notifications() {
       </div>
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex gap-2">

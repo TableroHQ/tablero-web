@@ -70,7 +70,7 @@ export default function DeliveryTracking() {
         </span>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <div className="aspect-[16/10] rounded-3xl overflow-hidden relative bg-ink" data-testid="tracking-map">
             <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_30%_40%,#E4883A,transparent_40%),radial-gradient(circle_at_70%_60%,#C8553D,transparent_50%)]" />
@@ -112,7 +112,7 @@ export default function DeliveryTracking() {
             </div>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <Stat icon={Clock} label={t('statEta')} value={status === 'EN_ROUTE' ? t('etaValue') : t('arrivedValue')} />
             <Stat icon={Navigation} label={t('statDistance')} value={status === 'EN_ROUTE' ? t('distanceValue') : '—'} />
             <Stat icon={MapPin} label={t('statRoute')} value={t('routeValue')} />
