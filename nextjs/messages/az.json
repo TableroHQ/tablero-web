@@ -20,7 +20,11 @@
     "noData": "Məlumat yoxdur",
     "active": "Aktiv",
     "suspended": "Bloklanmış",
-    "refresh": "Yenilə"
+    "refresh": "Yenilə",
+    "tryAgain": "Yenidən cəhd et",
+    "unexpectedError": "Bu səhifədə gözlənilməz xəta baş verdi.",
+    "lightMode": "İşıqlı rejimə keç",
+    "nightMode": "Gecə rejiminə keç"
   },
   "nav": {
     "home": "Ana səhifə",
@@ -319,7 +323,17 @@
     "pushNotifications": "Push bildirişlər",
     "pushNotificationsHint": "Tətbiqdaxili və mobil",
     "promotions": "Kampaniyalar",
-    "promotionsHint": "Aylıq aksiyalar"
+    "promotionsHint": "Aylıq aksiyalar",
+    "unreadShort": "{n} oxunmamış",
+    "markAll": "Hamısını işarələ",
+    "empty": "Sükut qızıldır.",
+    "viewAll": "Bütün bildirişlər →",
+    "secondsAgo": "{n} san əvvəl",
+    "minutesAgo": "{n} dəq əvvəl",
+    "hoursAgo": "{n} saat əvvəl",
+    "daysAgo": "{n} gün əvvəl",
+    "bellLabel": "Bildirişlər",
+    "bellLabelUnread": "Bildirişlər, {n} oxunmamış"
   },
   "profile": {
     "eyebrow": "Profil",
