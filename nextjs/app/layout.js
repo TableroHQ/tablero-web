@@ -16,9 +16,10 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={dir}>
       <body suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StoreProvider>
