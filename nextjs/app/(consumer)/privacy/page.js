@@ -17,7 +17,7 @@ export default function Privacy() {
 
       <div className="mt-12 space-y-10">
         {SECTIONS.map((s, i) => (
-          <div key={s} className="grid md:grid-cols-[200px_1fr] gap-4">
+          <div key={s} className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
             <div className="md:pt-0.5">
               <span className="font-mono text-xs text-ink-muted">{String(i + 1).padStart(2, '0')}</span>
               <h2 className="font-fn font-semibold text-ink mt-1">{t(`${s}Title`)}</h2>
