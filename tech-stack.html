@@ -138,6 +138,7 @@
       <span class="pill"><b>Tailwind</b> 3.4</span>
       <span class="pill"><b>SignalR</b> real-time</span>
       <span class="pill"><b>Stripe</b> payments</span>
+      <span class="pill"><b>Cloudinary</b> uploads</span>
       <span class="pill"><b>6</b> languages</span>
     </div>
   </div>
@@ -466,6 +467,42 @@ http.interceptors.response.use(res => res, <span class="k">async</span> err => {
     </div>
   </div>
 
+  <!-- Image upload -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#3448c5">↑</div>
+      <div class="card-title">
+        <h3>Image Upload <span class="ver">FormData · multipart</span></h3>
+        <div class="what">Menu-photo uploads sent as native <code class="inline">FormData</code> through the Axios client to the Cloudinary-backed media endpoint — no extra upload library.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Managers attach a photo to each dish. Rather than ship a heavyweight uploader, the menu editor builds a plain <code class="inline">FormData</code> and lets Axios post it as <code class="inline">multipart/form-data</code> (boundary set automatically) to the gateway, which signs &amp; stores the file on Cloudinary server-side and returns a permanent CDN URL. The browser only ever holds the file and the resulting <code class="inline">url</code>; the shared request interceptor still attaches the <code class="inline">Bearer</code> token, and a 5 MB client-side guard rejects oversized images before any bytes leave the device.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">The upload resolves</div>
+            The response is key-normalized to <code class="inline">{ url }</code> and written into the item form's <code class="inline">img</code> field, so the modal preview swaps from placeholder to the live Cloudinary thumbnail — and a <code class="inline">503</code> instead surfaces <code class="inline">uploadNotConfigured</code> as a toast.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Manager picks a dish photo</div>
+            The file input calls <code class="inline">uploadImage(file)</code>; it rejects anything over 5 MB with <code class="inline">toast.error</code>, else appends the file to a <code class="inline">FormData</code> and posts it to <code class="inline">/api/restaurants/{id}/media/upload</code>.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// app/admin/menu — multipart upload via the shared Axios client</span>
+<span class="k">const</span> fd = <span class="k">new</span> FormData();
+fd.<span class="f">append</span>(<span class="s">'file'</span>, file);                       <span class="c">// raw image, no JSON</span>
+<span class="k">const</span> { url } = <span class="k">await</span> api.<span class="f">post</span>(<span class="s">`/api/restaurants/${restaurantId}/media/upload`</span>, fd);
+setForm(f => ({ ...f, img: url }));            <span class="c">// store the returned CDN URL</span></pre>
+      <div class="grp"><span>FormData multipart</span><span>Axios auto-boundary</span><span>Bearer via interceptor</span><span>5 MB client guard</span><span>Cloudinary CDN url</span><span>admin/menu modal</span></div>
+    </div>
+  </div>
+
   <!-- ════════════ REALTIME & PAYMENTS ════════════ -->
   <div class="section-head" id="realtime">
     <div class="rule"></div>
@@ -619,8 +656,8 @@ http.interceptors.response.use(res => res, <span class="k">async</span> err => {
 
 <footer>
   <div class="display">Tablero — Restaurant Operating System</div>
-  <div>Frontend technology dossier · generated from the live codebase · 1 Jun 2026</div>
-  <div style="margin-top:10px;font-size:12px;opacity:.7">Built with Next.js 15 · React 19 · Tailwind · SignalR · Stripe · next-intl</div>
+  <div>Frontend technology dossier · generated from the live codebase · 2 Jun 2026</div>
+  <div style="margin-top:10px;font-size:12px;opacity:.7">Built with Next.js 15 · React 19 · Tailwind · SignalR · Stripe · Cloudinary · next-intl</div>
 </footer>
 
 </body>
