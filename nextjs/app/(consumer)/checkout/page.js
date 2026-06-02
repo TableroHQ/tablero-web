@@ -151,6 +151,8 @@ export default function Checkout() {
       // 1. Create the order
       const orderBody = {
         tableId: null,
+        type: type === 'delivery' ? 'DELIVERY' : 'DINE_IN',
+        deliveryAddress: type === 'delivery' ? address : null,
         customerName: user.name || user.username || 'Guest',
         customerPhoneNumber: user.phone || null,
         specialRequest: type === 'delivery' ? `Delivery to: ${address}` : null,

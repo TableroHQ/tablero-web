@@ -609,7 +609,9 @@
     "couldNotModerate": "Не удалось обработать отзыв",
     "revenueEyebrow": "Выручка",
     "noReviewsPending": "Нет отзывов на модерации",
-    "allBranches": "Все филиалы"
+    "allBranches": "Все филиалы",
+    "profitLabel": "Прибыль (7д)",
+    "marginLabel": "Маржа"
   },
   "adminStaff": {
     "title": "Управление персоналом",
@@ -1045,7 +1047,16 @@
     "upload": "Загрузить",
     "mDescription": "Описание",
     "mAllergens": "Аллергены (через запятую)",
-    "nameRequired": "Название обязательно"
+    "nameRequired": "Название обязательно",
+    "uploading": "Загрузка…",
+    "imageTooLarge": "Изображение должно быть не больше 5 МБ.",
+    "uploadNotConfigured": "Загрузка изображений не настроена на сервере.",
+    "uploadFailed": "Не удалось загрузить изображение.",
+    "mCostPrice": "Себестоимость",
+    "mStock": "Склад",
+    "marginLabel": "Маржа",
+    "thStock": "Склад",
+    "thMargin": "Маржа"
   },
   "adminTables": {
     "failedLoad": "Не удалось загрузить столы",
