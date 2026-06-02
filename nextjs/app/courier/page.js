@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { COURIER_ORDERS } from '@/lib/mock';
+import { api } from '@/lib/client';
 import { MapPin, Navigation, CheckCircle2, Phone, Power } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -15,11 +16,33 @@ const CHECKPOINTS = [
 export default function Courier() {
   const t = useTranslations('courier');
   const [online, setOnline] = React.useState(true);
-  const [active, setActive] = React.useState(COURIER_ORDERS.find(o => o.status === 'ASSIGNED'));
-  const [orders, setOrders] = React.useState(COURIER_ORDERS);
+  const [active, setActive] = React.useState(null);
+  const [orders, setOrders] = React.useState([]);
+
+  // Pull live delivery orders; a delivery that is READY is available to grab,
+  // anything earlier in the pipeline is shown as already assigned/in-prep.
+  React.useEffect(() => {
+    api.get('/api/orders/deliveries')
+      .then(data => {
+        const list = (Array.isArray(data) ? data : []).map(o => ({
+          id: o.id,
+          address: o.deliveryAddress || o.customerName,
+          distance: '—',
+          payout: Number(o.totalAmount) || 0,
+          items: o.items?.length || 0,
+          status: o.status === 'READY' ? 'AVAILABLE' : 'ASSIGNED',
+        }));
+        setOrders(list);
+        setActive(list.find(o => o.status === 'ASSIGNED') || null);
+      })
+      .catch(() => {
+        setOrders(COURIER_ORDERS);
+        setActive(COURIER_ORDERS.find(o => o.status === 'ASSIGNED') || null);
+      });
+  }, []);
 
   return (
-    <OpsLayout title={t('title')} subtitle={t('subtitle', { count: 5 })}
+    <OpsLayout title={t('title')} subtitle={t('subtitle', { count: orders.length })}
       right={
         <button onClick={() => setOnline(o => !o)} data-testid="online-toggle"
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-fn font-medium ${online ? 'bg-ok text-white' : 'bg-cream-sub text-ink-muted'}`}>
