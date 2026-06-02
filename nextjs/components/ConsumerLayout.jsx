@@ -104,7 +104,7 @@ export default function ConsumerLayout({ children }) {
           </div>
         )}
       </header>
-      <main className="fade-up">{children}</main>
+      <main>{children}</main>
       <footer className="mt-24 border-t border-border/60 bg-ink text-cream">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           <div className="lg:col-span-2">
