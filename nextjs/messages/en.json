@@ -609,7 +609,9 @@
     "couldNotModerate": "Could not moderate review",
     "revenueEyebrow": "Revenue",
     "noReviewsPending": "No reviews pending moderation",
-    "allBranches": "All branches"
+    "allBranches": "All branches",
+    "profitLabel": "Profit (7d)",
+    "marginLabel": "Margin"
   },
   "adminStaff": {
     "title": "Staff management",
@@ -1045,7 +1047,16 @@
     "upload": "Upload",
     "mDescription": "Description",
     "mAllergens": "Allergens (comma)",
-    "nameRequired": "Name is required"
+    "nameRequired": "Name is required",
+    "uploading": "Uploading…",
+    "imageTooLarge": "Image must be 5 MB or smaller.",
+    "uploadNotConfigured": "Image uploads aren't configured on the server.",
+    "uploadFailed": "Image upload failed.",
+    "mCostPrice": "Cost price",
+    "mStock": "Stock",
+    "marginLabel": "Margin",
+    "thStock": "Stock",
+    "thMargin": "Margin"
   },
   "adminTables": {
     "failedLoad": "Failed to load tables",

@@ -609,7 +609,9 @@
     "couldNotModerate": "Rəy idarə edilə bilmədi",
     "revenueEyebrow": "Gəlir",
     "noReviewsPending": "Moderasiyada rəy yoxdur",
-    "allBranches": "Bütün filiallar"
+    "allBranches": "Bütün filiallar",
+    "profitLabel": "Mənfəət (7g)",
+    "marginLabel": "Marja"
   },
   "adminStaff": {
     "title": "İşçi idarəetməsi",
@@ -1045,7 +1047,16 @@
     "upload": "Yüklə",
     "mDescription": "Təsvir",
     "mAllergens": "Allergenlər (vergüllə)",
-    "nameRequired": "Ad tələb olunur"
+    "nameRequired": "Ad tələb olunur",
+    "uploading": "Yüklənir…",
+    "imageTooLarge": "Şəkil 5 MB-dan kiçik olmalıdır.",
+    "uploadNotConfigured": "Şəkil yükləmə serverdə konfiqurasiya edilməyib.",
+    "uploadFailed": "Şəkil yüklənmədi.",
+    "mCostPrice": "Maya dəyəri",
+    "mStock": "Anbar",
+    "marginLabel": "Marja",
+    "thStock": "Anbar",
+    "thMargin": "Marja"
   },
   "adminTables": {
     "failedLoad": "Masalar yüklənmədi",
