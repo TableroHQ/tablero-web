@@ -609,9 +609,7 @@
     "couldNotModerate": "تعذّر الإشراف على التقييم",
     "revenueEyebrow": "الإيرادات",
     "noReviewsPending": "لا توجد تقييمات بانتظار الإشراف",
-    "allBranches": "جميع الفروع",
-    "profitLabel": "الربح (7 أيام)",
-    "marginLabel": "الهامش"
+    "allBranches": "جميع الفروع"
   },
   "adminStaff": {
     "title": "إدارة الموظفين",
@@ -1047,16 +1045,7 @@
     "upload": "رفع",
     "mDescription": "الوصف",
     "mAllergens": "مسبّبات الحساسية (بفاصلة)",
-    "nameRequired": "الاسم مطلوب",
-    "uploading": "جارٍ الرفع…",
-    "imageTooLarge": "يجب ألا يتجاوز حجم الصورة 5 ميغابايت.",
-    "uploadNotConfigured": "رفع الصور غير مُهيأ على الخادم.",
-    "uploadFailed": "فشل رفع الصورة.",
-    "mCostPrice": "سعر التكلفة",
-    "mStock": "المخزون",
-    "marginLabel": "الهامش",
-    "thStock": "المخزون",
-    "thMargin": "الهامش"
+    "nameRequired": "الاسم مطلوب"
   },
   "adminTables": {
     "failedLoad": "تعذّر تحميل الطاولات",
