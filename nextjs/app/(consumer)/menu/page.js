@@ -8,6 +8,7 @@ import { api } from '@/lib/client';
 import { toast } from 'sonner';
 import { IMG } from '@/lib/mock';
 import { useTranslations } from 'next-intl';
+import Reveal from '@/components/Reveal';
 
 const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
 
@@ -107,8 +108,9 @@ export default function Menu() {
         <div className="mt-20 text-center text-ink-muted font-fn">{t('noItems')}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {list.map(m => (
-            <article key={m.id} className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group">
+          {list.map((m, i) => (
+            <Reveal key={m.id} delay={Math.min(i, 8) * 60}>
+            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full">
               <div className="aspect-[4/3] relative overflow-hidden">
                 <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER_IMGS[0]; }} />
                 {!m.available && (
@@ -142,6 +144,7 @@ export default function Menu() {
                 )}
               </div>
             </article>
+            </Reveal>
           ))}
         </div>
       )}
