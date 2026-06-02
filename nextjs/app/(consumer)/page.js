@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { ArrowRight, Star, Clock, MapPin, ChefHat, Sparkles, QrCode } from 'lucide-react';
 import { IMG, REVIEWS } from '@/lib/mock';
 import { api } from '@/lib/client';
+import Reveal from '@/components/Reveal';
 
 const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
 
@@ -43,7 +44,7 @@ export default function Landing() {
       {/* HERO */}
       <section className="relative">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 pt-12 pb-16 md:pt-20 md:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7">
+          <Reveal className="lg:col-span-7" y={24}>
             <div className="label-eyebrow mb-5">{t('eyebrow')}</div>
             <h1 className="font-display text-5xl md:text-7xl font-semibold text-ink leading-[0.95]">
               {t('heroLine1')}<br />
@@ -64,8 +65,8 @@ export default function Landing() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="lg:col-span-5 relative">
+          </Reveal>
+          <Reveal className="lg:col-span-5 relative" delay={140} y={24}>
             <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5] shadow-2xl">
               <img src={IMG.interior} alt={restaurant?.name || 'Tablero interior'} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/50 via-transparent to-transparent" />
@@ -85,26 +86,30 @@ export default function Landing() {
               <p className="text-xs text-ink-body italic">{t('bestReview')}</p>
               <div className="text-[10px] font-mono text-ink-muted mt-2">— SOFIA M.</div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
       <section id="how-it-works" className="bg-cream-sub/50 py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="label-eyebrow">{t('whyTablero')}</div>
-          <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-2xl">{t('platformTitle')}</h2>
+          <Reveal>
+            <div className="label-eyebrow">{t('whyTablero')}</div>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-2xl">{t('platformTitle')}</h2>
+          </Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { icon: ChefHat, title: t('feature1Title'), text: t('feature1Text') },
               { icon: Clock, title: t('feature2Title'), text: t('feature2Text') },
               { icon: Sparkles, title: t('feature3Title'), text: t('feature3Text') },
-            ].map(c => (
-              <div key={c.title} className="bg-white rounded-3xl p-7 hover:-translate-y-1 transition-transform shadow-sm hover:shadow-md">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5"><c.icon size={22} /></div>
-                <h3 className="font-fn font-semibold text-xl text-ink">{c.title}</h3>
-                <p className="mt-2 text-sm text-ink-body leading-relaxed">{c.text}</p>
-              </div>
+            ].map((c, i) => (
+              <Reveal key={c.title} delay={i * 90}>
+                <div className="bg-white rounded-3xl p-7 hover:-translate-y-1 transition-transform shadow-sm hover:shadow-md h-full">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5"><c.icon size={22} /></div>
+                  <h3 className="font-fn font-semibold text-xl text-ink">{c.title}</h3>
+                  <p className="mt-2 text-sm text-ink-body leading-relaxed">{c.text}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -113,13 +118,14 @@ export default function Landing() {
       {/* MENU PEEK — uses live items if loaded, otherwise mock images */}
       <section className="py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="flex items-end justify-between gap-6 mb-10">
+          <Reveal className="flex items-end justify-between gap-6 mb-10">
             <div>
               <div className="label-eyebrow">{t('tonightsHighlights')}</div>
               <h2 className="font-display text-4xl md:text-5xl mt-2">{t('madeWithCare')}</h2>
             </div>
             <Link href="/menu" className="btn-outline inline-flex items-center gap-2" data-testid="see-menu">{t('fullMenu')} <ArrowRight size={14} /></Link>
-          </div>
+          </Reveal>
+          <Reveal delay={80}>
           {previewItems ? (
             <div className="grid grid-cols-12 gap-4 md:gap-6">
               <FoodCard item={previewItems[0]} className="col-span-12 md:col-span-7 aspect-[16/10]" big fallbackImg={IMG.burger} />
@@ -135,21 +141,26 @@ export default function Landing() {
               <StaticCard img={IMG.pasta}   cat="Mains"    name="Truffle Tagliatelle"    price={24}   className="col-span-12 md:col-span-8 aspect-[16/9]" big />
             </div>
           )}
+          </Reveal>
         </div>
       </section>
 
       {/* REVIEWS */}
       <section className="py-16 md:py-24 bg-ink text-cream">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="label-eyebrow !text-cream/60">{t('wordOfMouth')}</div>
-          <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-3xl">{t('famousQuote')}</h2>
+          <Reveal>
+            <div className="label-eyebrow !text-cream/60">{t('wordOfMouth')}</div>
+            <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-3xl">{t('famousQuote')}</h2>
+          </Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {REVIEWS.map(r => (
-              <div key={r.id} className="bg-white/5 backdrop-blur rounded-3xl p-6 border border-white/10">
-                <div className="flex items-center gap-1 text-secondary mb-3">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
-                <p className="leading-relaxed text-cream/90">"{r.comment}"</p>
-                <div className="mt-4 text-xs font-mono text-cream/50">— {r.author.toUpperCase()} · {r.date}</div>
-              </div>
+            {REVIEWS.map((r, idx) => (
+              <Reveal key={r.id} delay={idx * 90}>
+                <div className="bg-white/5 backdrop-blur rounded-3xl p-6 border border-white/10 h-full">
+                  <div className="flex items-center gap-1 text-secondary mb-3">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
+                  <p className="leading-relaxed text-cream/90">"{r.comment}"</p>
+                  <div className="mt-4 text-xs font-mono text-cream/50">— {r.author.toUpperCase()} · {r.date}</div>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -158,11 +169,11 @@ export default function Landing() {
       {/* PRICING */}
       <section id="pricing" className="py-16 md:py-24 bg-cream-sub/30">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <div className="label-eyebrow">{t('pricingEyebrow')}</div>
             <h2 className="font-display text-4xl md:text-5xl mt-2">{t('pricingTitle')}</h2>
             <p className="mt-4 text-ink-body max-w-xl mx-auto">{t('pricingSubtitle')}</p>
-          </div>
+          </Reveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
               {
@@ -192,9 +203,10 @@ export default function Landing() {
                 cta: t('planBusinessCta'),
                 highlight: false,
               },
-            ].map(plan => (
-              <div key={plan.name}
-                className={`rounded-3xl p-7 flex flex-col border ${plan.highlight ? 'bg-ink text-cream border-ink shadow-2xl scale-[1.03] dark:bg-primary/20 dark:text-foreground dark:border-primary/60' : 'bg-white border-border shadow-sm'}`}>
+            ].map((plan, i) => (
+              <Reveal key={plan.name} delay={i * 90}>
+                <div
+                className={`rounded-3xl p-7 flex flex-col border h-full ${plan.highlight ? 'bg-ink text-cream border-ink shadow-2xl scale-[1.03] dark:bg-primary/20 dark:text-foreground dark:border-primary/60' : 'bg-white border-border shadow-sm'}`}>
                 <div className={`label-eyebrow mb-3 ${plan.highlight ? '!text-cream/50 dark:!text-foreground/50' : ''}`}>{plan.name}</div>
                 <div className="flex items-end gap-1 mb-2">
                   <span className={`font-display text-5xl ${plan.highlight ? 'text-cream dark:text-foreground' : 'text-ink'}`}>{plan.price}</span>
@@ -213,7 +225,8 @@ export default function Landing() {
                   className={`w-full py-3 rounded-full text-center font-fn font-medium text-sm transition ${plan.highlight ? 'bg-primary text-white hover:bg-terracotta-dark' : 'border border-ink text-ink hover:bg-ink hover:text-white'}`}>
                   {plan.cta}
                 </Link>
-              </div>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -222,10 +235,10 @@ export default function Landing() {
       {/* FIND US */}
       <section className="py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          <div className="aspect-[4/3] rounded-[2rem] overflow-hidden">
+          <Reveal className="aspect-[4/3] rounded-[2rem] overflow-hidden">
             <img src={IMG.interior2} alt={t('diningRoom')} className="w-full h-full object-cover" />
-          </div>
-          <div>
+          </Reveal>
+          <Reveal delay={120}>
             <div className="label-eyebrow">{t('visitUs')}</div>
             <h2 className="font-display text-4xl md:text-5xl mt-2">
               {restaurant ? restaurant.name : 'Downtown · Riverside · Old Quarter'}
@@ -244,7 +257,7 @@ export default function Landing() {
                 </div>
               </div>
             )}
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>
