@@ -65,12 +65,14 @@ export default function MenuMgmt() {
 
   const save = async (form) => {
     const body = {
-      name:        form.name,
-      description: form.desc,
-      price:       Number(form.price),
-      categoryId:  form.categoryId,
-      imageUrl:    form.img || undefined,
-      allergens:   form.allergens,
+      name:          form.name,
+      description:   form.desc,
+      price:         Number(form.price),
+      costPrice:     Number(form.costPrice) || 0,
+      stockQuantity: Number(form.stockQuantity) || 0,
+      categoryId:    form.categoryId,
+      imageUrl:      form.img || undefined,
+      allergens:     form.allergens,
     };
     try {
       if (form.id) {
@@ -116,6 +118,8 @@ export default function MenuMgmt() {
                   <th className="text-left p-3 pl-5">{t('thItem')}</th>
                   <th className="text-left p-3">{t('thCategory')}</th>
                   <th className="text-left p-3">{t('thPrice')}</th>
+                  <th className="text-left p-3">{t('thStock')}</th>
+                  <th className="text-left p-3">{t('thMargin')}</th>
                   <th className="text-left p-3">{t('thAllergens')}</th>
                   <th className="text-left p-3">{t('thStatus')}</th>
                   <th className="text-right p-3 pr-5">{t('thActions')}</th>
@@ -138,6 +142,14 @@ export default function MenuMgmt() {
                     </td>
                     <td className="p-3 text-sm">{m.cat}</td>
                     <td className="p-3 font-mono text-sm">${Number(m.price).toFixed(2)}</td>
+                    <td className="p-3 font-mono text-sm" data-testid={`stock-${m.id}`}>
+                      <span className={Number(m.stockQuantity) <= 0 ? 'text-err' : Number(m.stockQuantity) < 10 ? 'text-secondary' : ''}>
+                        {Number(m.stockQuantity) || 0}
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono text-sm text-ink-muted">
+                      {Number(m.price) > 0 ? `${(((Number(m.price) - Number(m.costPrice || 0)) / Number(m.price)) * 100).toFixed(0)}%` : '—'}
+                    </td>
                     <td className="p-3">
                       <div className="flex gap-1 flex-wrap">
                         {(m.allergens || []).map(a => <span key={a} className="text-[9px] font-mono uppercase bg-cream-sub px-1.5 py-0.5 rounded text-ink-muted">{a}</span>)}
@@ -188,9 +200,27 @@ function EditModal({ item, categories, restaurantId, onClose, onSave }) {
   const tc = useTranslations('common');
   const [form, setForm] = React.useState({
     name: '', cat: categories[0]?.name || 'Mains', categoryId: categories[0]?.id || '',
-    price: 10, desc: '', allergens: [], img: '', ...item,
+    price: 10, costPrice: 0, stockQuantity: 0, desc: '', allergens: [], img: '', ...item,
   });
   const [saving, setSaving] = React.useState(false);
+  const [uploading, setUploading] = React.useState(false);
+
+  const uploadImage = async (file) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) return toast.error(t('imageTooLarge'));
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const { url } = await api.post(`/api/restaurants/${restaurantId}/media/upload`, fd);
+      setForm(f => ({ ...f, img: url }));
+    } catch (err) {
+      const status = err.response?.status;
+      toast.error(status === 503 ? t('uploadNotConfigured') : t('uploadFailed'));
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const submit = async () => {
     if (!form.name) return toast.error(t('nameRequired'));
@@ -219,20 +249,26 @@ function EditModal({ item, categories, restaurantId, onClose, onSave }) {
             </select>
           </label>
           <ModalInput label={t('mPrice')} type="number" value={form.price} onChange={v => setForm(f => ({ ...f, price: Number(v) }))} testid="modal-price" />
+          <ModalInput label={t('mCostPrice')} type="number" value={form.costPrice} onChange={v => setForm(f => ({ ...f, costPrice: Number(v) }))} testid="modal-cost" />
+          <ModalInput label={t('mStock')} type="number" value={form.stockQuantity} onChange={v => setForm(f => ({ ...f, stockQuantity: Number(v) }))} testid="modal-stock" />
+          {Number(form.price) > 0 && (
+            <div className="col-span-1 flex items-end pb-3 text-xs font-mono text-ink-muted" data-testid="modal-margin">
+              {t('marginLabel')}: {(((Number(form.price) - Number(form.costPrice)) / Number(form.price)) * 100).toFixed(0)}%
+            </div>
+          )}
           <label className="col-span-2" data-testid="modal-img">
             <span className="label-eyebrow">{t('mImage')}</span>
             <div className="mt-2 flex gap-2 items-start">
               <input value={form.img} onChange={e => setForm(f => ({ ...f, img: e.target.value }))}
                 placeholder={t('imagePlaceholder')}
                 className="flex-1 bg-cream-sub rounded-xl px-4 py-3 font-fn outline-none focus:ring-2 focus:ring-primary text-sm" />
-              <label className="cursor-pointer px-4 py-3 rounded-xl bg-cream-sub border border-border hover:bg-cream-warm text-sm font-fn whitespace-nowrap" title={t('upload')}>
-                {t('upload')}
-                <input type="file" accept="image/*" className="sr-only" onChange={e => {
+              <label className="cursor-pointer px-4 py-3 rounded-xl bg-cream-sub border border-border hover:bg-cream-warm text-sm font-fn whitespace-nowrap flex items-center gap-2" title={t('upload')}>
+                {uploading ? <Loader2 size={16} className="animate-spin" /> : null}
+                {uploading ? t('uploading') : t('upload')}
+                <input type="file" accept="image/*" className="sr-only" disabled={uploading} onChange={e => {
                   const file = e.target.files?.[0];
-                  if (!file) return;
-                  const reader = new FileReader();
-                  reader.onload = () => setForm(f => ({ ...f, img: reader.result }));
-                  reader.readAsDataURL(file);
+                  e.target.value = '';
+                  uploadImage(file);
                 }} />
               </label>
             </div>
