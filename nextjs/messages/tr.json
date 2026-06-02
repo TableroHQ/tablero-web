@@ -609,9 +609,7 @@
     "couldNotModerate": "Yorum denetlenemedi",
     "revenueEyebrow": "Gelir",
     "noReviewsPending": "Denetim bekleyen yorum yok",
-    "allBranches": "Tüm şubeler",
-    "profitLabel": "Kâr (7g)",
-    "marginLabel": "Marj"
+    "allBranches": "Tüm şubeler"
   },
   "adminStaff": {
     "title": "Personel yönetimi",
@@ -1047,16 +1045,7 @@
     "upload": "Yükle",
     "mDescription": "Açıklama",
     "mAllergens": "Alerjenler (virgülle)",
-    "nameRequired": "Ad zorunludur",
-    "uploading": "Yükleniyor…",
-    "imageTooLarge": "Görsel 5 MB veya daha küçük olmalı.",
-    "uploadNotConfigured": "Görsel yükleme sunucuda yapılandırılmamış.",
-    "uploadFailed": "Görsel yüklenemedi.",
-    "mCostPrice": "Maliyet fiyatı",
-    "mStock": "Stok",
-    "marginLabel": "Marj",
-    "thStock": "Stok",
-    "thMargin": "Marj"
+    "nameRequired": "Ad zorunludur"
   },
   "adminTables": {
     "failedLoad": "Masalar yüklenemedi",

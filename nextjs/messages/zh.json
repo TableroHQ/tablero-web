@@ -609,9 +609,7 @@
     "couldNotModerate": "无法审核评价",
     "revenueEyebrow": "营收",
     "noReviewsPending": "没有待审核的评价",
-    "allBranches": "所有门店",
-    "profitLabel": "利润 (7天)",
-    "marginLabel": "利润率"
+    "allBranches": "所有门店"
   },
   "adminStaff": {
     "title": "员工管理",
@@ -1047,16 +1045,7 @@
     "upload": "上传",
     "mDescription": "描述",
     "mAllergens": "过敏原(逗号分隔)",
-    "nameRequired": "名称为必填项",
-    "uploading": "上传中…",
-    "imageTooLarge": "图片须不超过 5 MB。",
-    "uploadNotConfigured": "服务器未配置图片上传。",
-    "uploadFailed": "图片上传失败。",
-    "mCostPrice": "成本价",
-    "mStock": "库存",
-    "marginLabel": "利润率",
-    "thStock": "库存",
-    "thMargin": "利润率"
+    "nameRequired": "名称为必填项"
   },
   "adminTables": {
     "failedLoad": "无法加载餐桌",
