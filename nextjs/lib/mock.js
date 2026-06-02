@@ -1,8 +1,8 @@
 // Tablero — mock data layer for the Next.js SPA. No backend required.
 
 export const IMG = {
-  logo: 'https://static.prod-images.emergentagent.com/jobs/d78e7132-dd0c-4247-aef3-70a3e1819389/images/6a66c426fc9dfea8b4def610ca4e613f6fc1d25ba980e6184fc9291bd39da038.png',
-  texture: 'https://static.prod-images.emergentagent.com/jobs/d78e7132-dd0c-4247-aef3-70a3e1819389/images/b9361a2768fec277e17d528c557bc9f993367982ad19c889094a78f7daf3538a.png',
+  logo: '/brand/logo.png',
+  texture: '/brand/texture.png',
   interior: 'https://images.pexels.com/photos/35505245/pexels-photo-35505245.jpeg',
   interior2: 'https://images.pexels.com/photos/29692582/pexels-photo-29692582.jpeg',
   chef: 'https://images.pexels.com/photos/32742915/pexels-photo-32742915.jpeg',
