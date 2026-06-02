@@ -139,6 +139,7 @@
       <span class="pill"><b>SignalR</b> real-time</span>
       <span class="pill"><b>Stripe</b> payments</span>
       <span class="pill"><b>Cloudinary</b> uploads</span>
+      <span class="pill"><b>Motion</b> system</span>
       <span class="pill"><b>6</b> languages</span>
     </div>
   </div>
@@ -318,6 +319,45 @@ colors: {
         </div>
       </div>
       <div class="grp"><span>Playfair Display</span><span>Outfit</span><span>Figtree</span><span>JetBrains Mono</span><span>lib/utils.js → cn()</span></div>
+    </div>
+  </div>
+
+  <!-- Motion -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#7c3aed">⤴</div>
+      <div class="card-title">
+        <h3>Motion &amp; Transitions <span class="ver">CSS · IntersectionObserver</span></h3>
+        <div class="what">A dependency-free motion layer — CSS keyframes &amp; Tailwind utilities, a reusable scroll-reveal, and App-Router route transitions — all gated by <code class="inline">prefers-reduced-motion</code>.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> The interface should feel alive without shipping a heavy animation runtime. Entrance, scroll-reveal and hover utilities live as tokens in <code class="inline">globals.css</code> (layered on the existing <code class="inline">tailwindcss-animate</code>); a reusable <code class="inline">&lt;Reveal&gt;</code> component fades content up the first time it scrolls into view; and a route-group <code class="inline">template.js</code> gives consumer pages a soft per-navigation transition. Operational real-time screens (<code class="inline">/kds</code>, <code class="inline">/pos</code>, <code class="inline">/waiter</code>, <code class="inline">/courier</code>) are deliberately left instant, and everything collapses to no-motion under reduced-motion — so polish never fights performance or accessibility.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A consumer route changes</div>
+            Next.js re-mounts <code class="inline">app/(consumer)/template.js</code> (a <em>template</em> mounts fresh per navigation, unlike a layout), replaying the <code class="inline">page-enter</code> keyframe so the new page fades and lifts in — no library, no layout shift.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A guest scrolls the landing page</div>
+            Each section's <code class="inline">&lt;Reveal&gt;</code> observes the viewport via <code class="inline">IntersectionObserver</code> and, the first time it enters, toggles <code class="inline">.reveal-in</code> to fade up with a staggered delay; above-the-fold content animates immediately.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// components/Reveal.jsx — reveal content the first time it enters view</span>
+<span class="k">const</span> io = <span class="k">new</span> IntersectionObserver(([e]) =&gt; {
+  <span class="k">if</span> (e.isIntersecting) { <span class="f">setShown</span>(<span class="k">true</span>); io.<span class="f">disconnect</span>(); }
+}, { threshold: <span class="f">.12</span> });
+<span class="c">/* globals.css */</span>
+.reveal    { opacity: <span class="f">0</span>; transform: translateY(var(--reveal-y,<span class="f">18px</span>)); transition: <span class="f">.65s</span>; }
+.reveal-in { opacity: <span class="f">1</span>; transform: none; }   <span class="c">/* never traps position:fixed children */</span>
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:<span class="f">1</span>; transform:none } }</pre>
+      <div class="grp"><span>tailwindcss-animate</span><span>CSS keyframes (globals.css)</span><span>IntersectionObserver</span><span>app/(consumer)/template.js</span><span>&lt;Reveal&gt; component</span><span>prefers-reduced-motion</span></div>
     </div>
   </div>
 
