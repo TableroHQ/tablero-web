@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
 import { IMG } from '@/lib/mock';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import Reveal from '@/components/Reveal';
 
 const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
@@ -30,6 +30,7 @@ const PLACEHOLDER_IMGS = [IMG.burger, IMG.pasta, IMG.salad, IMG.dessert];
 
 export default function Menu() {
   const t = useTranslations('menu');
+  const locale = useLocale();
   const [cat, setCat] = React.useState('All');
   const [q, setQ] = React.useState('');
   const [items, setItems] = React.useState([]);
@@ -44,7 +45,11 @@ export default function Menu() {
       setLoading(false);
       return;
     }
-    api.get(`/api/restaurants/${RESTAURANT_ID}/menu`)
+    // Ask the API for names/descriptions in the active UI language; the backend
+    // falls back to English for any locale it does not have a translation for.
+    api.get(`/api/restaurants/${RESTAURANT_ID}/menu`, {
+      headers: { 'Accept-Language': locale },
+    })
       .then((data) => {
         const normalised = normaliseItems(data).map((item, idx) => ({
           ...item,
@@ -52,6 +57,7 @@ export default function Menu() {
           img: item.imageUrl || item.image || PLACEHOLDER_IMGS[idx % PLACEHOLDER_IMGS.length],
           available: item.isAvailable !== false && item.available !== false,
           allergens: item.allergens ?? [],
+          tags: item.tags ?? [],
           desc: item.description || item.desc || '',
         }));
         setItems(normalised);
@@ -59,7 +65,9 @@ export default function Menu() {
       })
       .catch(() => toast.error(t('couldNotLoad')))
       .finally(() => setLoading(false));
-  }, []);
+    // Re-fetch when the language changes so the menu re-localizes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   const list = items.filter(m =>
     (cat === 'All' || m.cat === cat) &&
@@ -126,6 +134,16 @@ export default function Menu() {
                   <span className="font-mono text-sm font-semibold">${Number(m.price).toFixed(2)}</span>
                 </div>
                 <p className="mt-2 text-sm text-ink-body leading-relaxed">{m.desc}</p>
+                {(m.isSpicy || m.isVegetarian || m.isVegan || m.isGlutenFree || Number(m.calories) > 0) && (
+                  <div className="mt-3 flex items-center gap-1.5 flex-wrap text-[11px] font-fn">
+                    {m.isVegan && <span className="chip bg-green-50 text-green-700">🌱 Vegan</span>}
+                    {!m.isVegan && m.isVegetarian && <span className="chip bg-green-50 text-green-700">Vegetarian</span>}
+                    {m.isGlutenFree && <span className="chip bg-amber-50 text-amber-700">Gluten-free</span>}
+                    {m.isSpicy && <span className="chip bg-red-50 text-red-700">🌶 Spicy</span>}
+                    {Number(m.calories) > 0 && <span className="chip bg-cream-sub text-ink-muted">{m.calories} kcal</span>}
+                    {Number(m.preparationTimeMinutes) > 0 && <span className="chip bg-cream-sub text-ink-muted">{m.preparationTimeMinutes} min</span>}
+                  </div>
+                )}
                 {m.allergens.length > 0 && (
                   <div className="mt-3 flex items-center gap-1 flex-wrap">
                     {m.allergens.map(a => <span key={a} className="text-[10px] font-mono uppercase tracking-wide bg-cream-sub px-2 py-0.5 rounded-full text-ink-muted">{a}</span>)}
