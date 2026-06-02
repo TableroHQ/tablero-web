@@ -14,6 +14,21 @@ export default function Loyalty() {
   const { user } = state;
   const points = user.loyaltyPoints;
   const [redeeming, setRedeeming] = React.useState(null);
+  const [rewards, setRewards] = React.useState([]);
+
+  // Load the redeemable rewards catalogue from the server (falls back to the
+  // bundled list if the API is unreachable).
+  React.useEffect(() => {
+    const fallback = BONUSES.map(b => ({ id: b.id, name: b.name, cost: b.cost, img: b.img }));
+    api.get('/api/loyalty/rewards')
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        setRewards(list.length
+          ? list.map(r => ({ id: r.id, name: r.name, cost: r.pointsCost, img: r.imageUrl || IMG.dessert }))
+          : fallback);
+      })
+      .catch(() => setRewards(fallback));
+  }, []);
 
   // Load the server-side loyalty balance so points survive refreshes and reflect spend.
   React.useEffect(() => {
@@ -71,7 +86,7 @@ export default function Loyalty() {
 
       <h2 className="font-display text-3xl mt-14">{t('availableRewards')}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
-        {BONUSES.map(b => {
+        {rewards.map(b => {
           const locked = b.cost > points;
           return (
             <article key={b.id} className={`bg-white rounded-3xl border overflow-hidden ${locked ? 'opacity-70' : 'border-border hover:-translate-y-1 transition'}`} data-testid={`bonus-${b.id}`}>
