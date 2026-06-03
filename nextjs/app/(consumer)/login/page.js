@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import { ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/client';
