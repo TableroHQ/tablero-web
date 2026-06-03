@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ShoppingBag, User, Menu as MenuIcon, X, Instagram, Twitter, Facebook, Youtube, Linkedin } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import NotificationBell from '@/components/NotificationBell';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';

@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { Coins, Lock, Sparkles } from 'lucide-react';
-import { BONUSES, IMG } from '@/lib/mock';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
@@ -16,18 +15,14 @@ export default function Loyalty() {
   const [redeeming, setRedeeming] = React.useState(null);
   const [rewards, setRewards] = React.useState([]);
 
-  // Load the redeemable rewards catalogue from the server (falls back to the
-  // bundled list if the API is unreachable).
+  // Load the redeemable rewards catalogue from the server.
   React.useEffect(() => {
-    const fallback = BONUSES.map(b => ({ id: b.id, name: b.name, cost: b.cost, img: b.img }));
     api.get('/api/loyalty/rewards')
       .then(data => {
         const list = Array.isArray(data) ? data : [];
-        setRewards(list.length
-          ? list.map(r => ({ id: r.id, name: r.name, cost: r.pointsCost, img: r.imageUrl || IMG.dessert }))
-          : fallback);
+        setRewards(list.map(r => ({ id: r.id, name: r.name, cost: r.pointsCost, img: r.imageUrl || '' })));
       })
-      .catch(() => setRewards(fallback));
+      .catch(() => setRewards([]));
   }, []);
 
   // Load the server-side loyalty balance so points survive refreshes and reflect spend.
@@ -90,8 +85,10 @@ export default function Loyalty() {
           const locked = b.cost > points;
           return (
             <article key={b.id} className={`bg-white rounded-3xl border overflow-hidden ${locked ? 'opacity-70' : 'border-border hover:-translate-y-1 transition'}`} data-testid={`bonus-${b.id}`}>
-              <div className="aspect-square relative">
-                <img src={b.img} alt={b.name} className={`w-full h-full object-cover ${locked ? 'grayscale' : ''}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = IMG.burger; }} />
+              <div className="aspect-square relative bg-cream-sub">
+                {b.img
+                  ? <img src={b.img} alt={b.name} className={`w-full h-full object-cover ${locked ? 'grayscale' : ''}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
+                  : <div className="absolute inset-0 flex items-center justify-center text-secondary/40"><Coins size={48} /></div>}
                 {locked && <div className="absolute inset-0 bg-ink/40 flex items-center justify-center"><Lock className="text-white" size={28} /></div>}
               </div>
               <div className="p-5">

@@ -6,7 +6,6 @@ import { useStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
-import { IMG } from '@/lib/mock';
 import { useTranslations, useLocale } from 'next-intl';
 import Reveal from '@/components/Reveal';
 
@@ -25,8 +24,6 @@ function extractCats(items) {
   const cats = [...new Set(items.map(i => i.categoryName || i.cat || 'Other'))];
   return ['All', ...cats]; // 'All' is a sentinel, translated at render time
 }
-
-const PLACEHOLDER_IMGS = [IMG.burger, IMG.pasta, IMG.salad, IMG.dessert];
 
 export default function Menu() {
   const t = useTranslations('menu');
@@ -51,10 +48,10 @@ export default function Menu() {
       headers: { 'Accept-Language': locale },
     })
       .then((data) => {
-        const normalised = normaliseItems(data).map((item, idx) => ({
+        const normalised = normaliseItems(data).map((item) => ({
           ...item,
           cat: item.categoryName || item.cat || 'Other',
-          img: item.imageUrl || item.image || PLACEHOLDER_IMGS[idx % PLACEHOLDER_IMGS.length],
+          img: item.imageUrl || item.image || '',
           available: item.isAvailable !== false && item.available !== false,
           allergens: item.allergens ?? [],
           tags: item.tags ?? [],
@@ -120,7 +117,7 @@ export default function Menu() {
             <Reveal key={m.id} delay={Math.min(i, 8) * 60}>
             <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full">
               <div className="aspect-[4/3] relative overflow-hidden">
-                <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER_IMGS[0]; }} />
+                <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
                 {!m.available && (
                   <div className="absolute inset-0 bg-ink/70 flex items-center justify-center">
                     <span className="chip bg-white text-ink"><AlertTriangle size={12} /> {t('soldOut')}</span>
