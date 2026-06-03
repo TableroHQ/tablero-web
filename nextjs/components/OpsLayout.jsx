@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChefHat, Bell, Wallet, Bike, Gauge, ArrowLeft, UtensilsCrossed, Grid3x3, Users, Megaphone, BarChart3, Undo2, MessageSquareWarning, Menu as MenuIcon, X } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import NotificationBell from '@/components/NotificationBell';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useStore } from '@/lib/store';

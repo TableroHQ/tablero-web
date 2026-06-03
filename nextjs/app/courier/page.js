@@ -2,7 +2,6 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
-import { COURIER_ORDERS } from '@/lib/mock';
 import { api } from '@/lib/client';
 import { MapPin, Navigation, CheckCircle2, Phone, Power } from 'lucide-react';
 import { toast } from 'sonner';
@@ -36,8 +35,8 @@ export default function Courier() {
         setActive(list.find(o => o.status === 'ASSIGNED') || null);
       })
       .catch(() => {
-        setOrders(COURIER_ORDERS);
-        setActive(COURIER_ORDERS.find(o => o.status === 'ASSIGNED') || null);
+        setOrders([]);
+        setActive(null);
       });
   }, []);
 

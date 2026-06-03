@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Download, Mail, ExternalLink, FileText, Image, Package } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 
 const STATS = [
   { value: '12 k+', key: 'stat1Label' },
