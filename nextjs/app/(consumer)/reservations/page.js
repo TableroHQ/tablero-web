@@ -1,7 +1,8 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Calendar, Users, Check, Loader2 } from 'lucide-react';
+import { Calendar, Users, Check, Loader2, LogIn } from 'lucide-react';
 import { api } from '@/lib/client';
 import { useStore } from '@/lib/store';
 import { toast } from 'sonner';
@@ -54,6 +55,7 @@ export default function Reservations() {
   const days = React.useMemo(() => todayDays(), []);
   const [{ user }] = useStore();
   const router = useRouter();
+  const isGuest = user.role === 'GUEST';
 
   const [selectedDay, setSelectedDay] = React.useState(0);
   const [slot, setSlot] = React.useState('');
@@ -116,6 +118,7 @@ export default function Reservations() {
   }, [user.phone]);
 
   const confirm = async () => {
+    if (isGuest) return router.push('/login?next=/reservations');
     if (!slot) return toast.error(t('errSelectSlot'));
     if (!RESTAURANT_ID) return toast.error('Restaurant not configured');
     if (!phone.trim()) return toast.error('Please enter a contact phone number');
@@ -309,11 +312,22 @@ export default function Reservations() {
             <Row k="Zone" v={t(zone)} />
             <Row k="Table" v={tableId || t('anyAvailable')} />
             <hr className="my-5 border-border" />
-            <button onClick={confirm} disabled={confirming || !slot} className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50" data-testid="confirm-reservation">
-              {confirming ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
-              {confirming ? t('confirming') : t('confirmReservation')}
-            </button>
-            <p className="mt-4 text-[11px] text-ink-muted text-center font-mono uppercase tracking-wide">{t('freeCancellation')}</p>
+            {isGuest ? (
+              <>
+                <Link href="/login?next=/reservations" className="btn-primary w-full inline-flex items-center justify-center gap-2" data-testid="reservation-signin">
+                  <LogIn size={16} /> Sign in to reserve
+                </Link>
+                <p className="mt-4 text-[11px] text-ink-muted text-center font-mono uppercase tracking-wide">Sign in or create an account to book a table</p>
+              </>
+            ) : (
+              <>
+                <button onClick={confirm} disabled={confirming || !slot} className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-50" data-testid="confirm-reservation">
+                  {confirming ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                  {confirming ? t('confirming') : t('confirmReservation')}
+                </button>
+                <p className="mt-4 text-[11px] text-ink-muted text-center font-mono uppercase tracking-wide">{t('freeCancellation')}</p>
+              </>
+            )}
           </div>
         </aside>
       </div>
