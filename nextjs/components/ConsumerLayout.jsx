@@ -50,8 +50,8 @@ export default function ConsumerLayout({ children }) {
     <div className="min-h-screen bg-background text-foreground">
       <header className="glass-nav sticky top-0 z-50 border-b border-border/60" data-testid="consumer-header">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 h-[72px] flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0" data-testid="brand-link">
-            <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0" data-testid="brand-link">
+            <img src={IMG.logoMark} alt="Tablero" className="h-11 w-11 object-contain" />
             <span className="font-display text-2xl font-semibold text-ink hidden min-[360px]:inline">Tablero</span>
           </Link>
           <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-2">
@@ -112,8 +112,8 @@ export default function ConsumerLayout({ children }) {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
-              <span className="font-display text-2xl text-cream">Tablero</span>
+              <img src={IMG.logoMark} alt="Tablero" className="h-14 w-14 object-contain" />
+              <span className="font-display text-3xl text-cream">Tablero</span>
             </div>
             <p className="text-sm text-cream/70 leading-relaxed max-w-xs">{tf('tagline')}</p>
             <div className="mt-6 flex items-center gap-3">
