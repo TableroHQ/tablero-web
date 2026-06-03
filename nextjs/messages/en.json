@@ -24,7 +24,8 @@
     "tryAgain": "Try again",
     "unexpectedError": "An unexpected error occurred on this page.",
     "lightMode": "Switch to light mode",
-    "nightMode": "Switch to night mode"
+    "nightMode": "Switch to night mode",
+    "noStaffAccess": "You have no access to staff pages"
   },
   "nav": {
     "home": "Home",
