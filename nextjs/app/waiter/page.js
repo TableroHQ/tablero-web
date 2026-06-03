@@ -65,35 +65,28 @@ export default function Waiter() {
     conn.onreconnected(() => setHubConnected(true));
     conn.onreconnecting(() => setHubConnected(false));
 
-    conn.on('OrderReady', (data) => {
-      const alert = {
-        id: `alert_${Date.now()}`,
-        type: 'READY',
-        table: data?.tableId || t('colTable'),
-        text: t('orderReadyAlert', { table: data?.tableId || '?' }),
-      };
-      setAlerts(al => [alert, ...al].slice(0, 10));
-      toast.success(t('orderReady', { table: alert.table }));
+    // The WaiterHub broadcasts OrderPlaced and OrderStatusChanged to the
+    // restaurant group. A transition to READY means the kitchen finished an
+    // order and it's waiting for pickup — surface that as a floor alert.
+    conn.on('OrderStatusChanged', (data) => {
+      if (data?.newStatus === 'READY') {
+        const alert = {
+          id: `alert_${Date.now()}`,
+          type: 'READY',
+          table: data?.tableId || t('colTable'),
+          text: t('orderReadyAlert', { table: data?.tableId || '?' }),
+        };
+        setAlerts(al => [alert, ...al].slice(0, 10));
+        toast.success(t('orderReady', { table: alert.table }));
+      }
+      loadData();
     });
 
-    conn.on('CallWaiter', (data) => {
-      const alert = {
-        id: `alert_${Date.now()}`,
-        type: 'CALL',
-        table: data?.tableId || t('colTable'),
-        text: data?.message || t('needsAttention', { table: data?.tableId || '?' }),
-      };
-      setAlerts(al => [alert, ...al].slice(0, 10));
-    });
-
-    conn.on('TableUpdated', () => loadData());
+    conn.on('OrderPlaced', () => loadData());
 
     startHub(conn).then(ok => {
-      if (ok) {
-        setHubConnected(true);
-        conn.invoke('JoinGroup', `waiter:${user.id}`).catch(() => {});
-        conn.invoke('JoinGroup', `restaurant:${restaurantId}`).catch(() => {});
-      }
+      if (ok) setHubConnected(true);
+      // Hub auto-joins this connection to restaurant-{id} from the JWT claim.
     });
 
     return () => { conn.stop().catch(() => {}); };
