@@ -450,7 +450,8 @@
     "refunds": "退款",
     "revenue": "营收",
     "admin": "管理",
-    "backToConsumer": "返回顾客界面"
+    "backToConsumer": "返回顾客界面",
+    "signOut": "退出登录"
   },
   "kds": {
     "title": "厨房显示屏",

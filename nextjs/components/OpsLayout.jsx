@@ -2,8 +2,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChefHat, Bell, Wallet, Bike, Gauge, ArrowLeft, UtensilsCrossed, Grid3x3, Users, Megaphone, BarChart3, Undo2, MessageSquareWarning, Menu as MenuIcon, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ChefHat, Bell, Wallet, Bike, Gauge, LogOut, UtensilsCrossed, Grid3x3, Users, Megaphone, BarChart3, Undo2, MessageSquareWarning, Menu as MenuIcon, X } from 'lucide-react';
 import { IMG } from '@/lib/brand';
+import { api } from '@/lib/client';
 import NotificationBell from '@/components/NotificationBell';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useStore } from '@/lib/store';
@@ -14,8 +16,15 @@ const DIRECTOR = ['DIRECTOR', 'ADMIN'];
 export default function OpsLayout({ children, dark = false, title, subtitle, right }) {
   const t = useTranslations('ops');
   const pathname = usePathname();
-  const [{ user }] = useStore();
+  const router = useRouter();
+  const [{ user }, store] = useStore();
   const [navOpen, setNavOpen] = React.useState(false);
+
+  const logout = async () => {
+    try { await api.post('/api/auth/logout', {}); } catch {}
+    store.logout();
+    router.push('/login');
+  };
 
   React.useEffect(() => { setNavOpen(false); }, [pathname]);
 
@@ -69,11 +78,12 @@ export default function OpsLayout({ children, dark = false, title, subtitle, rig
   );
 
   const sidebarFooter = (
-    <div className="p-4 space-y-2">
-      <LanguageSwitcher dark={dark} />
-      <Link href="/" className={`flex items-center gap-2 text-xs font-mono ${dark ? 'text-cream/60 hover:text-cream' : 'text-ink-muted hover:text-ink'}`}>
-        <ArrowLeft size={14} /> {t('backToConsumer')}
-      </Link>
+    <div className="p-4 space-y-1">
+      <LanguageSwitcher dark={dark} dropUp />
+      <button onClick={logout} data-testid="ops-logout"
+        className={`flex items-center gap-2 px-3 py-2 text-xs font-mono rounded-full transition ${dark ? 'text-cream/60 hover:text-cream hover:bg-white/10' : 'text-ink-muted hover:text-ink hover:bg-cream-sub'}`}>
+        <LogOut size={14} /> {t('signOut')}
+      </button>
     </div>
   );
 

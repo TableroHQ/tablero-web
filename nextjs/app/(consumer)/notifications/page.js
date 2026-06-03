@@ -86,19 +86,18 @@ export default function Notifications() {
     conn.onreconnected(() => setHubConnected(true));
     conn.onreconnecting(() => setHubConnected(false));
 
-    conn.on('Notify', (data) => {
+    // NotifyHub pushes per-user events as "NotificationReceived" to the
+    // user-{id} group it auto-joins on connect from the JWT claim.
+    conn.on('NotificationReceived', (data) => {
       store.addNotif({
-        type: data?.type || 'system',
+        type: data?.channel || data?.type || 'system',
         title: data?.subject || data?.title || 'Notification',
         body: data?.body || data?.message || '',
       });
     });
 
     startHub(conn).then(ok => {
-      if (ok) {
-        setHubConnected(true);
-        conn.invoke('JoinGroup', `user:${user.id}`).catch(() => {});
-      }
+      if (ok) setHubConnected(true);
     });
 
     return () => { conn.stop().catch(() => {}); };

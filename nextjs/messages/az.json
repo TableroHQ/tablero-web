@@ -450,7 +450,8 @@
     "refunds": "Geri qaytarmalar",
     "revenue": "Gəlir",
     "admin": "İdarəetmə",
-    "backToConsumer": "Müştəri görünüşünə qayıt"
+    "backToConsumer": "Müştəri görünüşünə qayıt",
+    "signOut": "Çıxış"
   },
   "kds": {
     "title": "Mətbəx Ekranı",
