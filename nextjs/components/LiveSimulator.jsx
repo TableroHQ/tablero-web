@@ -16,6 +16,9 @@ export default function LiveSimulator() {
   const [, s] = useStore();
   React.useEffect(() => {
     const t = setInterval(() => {
+      // Only signed-in users receive notifications — guests get none.
+      const { hasSession, user } = s.get();
+      if (!hasSession || user.role === 'GUEST') return;
       if (Math.random() < 0.5) {
         const e = events[Math.floor(Math.random() * events.length)];
         s.addNotif(e);
