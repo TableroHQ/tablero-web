@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArrowRight, Heart, Zap, Users, Globe } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 
 const VALUES = [
   { icon: Heart, key: 'v1' },

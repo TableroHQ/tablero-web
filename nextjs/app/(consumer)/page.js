@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ArrowRight, Star, Clock, MapPin, ChefHat, Sparkles, QrCode } from 'lucide-react';
-import { IMG, REVIEWS } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import { api } from '@/lib/client';
 import Reveal from '@/components/Reveal';
 
@@ -13,18 +13,33 @@ export default function Landing() {
   const t = useTranslations('landing');
   const [restaurant, setRestaurant] = React.useState(null);
   const [menuItems, setMenuItems] = React.useState([]);
+  const [reviews, setReviews] = React.useState([]);
 
   React.useEffect(() => {
     if (!RESTAURANT_ID) return;
-    // Load restaurant info and a preview of the menu in parallel
+    // Load restaurant info, a preview of the menu and published reviews in parallel
     Promise.all([
       api.get(`/api/restaurants/${RESTAURANT_ID}`).catch(() => null),
       api.get(`/api/restaurants/${RESTAURANT_ID}/menu`).catch(() => null),
-    ]).then(([rest, menu]) => {
+      api.get(`/api/restaurants/${RESTAURANT_ID}/reviews`, { params: { pageSize: 6 } }).catch(() => null),
+    ]).then(([rest, menu, revs]) => {
       if (rest) setRestaurant(rest);
       if (menu) {
         const items = Array.isArray(menu) ? menu : (menu.items ?? menu.categories?.flatMap(c => c.items ?? []) ?? []);
         setMenuItems(items.filter(i => i.isAvailable !== false).slice(0, 4));
+      }
+      if (revs) {
+        const list = (Array.isArray(revs) ? revs : revs.items ?? [])
+          .filter(r => (r.content || r.comment || '').trim())
+          .slice(0, 3)
+          .map(r => ({
+            id: r.id,
+            author: r.authorName || r.author || '—',
+            rating: r.rating || 0,
+            comment: r.content || r.comment || '',
+            date: r.createdAt?.slice(0, 10) || '',
+          }));
+        setReviews(list);
       }
     });
   }, []);
@@ -115,7 +130,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* MENU PEEK — uses live items if loaded, otherwise mock images */}
+      {/* MENU PEEK — live menu items; neutral placeholders until loaded */}
       <section className="py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <Reveal className="flex items-end justify-between gap-6 mb-10">
@@ -128,17 +143,17 @@ export default function Landing() {
           <Reveal delay={80}>
           {previewItems ? (
             <div className="grid grid-cols-12 gap-4 md:gap-6">
-              <FoodCard item={previewItems[0]} className="col-span-12 md:col-span-7 aspect-[16/10]" big fallbackImg={IMG.burger} />
-              <FoodCard item={previewItems[3]} className="col-span-6 md:col-span-5 aspect-[4/5]" fallbackImg={IMG.dessert} />
-              <FoodCard item={previewItems[2]} className="col-span-6 md:col-span-4 aspect-[4/5]" fallbackImg={IMG.salad} />
-              <FoodCard item={previewItems[1]} className="col-span-12 md:col-span-8 aspect-[16/9]" big fallbackImg={IMG.pasta} />
+              <FoodCard item={previewItems[0]} className="col-span-12 md:col-span-7 aspect-[16/10]" big />
+              <FoodCard item={previewItems[3]} className="col-span-6 md:col-span-5 aspect-[4/5]" />
+              <FoodCard item={previewItems[2]} className="col-span-6 md:col-span-4 aspect-[4/5]" />
+              <FoodCard item={previewItems[1]} className="col-span-12 md:col-span-8 aspect-[16/9]" big />
             </div>
           ) : (
             <div className="grid grid-cols-12 gap-4 md:gap-6">
-              <StaticCard img={IMG.burger}  cat="Mains"    name="Smokehouse Burger"      price={18.5} className="col-span-12 md:col-span-7 aspect-[16/10]" big />
-              <StaticCard img={IMG.dessert} cat="Desserts" name="Bitter Chocolate Cake"  price={9}    className="col-span-6 md:col-span-5 aspect-[4/5]" />
-              <StaticCard img={IMG.salad}   cat="Starters" name="Garden Buddha Bowl"     price={14.5} className="col-span-6 md:col-span-4 aspect-[4/5]" />
-              <StaticCard img={IMG.pasta}   cat="Mains"    name="Truffle Tagliatelle"    price={24}   className="col-span-12 md:col-span-8 aspect-[16/9]" big />
+              <div className="col-span-12 md:col-span-7 aspect-[16/10] rounded-3xl bg-cream-sub animate-pulse" />
+              <div className="col-span-6 md:col-span-5 aspect-[4/5] rounded-3xl bg-cream-sub animate-pulse" />
+              <div className="col-span-6 md:col-span-4 aspect-[4/5] rounded-3xl bg-cream-sub animate-pulse" />
+              <div className="col-span-12 md:col-span-8 aspect-[16/9] rounded-3xl bg-cream-sub animate-pulse" />
             </div>
           )}
           </Reveal>
@@ -146,6 +161,7 @@ export default function Landing() {
       </section>
 
       {/* REVIEWS */}
+      {reviews.length > 0 && (
       <section className="py-16 md:py-24 bg-ink text-cream">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <Reveal>
@@ -153,7 +169,7 @@ export default function Landing() {
             <h2 className="font-display text-4xl md:text-5xl mt-2 max-w-3xl">{t('famousQuote')}</h2>
           </Reveal>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {REVIEWS.map((r, idx) => (
+            {reviews.map((r, idx) => (
               <Reveal key={r.id} delay={idx * 90}>
                 <div className="bg-white/5 backdrop-blur rounded-3xl p-6 border border-white/10 h-full">
                   <div className="flex items-center gap-1 text-secondary mb-3">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
@@ -165,6 +181,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      )}
 
       {/* PRICING */}
       <section id="pricing" className="py-16 md:py-24 bg-cream-sub/30">
@@ -264,9 +281,9 @@ export default function Landing() {
   );
 }
 
-function FoodCard({ item, className, big, fallbackImg }) {
+function FoodCard({ item, className, big }) {
   const tc = useTranslations('common');
-  const img = item.imageUrl || item.image || fallbackImg;
+  const img = item.imageUrl || item.image;
   return (
     <Link href="/menu" className={`group relative rounded-3xl overflow-hidden ${className}`} data-testid={`food-card-${item.id}`}>
       <img src={img} alt={item.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -283,20 +300,3 @@ function FoodCard({ item, className, big, fallbackImg }) {
   );
 }
 
-function StaticCard({ img, cat, name, price, className, big }) {
-  const tc = useTranslations('common');
-  return (
-    <Link href="/menu" className={`group relative rounded-3xl overflow-hidden ${className}`}>
-      <img src={img} alt={name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 text-white">
-        <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-cream/70">{cat}</div>
-        <div className={`font-display ${big ? 'text-3xl md:text-4xl' : 'text-2xl'} mt-1`}>{name}</div>
-        <div className="mt-2 flex items-center justify-between">
-          <span className="font-mono text-sm">${price.toFixed(2)}</span>
-          <span className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1 text-sm">{tc('view')} <ArrowRight size={14} /></span>
-        </div>
-      </div>
-    </Link>
-  );
-}

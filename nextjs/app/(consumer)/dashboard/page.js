@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Calendar, Coins, Receipt, ArrowRight, Wallet, Star, Bell, ChevronRight } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
 import { LOYALTY_NEXT_TARGET } from '@/lib/config';
