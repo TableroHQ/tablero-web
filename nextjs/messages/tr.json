@@ -24,7 +24,8 @@
     "tryAgain": "Tekrar dene",
     "unexpectedError": "Bu sayfada beklenmeyen bir hata oluştu.",
     "lightMode": "Aydınlık moda geç",
-    "nightMode": "Gece moduna geç"
+    "nightMode": "Gece moduna geç",
+    "noStaffAccess": "Personel sayfalarına erişiminiz yok"
   },
   "nav": {
     "home": "Ana sayfa",

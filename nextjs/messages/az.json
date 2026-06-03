@@ -24,7 +24,8 @@
     "tryAgain": "Yenidən cəhd et",
     "unexpectedError": "Bu səhifədə gözlənilməz xəta baş verdi.",
     "lightMode": "İşıqlı rejimə keç",
-    "nightMode": "Gecə rejiminə keç"
+    "nightMode": "Gecə rejiminə keç",
+    "noStaffAccess": "İşçi səhifələrinə girişiniz yoxdur"
   },
   "nav": {
     "home": "Ana səhifə",
