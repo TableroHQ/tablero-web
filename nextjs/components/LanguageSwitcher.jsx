@@ -12,7 +12,7 @@ const LANGS = [
   { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 
-export default function LanguageSwitcher({ dark = false }) {
+export default function LanguageSwitcher({ dark = false, dropUp = false }) {
   const locale = useLocale();
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef(null);
@@ -47,7 +47,9 @@ export default function LanguageSwitcher({ dark = false }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-xl border border-border py-1 z-50">
+        <div className={`absolute w-44 max-h-[60vh] overflow-y-auto bg-white rounded-2xl shadow-xl border border-border py-1 z-50 ${
+          dropUp ? 'bottom-full mb-2 left-0' : 'right-0 mt-2'
+        }`}>
           {LANGS.map(lang => (
             <button
               key={lang.code}

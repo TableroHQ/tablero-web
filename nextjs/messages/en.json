@@ -450,7 +450,8 @@
     "refunds": "Refunds",
     "revenue": "Revenue",
     "admin": "Admin",
-    "backToConsumer": "Back to consumer"
+    "backToConsumer": "Back to consumer",
+    "signOut": "Sign out"
   },
   "kds": {
     "title": "Kitchen Display",

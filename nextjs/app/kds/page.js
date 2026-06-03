@@ -115,9 +115,9 @@ export default function KDS() {
     conn.onreconnected(() => setHubConnected(true));
     conn.onreconnecting(() => setHubConnected(false));
 
-    // Listen for real-time order events
-    conn.on('OrderPlaced',   () => loadQueue());
-    conn.on('OrderUpdated',  () => loadQueue());
+    // Listen for real-time order events broadcast by the OrderService KitchenHub.
+    conn.on('OrderPlaced',        () => loadQueue());
+    conn.on('OrderStatusChanged', () => loadQueue());
     conn.on('ItemStatusChanged', (data) => {
       if (data?.orderId && data?.itemId && data?.status) {
         setTickets(ts => ts.map(t => t.id !== data.orderId ? t : {
@@ -128,11 +128,9 @@ export default function KDS() {
     });
 
     startHub(conn).then(ok => {
-      if (ok) {
-        setHubConnected(true);
-        // Join restaurant group
-        conn.invoke('JoinGroup', `kitchen:${restaurantId}`).catch(() => {});
-      }
+      if (ok) setHubConnected(true);
+      // The hub auto-joins this connection to its restaurant group (restaurant-{id})
+      // on connect using the restaurantId claim in the JWT — no client-side join needed.
     });
 
     return () => { conn.stop().catch(() => {}); };

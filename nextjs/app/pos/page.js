@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
+import { createHubConnection, startHub } from '@/lib/signalr';
 import { CreditCard, Banknote, SplitSquareHorizontal, Receipt, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -23,6 +24,7 @@ export default function POS() {
   const [tendered, setTendered] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const [paying, setPaying] = React.useState(false);
+  const [hubConnected, setHubConnected] = React.useState(false);
 
   const load = React.useCallback(async () => {
     if (!restaurantId) { setLoading(false); return; }
@@ -44,10 +46,30 @@ export default function POS() {
   }, [restaurantId, t]);
 
   React.useEffect(() => { load(); }, [load]);
+
+  // SignalR CashierHub — refresh the floor in real time on order/payment events.
+  // The hub auto-joins this connection to restaurant-{id} from the JWT claim.
   React.useEffect(() => {
-    const t = setInterval(load, 20000);
-    return () => clearInterval(t);
-  }, [load]);
+    if (!restaurantId) return;
+    const conn = createHubConnection('cashier');
+    conn.onclose(() => setHubConnected(false));
+    conn.onreconnected(() => setHubConnected(true));
+    conn.onreconnecting(() => setHubConnected(false));
+
+    conn.on('OrderPlaced', () => load());
+    conn.on('OrderStatusChanged', () => load());
+
+    startHub(conn).then(ok => { if (ok) setHubConnected(true); });
+
+    return () => { conn.stop().catch(() => {}); };
+  }, [restaurantId, load]);
+
+  // Poll as a fallback only while the hub is disconnected.
+  React.useEffect(() => {
+    if (hubConnected) return;
+    const id = setInterval(load, 20000);
+    return () => clearInterval(id);
+  }, [load, hubConnected]);
 
   // Build a map from tableId → order
   const tableOrderMap = React.useMemo(() => {
