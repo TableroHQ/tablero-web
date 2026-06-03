@@ -4,6 +4,7 @@
 
 export const IMG = {
   logo: '/brand/simpleLogo.png',
+  logoMark: '/brand/logoMark.png', // tightly-cropped, transparent mark for nav/footer
   texture: '/brand/texture.png',
   interior: 'https://images.pexels.com/photos/35505245/pexels-photo-35505245.jpeg',
   interior2: 'https://images.pexels.com/photos/29692582/pexels-photo-29692582.jpeg',
