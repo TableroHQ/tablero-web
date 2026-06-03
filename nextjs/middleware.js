@@ -5,11 +5,12 @@ import { NextResponse } from 'next/server';
  * Checked in order; first match wins.
  */
 const ROLE_GATES = [
-  { prefix: '/admin',   roles: ['ADMIN', 'DIRECTOR'] },
-  { prefix: '/waiter',  roles: ['WAITER', 'ADMIN', 'DIRECTOR'] },
-  { prefix: '/kds',     roles: ['CHEF', 'ADMIN', 'DIRECTOR'] },
-  { prefix: '/pos',     roles: ['CASHIER', 'ADMIN', 'DIRECTOR'] },
-  { prefix: '/courier', roles: ['COURIER', 'ADMIN', 'DIRECTOR'] },
+  { prefix: '/admin',    roles: ['ADMIN', 'DIRECTOR'] },
+  { prefix: '/director', roles: ['ADMIN', 'DIRECTOR'] },
+  { prefix: '/waiter',   roles: ['WAITER', 'ADMIN', 'DIRECTOR'] },
+  { prefix: '/kds',      roles: ['CHEF', 'ADMIN', 'DIRECTOR'] },
+  { prefix: '/pos',      roles: ['CASHIER', 'ADMIN', 'DIRECTOR'] },
+  { prefix: '/courier',  roles: ['COURIER', 'ADMIN', 'DIRECTOR'] },
 ];
 
 /**
@@ -58,6 +59,17 @@ function loginRedirect(request, pathname) {
   return NextResponse.redirect(url);
 }
 
+/**
+ * Non-staff (guests and consumers) who reach a back-of-house page are sent to
+ * the storefront home with a flag the client reads to show a "no access" toast.
+ */
+function staffDeniedRedirect(request) {
+  const url = request.nextUrl.clone();
+  url.pathname = '/';
+  url.search = '?denied=staff';
+  return NextResponse.redirect(url);
+}
+
 export function middleware(request) {
   const { pathname } = request.nextUrl;
   const auth = request.cookies.get('tablero_auth')?.value;   // '1' when logged in
@@ -84,14 +96,15 @@ export function middleware(request) {
   // ── Ops role gates ─────────────────────────────────────────────────────────
   for (const { prefix, roles } of ROLE_GATES) {
     if (isUnder(pathname, prefix)) {
-      if (!auth) return loginRedirect(request, pathname);
-      if (!roles.includes(role)) {
-        // Logged in but wrong role → send to their own home
-        return NextResponse.redirect(
-          new URL(ROLE_HOME[role] || '/dashboard', request.url)
-        );
-      }
-      return NextResponse.next();
+      if (roles.includes(role)) return NextResponse.next();
+      // Guests (not logged in) and consumers have no staff credentials → bounce
+      // them to the storefront home with a toast flag instead of /login.
+      if (!OPS_ROLES.includes(role)) return staffDeniedRedirect(request);
+      // A staff member on a page outside their own role → keep them in
+      // back-of-house by sending them to their own home.
+      return NextResponse.redirect(
+        new URL(ROLE_HOME[role] || '/dashboard', request.url)
+      );
     }
   }
 

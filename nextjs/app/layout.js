@@ -1,4 +1,5 @@
 import './globals.css';
+import { Suspense } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { StoreProvider } from '@/lib/store';
@@ -7,6 +8,7 @@ import RoleSwitcher from '@/components/RoleSwitcher';
 import LiveSimulator from '@/components/LiveSimulator';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import ThemeApplier from '@/components/ThemeApplier';
+import AccessToast from '@/components/AccessToast';
 
 export const metadata = {
   title: 'Tablero — Restaurant Operating System',
@@ -24,6 +26,7 @@ export default async function RootLayout({ children }) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StoreProvider>
             <ThemeApplier />
+            <Suspense fallback={null}><AccessToast /></Suspense>
             <LiveSimulator />
             <ErrorBoundary>
               {children}
