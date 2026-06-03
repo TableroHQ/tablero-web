@@ -38,6 +38,19 @@ const ROLE_HOME = {
   DIRECTOR: '/admin',
 };
 
+/**
+ * Staff roles. These users operate the back-of-house apps only — they must never
+ * land on the consumer/guest storefront. Anything outside their ops prefixes (and
+ * the shared auth pages) bounces them back to their own home.
+ */
+const OPS_ROLES = ['WAITER', 'CHEF', 'CASHIER', 'COURIER', 'ADMIN', 'DIRECTOR'];
+
+/** Shared, role-agnostic auth pages that any role may reach. */
+const PUBLIC_AUTH = ['/login', '/register', '/forgot-password'];
+
+const isUnder = (pathname, prefix) =>
+  pathname === prefix || pathname.startsWith(prefix + '/');
+
 function loginRedirect(request, pathname) {
   const url = request.nextUrl.clone();
   url.pathname = '/login';
@@ -70,7 +83,7 @@ export function middleware(request) {
 
   // ── Ops role gates ─────────────────────────────────────────────────────────
   for (const { prefix, roles } of ROLE_GATES) {
-    if (pathname === prefix || pathname.startsWith(prefix + '/')) {
+    if (isUnder(pathname, prefix)) {
       if (!auth) return loginRedirect(request, pathname);
       if (!roles.includes(role)) {
         // Logged in but wrong role → send to their own home
@@ -82,8 +95,22 @@ export function middleware(request) {
     }
   }
 
+  // ── Staff are confined to back-of-house ─────────────────────────────────────
+  // A logged-in staff member reaching anything outside their ops prefixes (the
+  // loop above already let those through) is on consumer/guest ground — bounce
+  // them to their own home. Shared auth pages stay reachable so they can log out
+  // and back in. Consumers (USER/GUEST) are unaffected.
+  if (auth && OPS_ROLES.includes(role)) {
+    const onPublicAuth = PUBLIC_AUTH.some(p => isUnder(pathname, p));
+    if (!onPublicAuth) {
+      return NextResponse.redirect(
+        new URL(ROLE_HOME[role] || '/dashboard', request.url)
+      );
+    }
+  }
+
   // ── Consumer auth-required routes ──────────────────────────────────────────
-  if (AUTH_REQUIRED.some(p => pathname === p || pathname.startsWith(p + '/'))) {
+  if (AUTH_REQUIRED.some(p => isUnder(pathname, p))) {
     if (!auth) return loginRedirect(request, pathname);
   }
 
@@ -91,25 +118,8 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    // Ops
-    '/admin/:path*',
-    '/waiter',
-    '/kds',
-    '/pos',
-    '/courier',
-    // Consumer (auth-required)
-    '/dashboard/:path*',
-    '/profile/:path*',
-    '/checkout/:path*',
-    '/topup/:path*',
-    '/orders/:path*',
-    '/delivery/:path*',
-    '/loyalty/:path*',
-    '/notifications/:path*',
-    '/reviews/:path*',
-    // Auth pages (bounce if already logged in)
-    '/login',
-    '/register',
-  ],
+  // Run on every page so staff can be confined to back-of-house and consumers
+  // kept out of ops apps. Skip Next.js internals, the API, and static assets
+  // (any path segment containing a dot, e.g. *.png, *.ico, *.js).
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };

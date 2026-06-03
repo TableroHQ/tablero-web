@@ -450,7 +450,8 @@
     "refunds": "İadeler",
     "revenue": "Gelir",
     "admin": "Yönetici",
-    "backToConsumer": "Müşteri görünümüne dön"
+    "backToConsumer": "Müşteri görünümüne dön",
+    "signOut": "Çıkış yap"
   },
   "kds": {
     "title": "Mutfak Ekranı",
