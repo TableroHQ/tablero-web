@@ -162,13 +162,20 @@ export default function TopUp() {
 
   const handleStripeSuccess = async () => {
     setStripeCtx(null);
+    const prevBalance = user.balance || 0;
     try {
-      const balance = await fetchCreditedBalance(user.balance || 0);
+      const balance = await fetchCreditedBalance(prevBalance);
       store.setBalance(balance, user.heldBalance, user.loyaltyPoints);
-      toast.success(t('toppedUp', { balance: balance?.toFixed(2) }));
+      if (balance > prevBalance) {
+        toast.success(t('toppedUp', { balance: balance.toFixed(2) }));
+      } else {
+        // Card succeeded but the crediting webhook hasn't landed within the poll
+        // window — don't claim a (possibly $0.00) amount; it reconciles shortly.
+        toast.success(t('topupProcessing'));
+      }
     } catch {
-      // Payment succeeded; balance will reconcile on next load even if this read failed.
-      toast.success(t('toppedUp', { balance: ((user.balance || 0) + amount).toFixed(2) }));
+      // Read failed; the payment still succeeded and will reconcile on next load.
+      toast.success(t('topupProcessing'));
     }
     router.push('/dashboard');
   };

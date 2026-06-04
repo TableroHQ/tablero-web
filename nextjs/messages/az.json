@@ -922,6 +922,7 @@
     "notConfigured": "Restoran konfiqurasiya edilməyib — NEXT_PUBLIC_RESTAURANT_ID təyin edin",
     "paymentCreated": "Ödəniş yaradıldı · ID {id}. Balansı artırmaq üçün Stripe vasitəsilə tamamlayın.",
     "toppedUp": "Balans artırıldı · ${balance}",
+    "topupProcessing": "Ödəniş alındı — balansınız tezliklə yenilənəcək.",
     "couldNotInitiate": "Ödəniş başlatmaq mümkün olmadı",
     "eyebrow": "Artırma",
     "title": "Pul kisənizi doldurun.",
