@@ -32,7 +32,7 @@ export default function ConsumerLayout({ children }) {
     { to: '/#pricing',      label: t('pricing') },
   ];
   const AUTH_NAV = [
-    { to: '/pickup',    label: 'Pickup' },
+    { to: '/pickup',    label: t('pickup') },
     { to: '/loyalty',   label: t('rewards') },
     { to: '/orders',    label: t('orders') },
     { to: '/dashboard', label: t('myTablero') },

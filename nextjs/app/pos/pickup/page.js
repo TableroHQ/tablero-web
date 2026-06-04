@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import OpsLayout from '@/components/OpsLayout';
+import { useTranslations } from 'next-intl';
 import { api } from '@/lib/client';
 import { createHubConnection, startHub } from '@/lib/signalr';
 import { Loader2, RefreshCw, Wifi, WifiOff, Check } from 'lucide-react';
@@ -17,6 +18,7 @@ const STATUS_STYLE = {
 };
 
 export default function CashierPickup() {
+  const t = useTranslations('pickup');
   const [payments, setPayments] = React.useState([]);
   const [bills, setBills] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -31,17 +33,17 @@ export default function CashierPickup() {
       setPayments(Array.isArray(p) ? p : p?.items ?? []);
       setBills(Array.isArray(b) ? b : b?.items ?? []);
     } catch {
-      toast.error('Could not load payments.');
+      toast.error(t('cashier.loadFail'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   React.useEffect(() => { load(); }, [load]);
 
   React.useEffect(() => {
     const conn = createHubConnection('cashier');
-    conn.on('RemainingPaymentCollected', () => { load(); toast.info('A balance is awaiting your confirmation'); });
+    conn.on('RemainingPaymentCollected', () => { load(); toast.info(t('cashier.awaitConfirm')); });
     conn.on('CashierConfirmationRequired', () => load());
     conn.on('OrderFullyPaid', () => load());
     conn.on('PrepaymentReceived', () => load());
@@ -49,34 +51,34 @@ export default function CashierPickup() {
     conn.onreconnected(() => setLive(true));
     startHub(conn).then(ok => setLive(ok));
     return () => { conn.stop().catch(() => {}); };
-  }, [load]);
+  }, [load, t]);
 
   React.useEffect(() => {
     if (live) return;
-    const t = setInterval(load, 15000);
-    return () => clearInterval(t);
+    const id = setInterval(load, 15000);
+    return () => clearInterval(id);
   }, [live, load]);
 
   const confirm = async (paymentId) => {
     try {
       await api.patch(`/api/staff/cashier/payments/${paymentId}/confirm`, { reason: 'Cash reconciled' });
-      toast.success('Payment confirmed.');
+      toast.success(t('cashier.confirmed'));
       load();
     } catch (err) {
-      toast.error(err?.response?.data?.message || 'Could not confirm payment.');
+      toast.error(err?.response?.data?.message || t('cashier.confirmFail'));
     }
   };
 
   const right = (
     <span className="chip bg-cream-sub text-ink-body inline-flex items-center gap-1">
       {live ? <Wifi size={11} className="text-green-600" /> : <WifiOff size={11} className="text-ink-muted" />}
-      {live ? 'Live' : 'Polling'}
-      <button onClick={load} className="ml-2" aria-label="Refresh"><RefreshCw size={12} /></button>
+      {live ? t('common.live') : t('common.polling')}
+      <button onClick={load} className="ml-2" aria-label={t('common.refresh')}><RefreshCw size={12} /></button>
     </span>
   );
 
   return (
-    <OpsLayout title="Pickup payments" subtitle="Deposits, balances & confirmations" right={right}>
+    <OpsLayout title={t('cashier.title')} subtitle={t('cashier.subtitle')} right={right}>
       {loading ? (
         <div className="py-20 flex justify-center"><Loader2 className="animate-spin text-ink-muted" /></div>
       ) : (
@@ -85,16 +87,16 @@ export default function CashierPickup() {
             <table className="w-full text-sm">
               <thead className="bg-cream-sub text-ink-muted text-left">
                 <tr>
-                  <th className="px-4 py-2 font-fn">Order</th>
-                  <th className="px-4 py-2 font-fn">Type</th>
-                  <th className="px-4 py-2 font-fn text-right">Amount</th>
-                  <th className="px-4 py-2 font-fn">Status</th>
-                  <th className="px-4 py-2 font-fn text-right">Action</th>
+                  <th className="px-4 py-2 font-fn">{t('cashier.colOrder')}</th>
+                  <th className="px-4 py-2 font-fn">{t('cashier.colType')}</th>
+                  <th className="px-4 py-2 font-fn text-right">{t('cashier.colAmount')}</th>
+                  <th className="px-4 py-2 font-fn">{t('cashier.colStatus')}</th>
+                  <th className="px-4 py-2 font-fn text-right">{t('cashier.colAction')}</th>
                 </tr>
               </thead>
               <tbody>
                 {payments.length === 0 ? (
-                  <tr><td colSpan={5} className="px-4 py-10 text-center text-ink-muted">No payments.</td></tr>
+                  <tr><td colSpan={5} className="px-4 py-10 text-center text-ink-muted">{t('cashier.noPayments')}</td></tr>
                 ) : payments.map(p => (
                   <tr key={p.id} data-testid={`cashier-payment-${p.id}`} className="border-t border-border">
                     <td className="px-4 py-2 font-mono text-xs">{String(p.orderId).slice(0, 8)}</td>
@@ -105,7 +107,7 @@ export default function CashierPickup() {
                       {p.status === 'PENDING' && (
                         <button onClick={() => confirm(p.id)} data-testid={`confirm-${p.id}`}
                           className="bg-primary text-primary-foreground rounded-full px-3 py-1.5 text-xs font-fn inline-flex items-center gap-1">
-                          <Check size={12} /> Confirm
+                          <Check size={12} /> {t('cashier.confirm')}
                         </button>
                       )}
                     </td>
@@ -116,16 +118,16 @@ export default function CashierPickup() {
           </div>
 
           <div>
-            <div className="label-eyebrow mb-2">Open table bills</div>
+            <div className="label-eyebrow mb-2">{t('cashier.openTableBills')}</div>
             {bills.length === 0 ? (
-              <div className="text-ink-muted text-sm">No open table bills.</div>
+              <div className="text-ink-muted text-sm">{t('cashier.noTableBills')}</div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {bills.map(b => (
                   <div key={b.tableId} className="bg-white border border-border rounded-xl p-4">
-                    <div className="text-xs text-ink-muted font-mono">Table {String(b.tableId).slice(0, 6)}</div>
+                    <div className="text-xs text-ink-muted font-mono">{t('cashier.table')} {String(b.tableId).slice(0, 6)}</div>
                     <div className="font-display text-2xl mt-1">{money(b.totalAmount)}</div>
-                    <div className="text-xs text-ink-muted">{b.openOrderCount} open order(s)</div>
+                    <div className="text-xs text-ink-muted">{t('cashier.openOrders', { count: b.openOrderCount })}</div>
                   </div>
                 ))}
               </div>
