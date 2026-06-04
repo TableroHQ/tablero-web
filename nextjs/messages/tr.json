@@ -925,6 +925,7 @@
     "notConfigured": "Restoran yapılandırılmadı — NEXT_PUBLIC_RESTAURANT_ID ayarlayın",
     "paymentCreated": "Ödeme oluşturuldu · ID {id}. Bakiyeyi yüklemek için Stripe ile tamamlayın.",
     "toppedUp": "Bakiye yüklendi · ${balance}",
+    "topupProcessing": "Ödeme alındı — bakiyeniz kısa süre içinde güncellenecek.",
     "couldNotInitiate": "Ödeme başlatılamadı",
     "eyebrow": "Bakiye yükle",
     "title": "Cüzdanınızı doldurun.",

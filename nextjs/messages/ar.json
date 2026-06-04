@@ -925,6 +925,7 @@
     "notConfigured": "المطعم غير مُهيّأ — اضبط NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "تم إنشاء الدفعة · المعرّف {id}. أكملها عبر Stripe لإضافة الرصيد.",
     "toppedUp": "تم شحن الرصيد · ${balance}",
+    "topupProcessing": "تم استلام الدفعة — سيتم تحديث رصيدك قريبًا.",
     "couldNotInitiate": "تعذّر بدء الدفع",
     "eyebrow": "شحن الرصيد",
     "title": "موّل محفظتك.",

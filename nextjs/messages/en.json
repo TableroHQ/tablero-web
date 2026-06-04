@@ -925,6 +925,7 @@
     "notConfigured": "Restaurant not configured — set NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "Payment created · ID {id}. Complete via Stripe to credit balance.",
     "toppedUp": "Balance topped up · ${balance}",
+    "topupProcessing": "Payment received — your balance will update shortly.",
     "couldNotInitiate": "Could not initiate payment",
     "eyebrow": "Top up",
     "title": "Fund your wallet.",

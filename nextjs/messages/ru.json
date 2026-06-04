@@ -925,6 +925,7 @@
     "notConfigured": "Ресторан не настроен — задайте NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "Платёж создан · ID {id}. Завершите через Stripe для зачисления баланса.",
     "toppedUp": "Баланс пополнен · ${balance}",
+    "topupProcessing": "Платёж получен — баланс обновится в ближайшее время.",
     "couldNotInitiate": "Не удалось инициировать платёж",
     "eyebrow": "Пополнение",
     "title": "Пополните кошелёк.",
