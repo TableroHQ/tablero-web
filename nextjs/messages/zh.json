@@ -921,6 +921,7 @@
     "invalidAmount": "请输入有效金额",
     "notConfigured": "餐厅未配置——请设置 NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "付款已创建 · ID {id}。请通过 Stripe 完成以充值余额。",
+    "toppedUp": "余额已充值 · ${balance}",
     "couldNotInitiate": "无法发起付款",
     "eyebrow": "充值",
     "title": "为您的钱包充值。",
@@ -936,7 +937,11 @@
     "fee": "手续费",
     "newBalance": "新余额",
     "processing": "处理中…",
-    "pay": "支付 ${amount}"
+    "pay": "支付 ${amount}",
+    "securePayment": "安全支付",
+    "enterCardDetails": "输入卡片信息",
+    "securedByStripe": "由 Stripe 保护",
+    "confirmPayment": "确认支付 →"
   },
   "orderDetail": {
     "couldNotLoad": "无法加载订单",

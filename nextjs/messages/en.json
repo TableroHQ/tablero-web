@@ -921,6 +921,7 @@
     "invalidAmount": "Enter a valid amount",
     "notConfigured": "Restaurant not configured — set NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "Payment created · ID {id}. Complete via Stripe to credit balance.",
+    "toppedUp": "Balance topped up · ${balance}",
     "couldNotInitiate": "Could not initiate payment",
     "eyebrow": "Top up",
     "title": "Fund your wallet.",
@@ -936,7 +937,11 @@
     "fee": "Fee",
     "newBalance": "New balance",
     "processing": "Processing…",
-    "pay": "Pay ${amount}"
+    "pay": "Pay ${amount}",
+    "securePayment": "Secure payment",
+    "enterCardDetails": "Enter card details",
+    "securedByStripe": "Secured by Stripe",
+    "confirmPayment": "Confirm payment →"
   },
   "orderDetail": {
     "couldNotLoad": "Could not load order",

@@ -921,6 +921,7 @@
     "invalidAmount": "Geçerli bir tutar girin",
     "notConfigured": "Restoran yapılandırılmadı — NEXT_PUBLIC_RESTAURANT_ID ayarlayın",
     "paymentCreated": "Ödeme oluşturuldu · ID {id}. Bakiyeyi yüklemek için Stripe ile tamamlayın.",
+    "toppedUp": "Bakiye yüklendi · ${balance}",
     "couldNotInitiate": "Ödeme başlatılamadı",
     "eyebrow": "Bakiye yükle",
     "title": "Cüzdanınızı doldurun.",
@@ -936,7 +937,11 @@
     "fee": "Ücret",
     "newBalance": "Yeni bakiye",
     "processing": "İşleniyor…",
-    "pay": "${amount} öde"
+    "pay": "${amount} öde",
+    "securePayment": "Güvenli ödeme",
+    "enterCardDetails": "Kart bilgilerini girin",
+    "securedByStripe": "Stripe tarafından korunur",
+    "confirmPayment": "Ödemeyi onayla →"
   },
   "orderDetail": {
     "couldNotLoad": "Sipariş yüklenemedi",
