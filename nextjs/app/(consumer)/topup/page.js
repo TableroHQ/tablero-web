@@ -18,7 +18,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY || '');
 // The wallet is credited server-side by the Stripe webhook once the intent
 // succeeds, so on success we re-read the authoritative balance from the API.
 // ---------------------------------------------------------------------------
-function StripeStep({ clientSecret, onBack, onSuccess, t, tc }) {
+function StripeStep({ clientSecret, intentId, onBack, onSuccess, t, tc }) {
   const options = {
     clientSecret,
     appearance: {
@@ -48,7 +48,7 @@ function StripeStep({ clientSecret, onBack, onSuccess, t, tc }) {
         </div>
 
         <Elements stripe={stripePromise} options={options}>
-          <StripeForm onSuccess={onSuccess} t={t} />
+          <StripeForm intentId={intentId} onSuccess={onSuccess} t={t} />
         </Elements>
 
         <div className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-ink-muted font-mono">
@@ -59,7 +59,7 @@ function StripeStep({ clientSecret, onBack, onSuccess, t, tc }) {
   );
 }
 
-function StripeForm({ onSuccess, t }) {
+function StripeForm({ intentId, onSuccess, t }) {
   const stripe = useStripe();
   const elements = useElements();
   const [confirming, setConfirming] = React.useState(false);
@@ -70,7 +70,7 @@ function StripeForm({ onSuccess, t }) {
     setConfirming(true);
     setError(null);
 
-    const { error: stripeError } = await stripe.confirmPayment({
+    const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
       elements,
       // redirect: 'if_required' keeps the user on-page for card payments.
       redirect: 'if_required',
@@ -83,7 +83,8 @@ function StripeForm({ onSuccess, t }) {
       setError(stripeError.message || t('couldNotInitiate'));
       setConfirming(false);
     } else {
-      await onSuccess();
+      // Prefer the id from the confirmed intent; fall back to the one we created with.
+      await onSuccess(paymentIntent?.id || intentId);
     }
   };
 
@@ -113,16 +114,13 @@ function StripeForm({ onSuccess, t }) {
   );
 }
 
-// Poll the wallet until the webhook-driven credit lands (or we give up and use
-// whatever the server currently reports). Returns the balance to display.
-async function fetchCreditedBalance(previousBalance) {
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const wallet = await api.get('/api/wallet');
-    if (wallet.balance > previousBalance) return wallet.balance;
-    await new Promise(r => setTimeout(r, 1200));
-  }
-  const wallet = await api.get('/api/wallet');
-  return wallet.balance;
+// Credit the wallet synchronously: ask the server to re-read the PaymentIntent from
+// Stripe and apply the top-up. This is idempotent with the webhook and works even when
+// the local webhook listener isn't running. Returns the COMPLETED balance, or null if
+// Stripe still reports the payment as not-yet-succeeded (rare — it reconciles via webhook).
+async function confirmCreditedBalance(intentId) {
+  const res = await api.post('/api/wallet/topup/confirm', { intentId });
+  return res.status === 'COMPLETED' ? res.balance : null;
 }
 
 export default function TopUp() {
@@ -142,8 +140,8 @@ export default function TopUp() {
     setProcessing(true);
     try {
       // Wallet top-up needs no order — funds belong to the authenticated user.
-      // Stripe provider returns a clientSecret (status PENDING); the balance is
-      // credited by the webhook once the card payment is confirmed below.
+      // Stripe provider returns an intentId + clientSecret (status PENDING); after the
+      // card is confirmed we credit the balance via the confirm endpoint (see below).
       const res = await api.post('/api/wallet/topup', {
         amount,
         currency: 'USD',
@@ -152,7 +150,7 @@ export default function TopUp() {
       if (!res.clientSecret) {
         throw new Error('No Stripe client secret returned from server.');
       }
-      setStripeCtx({ clientSecret: res.clientSecret });
+      setStripeCtx({ clientSecret: res.clientSecret, intentId: res.intentId });
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || t('couldNotInitiate'));
     } finally {
@@ -160,15 +158,22 @@ export default function TopUp() {
     }
   };
 
-  const handleStripeSuccess = async () => {
+  const handleStripeSuccess = async (intentId) => {
     setStripeCtx(null);
     try {
-      const balance = await fetchCreditedBalance(user.balance || 0);
-      store.setBalance(balance, user.heldBalance, user.loyaltyPoints);
-      toast.success(t('toppedUp', { balance: balance?.toFixed(2) }));
+      // Credit synchronously off the confirmed PaymentIntent — no waiting on the webhook.
+      const balance = await confirmCreditedBalance(intentId);
+      if (balance != null) {
+        store.setBalance(balance, user.heldBalance, user.loyaltyPoints);
+        toast.success(t('toppedUp', { balance: balance.toFixed(2) }));
+      } else {
+        // Stripe still reports the payment as not-yet-succeeded (e.g. async method
+        // "processing"); it reconciles via the webhook shortly.
+        toast.success(t('topupProcessing'));
+      }
     } catch {
-      // Payment succeeded; balance will reconcile on next load even if this read failed.
-      toast.success(t('toppedUp', { balance: ((user.balance || 0) + amount).toFixed(2) }));
+      // Confirm failed; the payment still succeeded and reconciles via the webhook on next load.
+      toast.success(t('topupProcessing'));
     }
     router.push('/dashboard');
   };
@@ -178,6 +183,7 @@ export default function TopUp() {
       {stripeCtx && (
         <StripeStep
           clientSecret={stripeCtx.clientSecret}
+          intentId={stripeCtx.intentId}
           onBack={() => setStripeCtx(null)}
           onSuccess={handleStripeSuccess}
           t={t}
