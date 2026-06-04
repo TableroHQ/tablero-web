@@ -924,6 +924,7 @@
     "invalidAmount": "Düzgün məbləğ daxil edin",
     "notConfigured": "Restoran konfiqurasiya edilməyib — NEXT_PUBLIC_RESTAURANT_ID təyin edin",
     "paymentCreated": "Ödəniş yaradıldı · ID {id}. Balansı artırmaq üçün Stripe vasitəsilə tamamlayın.",
+    "toppedUp": "Balans artırıldı · ${balance}",
     "couldNotInitiate": "Ödəniş başlatmaq mümkün olmadı",
     "eyebrow": "Artırma",
     "title": "Pul kisənizi doldurun.",
@@ -939,7 +940,11 @@
     "fee": "Komissiya",
     "newBalance": "Yeni balans",
     "processing": "Emal olunur…",
-    "pay": "${amount} ödə"
+    "pay": "${amount} ödə",
+    "securePayment": "Təhlükəsiz ödəniş",
+    "enterCardDetails": "Kart məlumatlarını daxil edin",
+    "securedByStripe": "Stripe tərəfindən qorunur",
+    "confirmPayment": "Ödənişi təsdiqlə →"
   },
   "orderDetail": {
     "couldNotLoad": "Sifariş yüklənmədi",
