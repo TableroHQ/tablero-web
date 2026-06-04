@@ -3,6 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, Minus, Plus, Loader2, Wallet, ArrowRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { api } from '@/lib/client';
 import { useStore } from '@/lib/store';
 import { toast } from 'sonner';
@@ -17,7 +18,6 @@ function normaliseItems(data) {
   return [];
 }
 
-// Default pickup = 45 minutes from now, rounded, as a value for <input type="datetime-local">
 function defaultPickupLocal() {
   const d = new Date(Date.now() + 45 * 60 * 1000);
   d.setSeconds(0, 0);
@@ -28,10 +28,11 @@ function defaultPickupLocal() {
 const money = (n) => `$${Number(n || 0).toFixed(2)}`;
 
 export default function PickupCreate() {
+  const t = useTranslations('pickup');
   const router = useRouter();
   const [{ user }] = useStore();
   const [items, setItems] = React.useState([]);
-  const [qty, setQty] = React.useState({}); // menuItemId -> quantity
+  const [qty, setQty] = React.useState({});
   const [pickupAt, setPickupAt] = React.useState(defaultPickupLocal());
   const [loading, setLoading] = React.useState(true);
   const [submitting, setSubmitting] = React.useState(false);
@@ -44,9 +45,9 @@ export default function PickupCreate() {
           .filter(i => i.isAvailable !== false && i.available !== false)
           .map(i => ({ id: i.id, name: i.name, price: Number(i.price ?? 0), img: i.imageUrl || i.image || '' }))
       ))
-      .catch(() => toast.error('Could not load the menu.'))
+      .catch(() => toast.error(t('create.couldNotLoadMenu')))
       .finally(() => setLoading(false));
-  }, []);
+  }, [t]);
 
   const setItemQty = (id, delta) =>
     setQty(q => {
@@ -62,8 +63,8 @@ export default function PickupCreate() {
   const remaining = Math.round((total - deposit) * 100) / 100;
 
   const submit = async () => {
-    if (lines.length === 0) { toast.error('Add at least one item.'); return; }
-    if (new Date(pickupAt).getTime() <= Date.now()) { toast.error('Pickup time must be in the future.'); return; }
+    if (lines.length === 0) { toast.error(t('create.addOneItem')); return; }
+    if (new Date(pickupAt).getTime() <= Date.now()) { toast.error(t('create.pickupFuture')); return; }
 
     setSubmitting(true);
     try {
@@ -74,7 +75,6 @@ export default function PickupCreate() {
         items: lines.map(i => ({ menuItemId: i.id, quantity: qty[i.id] })),
       });
 
-      // Pay the 40% deposit from the customer's wallet (settles instantly).
       try {
         await api.post('/api/payments', {
           orderId: order.id,
@@ -84,10 +84,10 @@ export default function PickupCreate() {
           provider: 'WALLET',
           paymentType: 'PREPAYMENT',
         });
-        toast.success('Order placed and 40% deposit paid. The kitchen will get it ready before pickup.');
+        toast.success(t('create.placedPaid'));
       } catch (payErr) {
-        toast.warning('Order created, but the deposit could not be charged to your wallet. Top up and pay from the order page.', {
-          action: { label: 'Top up', onClick: () => router.push('/topup') },
+        toast.warning(t('create.depositFailed'), {
+          action: { label: t('create.topUp'), onClick: () => router.push('/topup') },
         });
       }
 
@@ -95,7 +95,7 @@ export default function PickupCreate() {
     } catch (err) {
       const msg = err?.response?.data?.message
         || err?.response?.data?.errors?.Items?.[0]
-        || 'Could not create the pickup order.';
+        || t('create.createFailed');
       toast.error(msg);
     } finally {
       setSubmitting(false);
@@ -106,24 +106,21 @@ export default function PickupCreate() {
     <div className="max-w-[1100px] mx-auto px-6 md:px-12 py-12">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <div className="label-eyebrow">Scheduled pickup</div>
-          <h1 className="font-display text-4xl md:text-5xl mt-2">Order ahead for pickup</h1>
-          <p className="mt-3 text-ink-body max-w-xl">
-            Pick your items and a collection time. Pay {PREPAY_PERCENT}% now to confirm — the rest on collection.
-          </p>
+          <div className="label-eyebrow">{t('create.eyebrow')}</div>
+          <h1 className="font-display text-4xl md:text-5xl mt-2">{t('create.title')}</h1>
+          <p className="mt-3 text-ink-body max-w-xl">{t('create.subtitle', { percent: PREPAY_PERCENT })}</p>
         </div>
         <Link href="/pickup/mine" className="text-sm font-fn text-primary hover:underline inline-flex items-center gap-1">
-          My pickup orders <ArrowRight size={14} />
+          {t('create.myOrders')} <ArrowRight size={14} />
         </Link>
       </div>
 
       <div className="mt-8 grid lg:grid-cols-[1fr_360px] gap-8 items-start">
-        {/* Menu picker */}
         <div className="space-y-3">
           {loading ? (
             <div className="py-20 flex justify-center"><Loader2 className="animate-spin text-ink-muted" /></div>
           ) : items.length === 0 ? (
-            <div className="py-20 text-center text-ink-muted">No menu items available.</div>
+            <div className="py-20 text-center text-ink-muted">{t('create.noMenu')}</div>
           ) : items.map(i => (
             <div key={i.id} data-testid={`pickup-item-${i.id}`}
               className="flex items-center gap-4 bg-white border border-border rounded-xl p-3">
@@ -137,29 +134,28 @@ export default function PickupCreate() {
               <div className="flex items-center gap-2">
                 <button onClick={() => setItemQty(i.id, -1)} disabled={!qty[i.id]}
                   className="h-8 w-8 rounded-full border border-border flex items-center justify-center disabled:opacity-30"
-                  aria-label="Decrease"><Minus size={14} /></button>
+                  aria-label={t('create.decrease')}><Minus size={14} /></button>
                 <span className="w-6 text-center font-mono">{qty[i.id] || 0}</span>
                 <button onClick={() => setItemQty(i.id, 1)}
                   className="h-8 w-8 rounded-full border border-border flex items-center justify-center"
-                  aria-label="Increase"><Plus size={14} /></button>
+                  aria-label={t('create.increase')}><Plus size={14} /></button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Summary */}
         <div className="bg-white border border-border rounded-2xl p-5 lg:sticky lg:top-24 space-y-4">
           <div>
-            <label className="label-eyebrow flex items-center gap-1"><Clock size={12} /> Pickup time</label>
+            <label className="label-eyebrow flex items-center gap-1"><Clock size={12} /> {t('create.pickupTime')}</label>
             <input type="datetime-local" value={pickupAt} min={defaultPickupLocal()}
               onChange={e => setPickupAt(e.target.value)} data-testid="pickup-time"
               className="mt-1.5 w-full rounded-lg border border-border px-3 py-2 text-sm font-mono" />
-            <p className="text-xs text-ink-muted mt-1.5">We aim to have it ready ~10 min before this time.</p>
+            <p className="text-xs text-ink-muted mt-1.5">{t('create.readyHint')}</p>
           </div>
 
           <div className="border-t border-border pt-4 space-y-1.5 text-sm">
             {lines.length === 0
-              ? <p className="text-ink-muted">No items yet.</p>
+              ? <p className="text-ink-muted">{t('create.noItemsYet')}</p>
               : lines.map(i => (
                 <div key={i.id} className="flex justify-between">
                   <span className="text-ink-body">{qty[i.id]} × {i.name}</span>
@@ -169,17 +165,17 @@ export default function PickupCreate() {
           </div>
 
           <div className="border-t border-border pt-4 space-y-1.5">
-            <Row label="Total" value={money(total)} />
-            <Row label={`Deposit (${PREPAY_PERCENT}%) — due now`} value={money(deposit)} strong />
-            <Row label="Remaining — on collection" value={money(remaining)} muted />
+            <Row label={t('create.total')} value={money(total)} />
+            <Row label={t('create.depositDue', { percent: PREPAY_PERCENT })} value={money(deposit)} strong />
+            <Row label={t('create.remainingOnCollection')} value={money(remaining)} muted />
           </div>
 
           <button onClick={submit} disabled={submitting || lines.length === 0} data-testid="pickup-submit"
             className="w-full bg-primary text-primary-foreground rounded-full py-3 font-fn font-medium flex items-center justify-center gap-2 disabled:opacity-40">
             {submitting ? <Loader2 size={16} className="animate-spin" /> : <Wallet size={16} />}
-            Pay {money(deposit)} deposit
+            {t('create.payDeposit', { amount: money(deposit) })}
           </button>
-          <p className="text-[11px] text-ink-muted text-center">Deposit is charged to your Tablero wallet.</p>
+          <p className="text-[11px] text-ink-muted text-center">{t('create.depositWallet')}</p>
         </div>
       </div>
     </div>
