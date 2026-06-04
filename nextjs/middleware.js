@@ -22,6 +22,7 @@ const AUTH_REQUIRED = [
   '/checkout',
   '/topup',
   '/orders',
+  '/pickup',
   '/delivery',
   '/loyalty',
   '/notifications',
