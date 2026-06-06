@@ -122,7 +122,8 @@
     "welcomeToast": "С возвращением!",
     "codeSentToast": "Код отправлен — проверьте почту",
     "accountCreatedToast": "Аккаунт создан! Войдите в систему.",
-    "invalidCredentials": "Неверные данные для входа"
+    "invalidCredentials": "Неверные данные для входа",
+    "errAllDigits": "Введите все 6 цифр"
   },
   "forgotPw": {
     "backToSignIn": "Назад ко входу",
@@ -197,7 +198,11 @@
     "soldOut": "Закончилось сегодня",
     "signInToOrder": "Войдите для заказа",
     "addToOrder": "Добавить в заказ",
-    "couldNotLoad": "Не удалось загрузить меню"
+    "couldNotLoad": "Не удалось загрузить меню",
+    "addedToOrder": "{name} добавлено в заказ",
+    "inOrderCount": "{n} в заказе",
+    "increase": "Увеличить количество",
+    "decrease": "Уменьшить количество"
   },
   "orders": {
     "eyebrow": "История",
@@ -245,7 +250,9 @@
     "cancelledToast": "Бронирование отменено",
     "errSelectSlot": "Пожалуйста, выберите временной слот",
     "couldNotConfirm": "Не удалось подтвердить бронирование",
-    "couldNotCancel": "Не удалось отменить"
+    "couldNotCancel": "Не удалось отменить",
+    "notConfigured": "Ресторан не настроен",
+    "errPhone": "Укажите контактный номер телефона"
   },
   "checkout": {
     "eyebrow": "Оформление заказа",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "Заказ оформлен! Кухня уведомлена.",
     "paymentConfirmedToast": "Оплата подтверждена! Кухня уведомлена.",
     "emptyCartError": "Корзина пуста",
-    "itemsCount": "{n} позиций"
+    "itemsCount": "{n} позиций",
+    "notConfigured": "Ресторан не настроен",
+    "couldNotPlace": "Не удалось оформить заказ",
+    "paymentFailed": "Платёж не прошёл. Повторите попытку."
   },
   "loyalty": {
     "eyebrow": "Каталог бонусов",
@@ -373,7 +383,8 @@
     "couldNotSave": "Не удалось сохранить профиль",
     "accountDeleted": "Аккаунт удалён",
     "errRequired": "Обязательное поле",
-    "errMin3": "Минимум 3 символа"
+    "errMin3": "Минимум 3 символа",
+    "couldNotDelete": "Не удалось удалить аккаунт"
   },
   "landing": {
     "eyebrow": "Операционная система ресторана · с 2026",

@@ -81,7 +81,7 @@ function StripeForm({ orderId, onBack, onSuccess, t }) {
     });
 
     if (stripeError) {
-      setError(stripeError.message || 'Payment failed. Please try again.');
+      setError(stripeError.message || t('paymentFailed'));
       setConfirming(false);
     } else {
       onSuccess(orderId);
@@ -145,7 +145,7 @@ export default function Checkout() {
 
   const placeOrder = async () => {
     if (cart.length === 0) return toast.error(t('emptyCartError'));
-    if (!RESTAURANT_ID) return toast.error('Restaurant not configured — set NEXT_PUBLIC_RESTAURANT_ID');
+    if (!RESTAURANT_ID) return toast.error(t('notConfigured'));
     setPlacing(true);
     try {
       // 1. Create the order
@@ -190,7 +190,7 @@ export default function Checkout() {
         router.push(`/orders/${order.id}`);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || 'Could not place order');
+      toast.error(err.response?.data?.message || err.message || t('couldNotPlace'));
     } finally {
       setPlacing(false);
     }

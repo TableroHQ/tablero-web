@@ -122,7 +122,8 @@
     "welcomeToast": "欢迎回来!",
     "codeSentToast": "验证码已发送——请查收您的收件箱",
     "accountCreatedToast": "账户已创建!请登录。",
-    "invalidCredentials": "凭据无效"
+    "invalidCredentials": "凭据无效",
+    "errAllDigits": "请输入全部 6 位数字"
   },
   "forgotPw": {
     "backToSignIn": "返回登录",
@@ -197,7 +198,11 @@
     "soldOut": "今日售罄",
     "signInToOrder": "登录后点餐",
     "addToOrder": "加入订单",
-    "couldNotLoad": "无法加载菜单"
+    "couldNotLoad": "无法加载菜单",
+    "addedToOrder": "{name} 已加入您的订单",
+    "inOrderCount": "已点 {n} 份",
+    "increase": "增加数量",
+    "decrease": "减少数量"
   },
   "orders": {
     "eyebrow": "您的历史记录",
@@ -245,7 +250,9 @@
     "cancelledToast": "预订已取消",
     "errSelectSlot": "请选择一个时段",
     "couldNotConfirm": "无法确认预订",
-    "couldNotCancel": "无法取消"
+    "couldNotCancel": "无法取消",
+    "notConfigured": "餐厅未配置",
+    "errPhone": "请输入联系电话"
   },
   "checkout": {
     "eyebrow": "结账",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "订单已提交!厨房已收到通知。",
     "paymentConfirmedToast": "支付已确认!厨房已收到通知。",
     "emptyCartError": "您的购物车是空的",
-    "itemsCount": "{n} 件"
+    "itemsCount": "{n} 件",
+    "notConfigured": "餐厅未配置",
+    "couldNotPlace": "无法提交您的订单",
+    "paymentFailed": "支付失败，请重试。"
   },
   "loyalty": {
     "eyebrow": "积分目录",
@@ -373,7 +383,8 @@
     "couldNotSave": "无法保存资料",
     "accountDeleted": "账户已删除",
     "errRequired": "必填",
-    "errMin3": "至少 3 个字符"
+    "errMin3": "至少 3 个字符",
+    "couldNotDelete": "无法删除账户"
   },
   "landing": {
     "eyebrow": "餐厅操作系统 · 创立于 2026",

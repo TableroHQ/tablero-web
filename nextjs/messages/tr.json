@@ -122,7 +122,8 @@
     "welcomeToast": "Tekrar hoş geldiniz!",
     "codeSentToast": "Doğrulama kodu gönderildi — gelen kutunuzu kontrol edin",
     "accountCreatedToast": "Hesap oluşturuldu! Lütfen giriş yapın.",
-    "invalidCredentials": "Geçersiz kimlik bilgileri"
+    "invalidCredentials": "Geçersiz kimlik bilgileri",
+    "errAllDigits": "6 rakamın tamamını girin"
   },
   "forgotPw": {
     "backToSignIn": "Girişe dön",
@@ -197,7 +198,11 @@
     "soldOut": "Bugün tükendi",
     "signInToOrder": "Sipariş için giriş yapın",
     "addToOrder": "Siparişe ekle",
-    "couldNotLoad": "Menü yüklenemedi"
+    "couldNotLoad": "Menü yüklenemedi",
+    "addedToOrder": "{name} siparişinize eklendi",
+    "inOrderCount": "siparişte {n}",
+    "increase": "Adedi artır",
+    "decrease": "Adedi azalt"
   },
   "orders": {
     "eyebrow": "Geçmişiniz",
@@ -245,7 +250,9 @@
     "cancelledToast": "Rezervasyon iptal edildi",
     "errSelectSlot": "Lütfen bir saat seçin",
     "couldNotConfirm": "Rezervasyon onaylanamadı",
-    "couldNotCancel": "İptal edilemedi"
+    "couldNotCancel": "İptal edilemedi",
+    "notConfigured": "Restoran yapılandırılmamış",
+    "errPhone": "Lütfen bir iletişim telefon numarası girin"
   },
   "checkout": {
     "eyebrow": "Ödeme",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "Sipariş verildi! Mutfak bilgilendirildi.",
     "paymentConfirmedToast": "Ödeme onaylandı! Mutfak bilgilendirildi.",
     "emptyCartError": "Sepetiniz boş",
-    "itemsCount": "{n} ürün"
+    "itemsCount": "{n} ürün",
+    "notConfigured": "Restoran yapılandırılmamış",
+    "couldNotPlace": "Siparişiniz verilemedi",
+    "paymentFailed": "Ödeme başarısız. Lütfen tekrar deneyin."
   },
   "loyalty": {
     "eyebrow": "Bonus kataloğu",
@@ -373,7 +383,8 @@
     "couldNotSave": "Profil kaydedilemedi",
     "accountDeleted": "Hesap silindi",
     "errRequired": "Zorunlu",
-    "errMin3": "En az 3 karakter"
+    "errMin3": "En az 3 karakter",
+    "couldNotDelete": "Hesap silinemedi"
   },
   "landing": {
     "eyebrow": "Bir restoran işletim sistemi · 2026 kuruluşu",

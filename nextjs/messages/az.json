@@ -122,7 +122,8 @@
     "welcomeToast": "Xoş gəldiniz!",
     "codeSentToast": "Doğrulama kodu göndərildi — poçtunuzu yoxlayın",
     "accountCreatedToast": "Hesab yaradıldı! Daxil olun.",
-    "invalidCredentials": "Yanlış giriş məlumatları"
+    "invalidCredentials": "Yanlış giriş məlumatları",
+    "errAllDigits": "Bütün 6 rəqəmi daxil edin"
   },
   "forgotPw": {
     "backToSignIn": "Girişə qayıt",
@@ -197,7 +198,11 @@
     "soldOut": "Bu gün bitib",
     "signInToOrder": "Sifariş vermək üçün daxil olun",
     "addToOrder": "Sifarişə əlavə et",
-    "couldNotLoad": "Menyu yüklənə bilmədi"
+    "couldNotLoad": "Menyu yüklənə bilmədi",
+    "addedToOrder": "{name} sifarişinizə əlavə edildi",
+    "inOrderCount": "sifarişdə {n}",
+    "increase": "Sayı artır",
+    "decrease": "Sayı azalt"
   },
   "orders": {
     "eyebrow": "Tarixçəniz",
@@ -245,7 +250,9 @@
     "cancelledToast": "Rezervasiya ləğv edildi",
     "errSelectSlot": "Zəhmət olmasa vaxt seçin",
     "couldNotConfirm": "Rezervasiya təsdiqlənə bilmədi",
-    "couldNotCancel": "Ləğv etmək mümkün olmadı"
+    "couldNotCancel": "Ləğv etmək mümkün olmadı",
+    "notConfigured": "Restoran konfiqurasiya edilməyib",
+    "errPhone": "Zəhmət olmasa əlaqə telefon nömrəsini daxil edin"
   },
   "checkout": {
     "eyebrow": "Sifariş rəsmiləşdirmə",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "Sifariş verildi! Mətbəx xəbərdar edildi.",
     "paymentConfirmedToast": "Ödəniş təsdiqləndi! Mətbəx xəbərdar edildi.",
     "emptyCartError": "Səbət boşdur",
-    "itemsCount": "{n} məhsul"
+    "itemsCount": "{n} məhsul",
+    "notConfigured": "Restoran konfiqurasiya edilməyib",
+    "couldNotPlace": "Sifariş verilə bilmədi",
+    "paymentFailed": "Ödəniş alınmadı. Yenidən cəhd edin."
   },
   "loyalty": {
     "eyebrow": "Bonus kataloqu",
@@ -373,7 +383,8 @@
     "couldNotSave": "Profil saxlanıla bilmədi",
     "accountDeleted": "Hesab silindi",
     "errRequired": "Mütləq doldurulmalıdır",
-    "errMin3": "Minimum 3 simvol"
+    "errMin3": "Minimum 3 simvol",
+    "couldNotDelete": "Hesab silinə bilmədi"
   },
   "landing": {
     "eyebrow": "Restoran idarəetmə sistemi · 2026-dan",
