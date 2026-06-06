@@ -113,7 +113,7 @@ export default function Auth() {
       if (errData?.errors) {
         toast.error(Object.values(errData.errors).flat().join(' · '));
       } else {
-        toast.error(errData?.message || 'Something went wrong');
+        toast.error(errData?.message || tc('somethingWentWrong'));
       }
     } finally {
       setLoading(false);
@@ -124,7 +124,7 @@ export default function Auth() {
   const verifyOtp = () => {
     const code = regOtp.join('');
     if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-      return toast.error('Enter all 6 digits');
+      return toast.error(t('errAllDigits'));
     }
     setRegStep(3);
   };
@@ -180,7 +180,7 @@ export default function Auth() {
           setRegStep(2);
         }
       } else {
-        toast.error(errData?.message || 'Something went wrong');
+        toast.error(errData?.message || tc('somethingWentWrong'));
       }
     } finally {
       setLoading(false);

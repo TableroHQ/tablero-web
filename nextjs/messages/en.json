@@ -122,7 +122,8 @@
     "welcomeToast": "Welcome back!",
     "codeSentToast": "Verification code sent — check your inbox",
     "accountCreatedToast": "Account created! Please sign in.",
-    "invalidCredentials": "Invalid credentials"
+    "invalidCredentials": "Invalid credentials",
+    "errAllDigits": "Enter all 6 digits"
   },
   "forgotPw": {
     "backToSignIn": "Back to sign in",
@@ -197,7 +198,11 @@
     "soldOut": "86'd today",
     "signInToOrder": "Sign in to order",
     "addToOrder": "Add to order",
-    "couldNotLoad": "Could not load menu"
+    "couldNotLoad": "Could not load menu",
+    "addedToOrder": "{name} added to your order",
+    "inOrderCount": "{n} in order",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity"
   },
   "orders": {
     "eyebrow": "Your history",
@@ -245,7 +250,9 @@
     "cancelledToast": "Reservation cancelled",
     "errSelectSlot": "Please select a time slot",
     "couldNotConfirm": "Could not confirm reservation",
-    "couldNotCancel": "Could not cancel"
+    "couldNotCancel": "Could not cancel",
+    "notConfigured": "Restaurant not configured",
+    "errPhone": "Please enter a contact phone number"
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "Order placed! Kitchen notified.",
     "paymentConfirmedToast": "Payment confirmed! Kitchen notified.",
     "emptyCartError": "Your cart is empty",
-    "itemsCount": "{n} items"
+    "itemsCount": "{n} items",
+    "notConfigured": "Restaurant not configured",
+    "couldNotPlace": "Could not place your order",
+    "paymentFailed": "Payment failed. Please try again."
   },
   "loyalty": {
     "eyebrow": "Bonus catalogue",
@@ -373,7 +383,8 @@
     "couldNotSave": "Could not save profile",
     "accountDeleted": "Account deleted",
     "errRequired": "Required",
-    "errMin3": "Min 3 characters"
+    "errMin3": "Min 3 characters",
+    "couldNotDelete": "Could not delete account"
   },
   "landing": {
     "eyebrow": "A restaurant operating system · est. 2026",

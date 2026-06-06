@@ -104,7 +104,7 @@ export default function Profile() {
       router.push('/');
       toast.success(t('accountDeleted'));
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Could not delete account');
+      toast.error(err.response?.data?.message || t('couldNotDelete'));
     } finally {
       setConfirmDelete(false);
     }

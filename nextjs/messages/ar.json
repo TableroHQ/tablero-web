@@ -122,7 +122,8 @@
     "welcomeToast": "أهلاً بعودتك!",
     "codeSentToast": "تم إرسال رمز التحقق — تحقق من صندوق الوارد",
     "accountCreatedToast": "تم إنشاء الحساب! يُرجى تسجيل الدخول.",
-    "invalidCredentials": "بيانات اعتماد غير صالحة"
+    "invalidCredentials": "بيانات اعتماد غير صالحة",
+    "errAllDigits": "أدخل جميع الأرقام الستة"
   },
   "forgotPw": {
     "backToSignIn": "العودة إلى تسجيل الدخول",
@@ -197,7 +198,11 @@
     "soldOut": "نفد اليوم",
     "signInToOrder": "سجّل الدخول للطلب",
     "addToOrder": "أضف إلى الطلب",
-    "couldNotLoad": "تعذّر تحميل القائمة"
+    "couldNotLoad": "تعذّر تحميل القائمة",
+    "addedToOrder": "تمت إضافة {name} إلى طلبك",
+    "inOrderCount": "{n} في الطلب",
+    "increase": "زيادة الكمية",
+    "decrease": "إنقاص الكمية"
   },
   "orders": {
     "eyebrow": "سجلّك",
@@ -245,7 +250,9 @@
     "cancelledToast": "تم إلغاء الحجز",
     "errSelectSlot": "يُرجى اختيار موعد",
     "couldNotConfirm": "تعذّر تأكيد الحجز",
-    "couldNotCancel": "تعذّر الإلغاء"
+    "couldNotCancel": "تعذّر الإلغاء",
+    "notConfigured": "المطعم غير مهيأ",
+    "errPhone": "يرجى إدخال رقم هاتف للتواصل"
   },
   "checkout": {
     "eyebrow": "الدفع",
@@ -285,7 +292,10 @@
     "orderPlacedToast": "تم تقديم الطلب! تم إخطار المطبخ.",
     "paymentConfirmedToast": "تم تأكيد الدفع! تم إخطار المطبخ.",
     "emptyCartError": "سلتك فارغة",
-    "itemsCount": "{n} أصناف"
+    "itemsCount": "{n} أصناف",
+    "notConfigured": "المطعم غير مهيأ",
+    "couldNotPlace": "تعذر تقديم طلبك",
+    "paymentFailed": "فشل الدفع. يرجى المحاولة مرة أخرى."
   },
   "loyalty": {
     "eyebrow": "كتالوج المكافآت",
@@ -373,7 +383,8 @@
     "couldNotSave": "تعذّر حفظ الملف الشخصي",
     "accountDeleted": "تم حذف الحساب",
     "errRequired": "مطلوب",
-    "errMin3": "3 أحرف على الأقل"
+    "errMin3": "3 أحرف على الأقل",
+    "couldNotDelete": "تعذر حذف الحساب"
   },
   "landing": {
     "eyebrow": "نظام تشغيل مطعم · تأسس 2026",
