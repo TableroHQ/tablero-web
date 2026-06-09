@@ -52,7 +52,14 @@ export default function Menu() {
           ...item,
           cat: item.categoryName || item.cat || 'Other',
           img: item.imageUrl || item.image || '',
-          available: item.isAvailable !== false && item.available !== false,
+          // Prefer the server's authoritative isOrderable (active + available +
+          // in stock); fall back to availability/stock for older payloads so a
+          // zero-stock item shows "Sold out" instead of failing at checkout.
+          available: item.isOrderable !== undefined
+            ? item.isOrderable
+            : (item.isAvailable !== false
+                && item.available !== false
+                && (item.stockQuantity == null || item.stockQuantity > 0)),
           allergens: item.allergens ?? [],
           tags: item.tags ?? [],
           desc: item.description || item.desc || '',

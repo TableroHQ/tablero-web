@@ -15,9 +15,11 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
   workers: 1,
-  retries: process.env.CI ? 1 : 0,
-  timeout: 30_000,
-  expect: { timeout: 10_000 },
+  // One retry absorbs the cold first-compile of heavy routes (e.g. /admin) the
+  // dev server does on the initial hit — the warm retry is fast and stable.
+  retries: 1,
+  timeout: 90_000,
+  expect: { timeout: 20_000 },
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: process.env.E2E_BASE_URL || 'http://localhost:3000',
