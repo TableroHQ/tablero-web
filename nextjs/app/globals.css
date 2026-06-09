@@ -6,6 +6,7 @@
 
 @layer base {
   html.dark {
+    color-scheme: dark;
     --background: 20 15% 9%;
     --foreground: 35 25% 90%;
     --card: 22 13% 13%;
@@ -30,6 +31,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --background: 40 30% 97%;
     --foreground: 20 25% 13%;
     --card: 0 0% 100%;
@@ -66,6 +68,25 @@
     -moz-osx-font-smoothing: grayscale;
   }
   ::selection { background: hsl(var(--primary) / 0.2); color: hsl(var(--foreground)); }
+
+  /* Form controls always use themed text so they stay legible in both
+     light and dark mode, regardless of the surface they sit on. */
+  input, textarea, select {
+    color: hsl(var(--foreground));
+  }
+  input::placeholder, textarea::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 1;
+  }
+  /* Keep autofilled inputs readable in dark mode (Chrome forces a light
+     fill + dark text otherwise, which clashes on dark surfaces). */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: hsl(var(--foreground));
+    -webkit-box-shadow: 0 0 0 1000px hsl(var(--input)) inset;
+    caret-color: hsl(var(--foreground));
+  }
 }
 
 .font-display { font-family: 'Playfair Display', serif; letter-spacing: -0.02em; }
