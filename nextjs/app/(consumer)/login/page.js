@@ -409,7 +409,7 @@ export default function Auth() {
         </div>
       </div>
 
-      <style>{`.auth-input{width:100%;background:hsl(30 20% 95%);border:1px solid transparent;border-radius:14px;padding:14px 16px;font-family:Figtree,sans-serif;font-size:14px;outline:none;transition:all .2s}.auth-input:focus{border-color:hsl(var(--primary));background:white;box-shadow:0 0 0 4px hsl(var(--primary) / 0.1)}`}</style>
+      <style>{`.auth-input{width:100%;background:hsl(var(--input));color:hsl(var(--foreground));border:1px solid transparent;border-radius:14px;padding:14px 16px;font-family:Figtree,sans-serif;font-size:14px;outline:none;transition:all .2s}.auth-input:focus{border-color:hsl(var(--primary));background:hsl(var(--card));box-shadow:0 0 0 4px hsl(var(--primary) / 0.1)}`}</style>
     </div>
   );
 }
