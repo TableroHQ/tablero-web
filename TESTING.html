@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tablero — Zero-to-Hero Test Plan</title>
+<style>
+  :root{
+    --ink:#111827; --ink-body:#374151; --ink-muted:#6b7280;
+    --primary:#F97316; --primary-dark:#c2410c; --secondary:#0ea5e9;
+    --cream:#fdf8f1; --cream-sub:#f3ece1; --border:#e7ded0;
+    --ok:#16a34a; --warn:#d97706; --danger:#dc2626;
+    --card:#ffffff;
+    --shadow:0 1px 3px rgba(17,24,39,.06),0 8px 24px rgba(17,24,39,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink-body);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--primary-dark);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86em;background:var(--cream-sub);
+    padding:.12em .4em;border-radius:6px;color:var(--ink);border:1px solid var(--border)}
+  pre{background:var(--ink);color:#f3ece1;padding:16px 18px;border-radius:14px;overflow:auto;font-size:.85rem;
+    line-height:1.5;box-shadow:var(--shadow)}
+  pre code{background:none;border:none;color:inherit;padding:0}
+
+  /* Layout */
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  header.hero{background:linear-gradient(135deg,#111827 0%,#1f2937 60%,#3a2618 100%);color:#fff;padding:54px 0 60px;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 12% 20%,rgba(249,115,22,.28),transparent 42%),radial-gradient(circle at 88% 80%,rgba(14,165,233,.18),transparent 45%);}
+  .hero .wrap{position:relative;z-index:1}
+  .logo-row{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+  .logo-mark{width:46px;height:46px;border-radius:13px;background:var(--primary);display:grid;place-items:center;
+    box-shadow:0 6px 18px rgba(249,115,22,.4);flex:none}
+  .logo-mark svg{width:26px;height:26px}
+  .brand-name{font-weight:700;font-size:1.15rem;letter-spacing:.04em}
+  .brand-sub{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  header.hero h1{font-size:clamp(2rem,5vw,3rem);margin:0 0 10px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.05}
+  header.hero p.lead{font-size:1.06rem;color:rgba(255,255,255,.82);max-width:680px;margin:0}
+  .hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .hero-chips span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;
+    padding:5px 12px;border-radius:999px;font-size:.78rem;backdrop-filter:blur(4px)}
+
+  /* Progress bar */
+  .progress-shell{position:sticky;top:0;z-index:50;background:rgba(253,248,241,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border)}
+  .progress-inner{display:flex;align-items:center;gap:16px;padding:12px 0}
+  .bar{flex:1;height:9px;border-radius:999px;background:var(--cream-sub);overflow:hidden;border:1px solid var(--border)}
+  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),#fbbf24);transition:width .3s ease}
+  .progress-label{font-size:.82rem;font-weight:600;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .reset-btn{font-size:.74rem;border:1px solid var(--border);background:#fff;color:var(--ink-muted);
+    padding:5px 11px;border-radius:999px;cursor:pointer}
+  .reset-btn:hover{color:var(--danger);border-color:var(--danger)}
+
+  /* Layout w/ TOC */
+  .layout{display:grid;grid-template-columns:236px 1fr;gap:40px;align-items:start;padding:38px 0 80px}
+  nav.toc{position:sticky;top:74px;font-size:.86rem}
+  nav.toc .toc-title{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 12px;font-weight:700}
+  nav.toc ol{list-style:none;margin:0;padding:0;border-left:2px solid var(--border)}
+  nav.toc li a{display:block;padding:7px 0 7px 16px;margin-left:-2px;border-left:2px solid transparent;color:var(--ink-body)}
+  nav.toc li a:hover{color:var(--primary-dark);text-decoration:none}
+  nav.toc li a.active{border-left-color:var(--primary);color:var(--ink);font-weight:600}
+
+  main{min-width:0}
+  section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:30px 32px;margin-bottom:24px;box-shadow:var(--shadow)}
+  section>h2{margin:0 0 6px;font-size:1.5rem;color:var(--ink);letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+  .phase-num{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:#fff;background:var(--primary);
+    border-radius:8px;padding:5px 9px;flex:none}
+  section>p.section-lead{margin:0 0 20px;color:var(--ink-muted)}
+  h3{margin:26px 0 10px;font-size:1.06rem;color:var(--ink)}
+  h3:first-of-type{margin-top:8px}
+
+  /* Tables */
+  table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.9rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);font-weight:700}
+  tbody tr:hover{background:var(--cream)}
+  td code{white-space:nowrap}
+  .scroll-x{overflow-x:auto}
+
+  /* Badges */
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  .b-guest{background:#e5e7eb;color:#374151}
+  .b-cust{background:#dbeafe;color:#1d4ed8}
+  .b-wait{background:#ffedd5;color:#c2410c}
+  .b-chef{background:#fee2e2;color:#b91c1c}
+  .b-cash{background:#ede9fe;color:#6d28d9}
+  .b-cour{background:#fef9c3;color:#a16207}
+  .b-admin{background:#111827;color:#fff}
+  .pass{color:var(--ok);font-weight:700}
+
+  /* Checklists */
+  ul.check{list-style:none;margin:6px 0;padding:0}
+  ul.check li{position:relative;margin:4px 0}
+  ul.check label{display:flex;gap:11px;align-items:flex-start;padding:9px 12px;border-radius:11px;cursor:pointer;
+    border:1px solid transparent;transition:background .12s}
+  ul.check label:hover{background:var(--cream)}
+  ul.check input{appearance:none;-webkit-appearance:none;width:20px;height:20px;border:2px solid var(--border);
+    border-radius:6px;flex:none;margin-top:2px;cursor:pointer;position:relative;background:#fff;transition:.12s}
+  ul.check input:checked{background:var(--ok);border-color:var(--ok)}
+  ul.check input:checked::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  ul.check input:checked + span{color:var(--ink-muted);text-decoration:line-through;text-decoration-color:var(--ink-muted)}
+  ul.check span{flex:1}
+
+  .role-head{display:flex;align-items:center;gap:12px;margin:30px 0 4px}
+  .role-head h3{margin:0}
+  .device-tag{font-size:.74rem;color:var(--ink-muted);background:var(--cream-sub);border:1px solid var(--border);
+    padding:3px 10px;border-radius:999px}
+
+  /* Callouts */
+  .note{border-left:4px solid var(--primary);background:#fff7ed;padding:13px 16px;border-radius:0 12px 12px 0;margin:16px 0;font-size:.9rem}
+  .note.warn{border-color:var(--warn);background:#fffbeb}
+  .note.tip{border-color:var(--secondary);background:#f0f9ff}
+  .note strong{color:var(--ink)}
+
+  .scenario{border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:14px 0;background:var(--cream)}
+  .scenario h4{margin:0 0 10px;color:var(--ink);font-size:1rem;display:flex;align-items:center;gap:10px}
+  .star{color:var(--primary)}
+  .scenario ol{margin:0;padding-left:20px}
+  .scenario ol li{margin:5px 0}
+  .scenario ol li b{color:var(--ink)}
+
+  .exit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:8px}
+  .exit-card{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:var(--cream)}
+  .exit-card .pass{font-size:1.3rem}
+
+  footer{text-align:center;color:var(--ink-muted);font-size:.82rem;padding:34px 0 50px}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:0}
+    nav.toc{display:none}
+    section{padding:22px 18px}
+    .wrap{padding:0 16px}
+  }
+  @media print{
+    .progress-shell,nav.toc,.reset-btn{display:none!important}
+    body{background:#fff}
+    section{break-inside:avoid;box-shadow:none;border-color:#ccc}
+    header.hero{background:#111827!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .layout{grid-template-columns:1fr;padding-top:10px}
+    ul.check input{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="logo-row">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="6" height="6" rx="1.4"/><rect x="15" y="3" width="6" height="6" rx="1.4"/>
+          <rect x="3" y="15" width="6" height="6" rx="1.4"/><path d="M15 15v6M18 18h3M18 12.5v.01"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Tablero</div>
+        <div class="brand-sub">Restaurant Operating System</div>
+      </div>
+    </div>
+    <h1>Zero-to-Hero Test Plan</h1>
+    <p class="lead">A device-by-device, role-by-role, technology-by-technology checklist to validate the entire Tablero web platform — frontend, backend, and real-time — across 2 phones and 2 PCs.</p>
+    <div class="hero-chips">
+      <span>6 microservices</span><span>8 roles</span><span>6 SignalR hubs</span>
+      <span>6 languages + RTL</span><span>Stripe</span><span>Cloudinary</span><span>Kafka · Redis · Postgres</span>
+    </div>
+  </div>
+</header>
+
+<div class="progress-shell">
+  <div class="wrap">
+    <div class="progress-inner">
+      <span class="progress-label" id="pct">0%</span>
+      <div class="bar"><i id="barFill"></i></div>
+      <span class="progress-label" id="count">0 / 0 checks</span>
+      <button class="reset-btn" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <nav class="toc">
+    <p class="toc-title">Contents</p>
+    <ol>
+      <li><a href="#inventory">Test inventory</a></li>
+      <li><a href="#phase0">0 · Setup</a></li>
+      <li><a href="#phase1">1 · Automated tests</a></li>
+      <li><a href="#phase2">2 · Technology smoke</a></li>
+      <li><a href="#phase3">3 · Per-role checklists</a></li>
+      <li><a href="#phase4">4 · Real-time E2E ★</a></li>
+      <li><a href="#phase5">5 · Negative &amp; security</a></li>
+      <li><a href="#phase6">6 · Logging</a></li>
+      <li><a href="#phase7">7 · Exit criteria</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <!-- INVENTORY -->
+    <section id="inventory">
+      <h2>What you're testing</h2>
+      <p class="section-lead">The real component inventory, pulled from the codebase.</p>
+      <div class="scroll-x">
+      <table>
+        <thead><tr><th>Layer</th><th>Components</th></tr></thead>
+        <tbody>
+          <tr><td><b>Frontend</b></td><td>Next.js (App Router), <code>next-intl</code> 6 languages (en, az, ru, tr, ar→RTL, zh), SignalR client, Stripe.js, axios + httpOnly-cookie auth</td></tr>
+          <tr><td><b>Backend</b></td><td>6 microservices: <code>identity</code>, <code>restaurant</code>, <code>reservation</code>, <code>order</code>, <code>payment</code>, <code>notification</code> behind YARP <b>gateway :8080</b></td></tr>
+          <tr><td><b>Real-time</b></td><td>6 SignalR hubs: <code>kitchen</code>, <code>waiter</code>, <code>table</code>, <code>cashier</code>, <code>courier</code>, <code>notify</code>.<br>Events: <code>OrderPlaced</code>, <code>OrderUpdated</code>, <code>OrderReady</code>, <code>ItemStatusChanged</code>, <code>TableUpdated</code>, <code>CallWaiter</code>, <code>Notify</code></td></tr>
+          <tr><td><b>Infra</b></td><td>Postgres, Redis, Kafka (outbox/events), Seq (logs), Cloudinary (images), Cloudflare tunnel</td></tr>
+          <tr><td><b>Roles</b></td><td>Guest, User (customer), Waiter, Chef, Cashier, Courier, Admin, Director</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- PHASE 0 -->
+    <section id="phase0">
+      <h2><span class="phase-num">PHASE 0</span> Setup</h2>
+      <p class="section-lead">Do this once before touching the devices.</p>
+
+      <h3>0.1 — Device matrix</h3>
+      <p>Assign fixed roles so real-time propagation is observable.</p>
+      <div class="scroll-x">
+      <table>
+        <thead><tr><th>Device</th><th>Role / View</th><th>Route after login</th></tr></thead>
+        <tbody>
+          <tr><td><b>PC-1</b> (big screen)</td><td><span class="badge b-chef">CHEF</span> Kitchen / KDS</td><td><code>/kds</code></td></tr>
+          <tr><td><b>PC-2</b></td><td><span class="badge b-admin">ADMIN</span> Dashboard + <span class="badge b-cash">CASHIER</span> POS (2nd tab)</td><td><code>/admin</code>, <code>/pos</code></td></tr>
+          <tr><td><b>Phone-1</b></td><td><span class="badge b-cust">CUSTOMER</span> dine-in QR + ordering</td><td><code>/menu</code>, <code>/dashboard</code></td></tr>
+          <tr><td><b>Phone-2</b></td><td><span class="badge b-wait">WAITER</span> floor + <span class="badge b-cour">COURIER</span> (swap)</td><td><code>/waiter</code>, <code>/courier</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>0.2 — Seeded test accounts</h3>
+      <div class="scroll-x">
+      <table>
+        <thead><tr><th>Email</th><th>Role</th><th>Lands on</th><th>Password</th></tr></thead>
+        <tbody>
+          <tr><td><code>director@tablero.com</code></td><td><span class="badge b-admin">DIRECTOR</span></td><td><code>/admin</code></td><td><code>Director1!</code></td></tr>
+          <tr><td><code>sofia.esposito@tablero.com</code></td><td><span class="badge b-wait">WAITER</span></td><td><code>/waiter</code></td><td><code>Staff1!!</code></td></tr>
+          <tr><td><code>luca.bianchi@tablero.com</code></td><td><span class="badge b-wait">WAITER</span></td><td><code>/waiter</code></td><td><code>Staff1!!</code></td></tr>
+          <tr><td><code>alex.ferrari@tablero.com</code></td><td><span class="badge b-chef">CHEF</span></td><td><code>/kds</code></td><td><code>Staff1!!</code></td></tr>
+          <tr><td><code>matteo.greco@tablero.com</code></td><td><span class="badge b-chef">CHEF</span></td><td><code>/kds</code></td><td><code>Staff1!!</code></td></tr>
+          <tr><td><code>giulia.romano@tablero.com</code></td><td><span class="badge b-cash">CASHIER</span></td><td><code>/pos</code></td><td><code>Staff1!!</code></td></tr>
+          <tr><td><code>alice.johnson@example.com</code> … <code>olivia.brown@example.com</code> (5)</td><td><span class="badge b-cust">CUSTOMER</span></td><td><code>/dashboard</code></td><td><code>Customer1!</code></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note warn"><strong>⚠ No seeded Courier account.</strong> To test the courier role: log in as Director → <code>/admin/staff</code> → create a staff user with role <code>COURIER</code> (or change a user's role), then log in on Phone-2.</div>
+
+      <h3>0.3 — Make it reachable from phones</h3>
+      <ul class="check" data-group="setup">
+        <li><label><input type="checkbox"><span>Backend: <code>./run.sh start</code> → note the <code>*.trycloudflare.com</code> URL</span></label></li>
+        <li><label><input type="checkbox"><span>Set <code>NEXT_PUBLIC_API_URL</code> to the tunnel URL (not <code>localhost</code>)</span></label></li>
+        <li><label><input type="checkbox"><span><b>Option A (phones):</b> use the deployed Vercel URL · <b>Option B (LAN):</b> <code>npm run build &amp;&amp; npm run start</code>, phones open <code>http://&lt;PC-LAN-IP&gt;:3000</code></span></label></li>
+        <li><label><input type="checkbox"><span>Confirm <code>NEXT_PUBLIC_STRIPE_KEY</code> and <code>NEXT_PUBLIC_RESTAURANT_ID</code> are set</span></label></li>
+      </ul>
+
+      <h3>0.4 — Pre-flight (PC-2 terminal)</h3>
+      <pre><code>docker ps --format '{{.Names}}\t{{.Status}}'      # all Up/healthy, seq not restarting
+curl -s http://localhost:8080/api/restaurants/&lt;RID&gt;/menu | head   # 72 items w/ imageUrl</code></pre>
+      <ul class="check" data-group="preflight">
+        <li><label><input type="checkbox"><span>All containers <code>Up</code> / <code>healthy</code></span></label></li>
+        <li><label><input type="checkbox"><span>Menu API returns 72 items, each with a Cloudinary <code>imageUrl</code></span></label></li>
+      </ul>
+    </section>
+
+    <!-- PHASE 1 -->
+    <section id="phase1">
+      <h2><span class="phase-num">PHASE 1</span> Automated tests first</h2>
+      <p class="section-lead">Cheap and fast — run before touching devices.</p>
+
+      <h3>Backend</h3>
+      <pre><code>cd /home/said/tablero-platform
+dotnet test     # 6 suites: Identity, Restaurant, Order, Reservation, Payment</code></pre>
+      <p>Covers outbox/Kafka publishing, authorization rules, and order/reservation/payment app-service logic.</p>
+
+      <h3>API contract</h3>
+      <pre><code>newman run postman/Tablero_Restaurant_OS_API_Collection.json --env-var base_url=http://localhost:8080</code></pre>
+
+      <h3>Frontend build gate</h3>
+      <pre><code>cd /home/said/tablero-web/nextjs &amp;&amp; npm run build   # must compile clean (38 routes)</code></pre>
+
+      <ul class="check" data-group="automated">
+        <li><label><input type="checkbox"><span>All 6 backend test suites green</span></label></li>
+        <li><label><input type="checkbox"><span>Postman / newman collection passes</span></label></li>
+        <li><label><input type="checkbox"><span>Frontend <code>npm run build</code> compiles clean</span></label></li>
+      </ul>
+      <div class="note tip"><strong>Gap to close:</strong> there's no frontend E2E suite yet. Recommended: add <b>Playwright</b> for consumer happy-path + role-gate redirects (see Phase 7).</div>
+    </section>
+
+    <!-- PHASE 2 -->
+    <section id="phase2">
+      <h2><span class="phase-num">PHASE 2</span> Technology smoke tests</h2>
+      <p class="section-lead">Does each technology work <em>at all</em>? Run on one PC + one phone before the full role sweep.</p>
+      <div class="scroll-x">
+      <table>
+        <thead><tr><th>#</th><th>Technology</th><th>Test</th><th>Pass criteria</th></tr></thead>
+        <tbody>
+          <tr><td>T1</td><td>Auth / JWT cookies</td><td>Login → refresh → reopen tab</td><td>Session persists; no re-login</td></tr>
+          <tr><td>T2</td><td>Token refresh</td><td>Idle past access-token expiry, then act</td><td>Silent <code>/api/auth/refresh</code>; no 401 bounce</td></tr>
+          <tr><td>T3</td><td>Logout</td><td>Logout</td><td>Cookies cleared; protected route → <code>/login</code></td></tr>
+          <tr><td>T4</td><td>i18n</td><td>Switch en/az/ru/tr/zh</td><td>All strings translate; menu re-fetches localized</td></tr>
+          <tr><td>T5</td><td>RTL</td><td>Switch to Arabic (ar)</td><td>Layout flips RTL; nav/cards/icons mirror</td></tr>
+          <tr><td>T6</td><td>Cloudinary images</td><td>Open <code>/menu</code></td><td>All 72 items show real photos, no broken</td></tr>
+          <tr><td>T7</td><td>Stripe</td><td><code>/topup</code> &amp; <code>/checkout</code> w/ <code>4242 4242 4242 4242</code></td><td>PaymentIntent succeeds; balance/order updates</td></tr>
+          <tr><td>T8</td><td>SignalR connect</td><td>Open <code>/kds</code>,<code>/waiter</code>,<code>/pos</code>,<code>/courier</code> + console</td><td>Hub connects, or logs graceful polling fallback</td></tr>
+          <tr><td>T9</td><td>Responsive</td><td>Phones at 360–430px</td><td>No overflow; nav collapses; tap targets usable</td></tr>
+          <tr><td>T10</td><td>Error/empty states</td><td>Kill <code>restaurant-service</code>, open <code>/menu</code></td><td>Friendly error toast, not white screen</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <ul class="check" data-group="tech">
+        <li><label><input type="checkbox"><span>T1 Auth · T2 Refresh · T3 Logout</span></label></li>
+        <li><label><input type="checkbox"><span>T4 i18n (5 LTR langs) · T5 Arabic RTL</span></label></li>
+        <li><label><input type="checkbox"><span>T6 Cloudinary images · T7 Stripe payments</span></label></li>
+        <li><label><input type="checkbox"><span>T8 SignalR · T9 Responsive · T10 Error states</span></label></li>
+      </ul>
+    </section>
+
+    <!-- PHASE 3 -->
+    <section id="phase3">
+      <h2><span class="phase-num">PHASE 3</span> Per-role functional checklists</h2>
+      <p class="section-lead">Walk every role through its core surface.</p>
+
+      <div class="role-head"><span class="badge b-guest">GUEST</span><h3>No login</h3></div>
+      <ul class="check" data-group="r-guest">
+        <li><label><input type="checkbox"><span>Landing, <code>/about</code>, <code>/press</code>, <code>/menu</code>, <code>/reviews</code>, <code>/contact</code>, legal pages render</span></label></li>
+        <li><label><input type="checkbox"><span>Reviews section hides when none / shows live published reviews</span></label></li>
+        <li><label><input type="checkbox"><span><code>/dashboard</code>, <code>/admin</code>, <code>/waiter</code> → redirect to <code>/login</code></span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-cust">CUSTOMER</span><h3>alice.johnson@…</h3><span class="device-tag">Phone-1</span></div>
+      <ul class="check" data-group="r-cust">
+        <li><label><input type="checkbox"><span>Browse menu, filter by category, search, see sold-out state</span></label></li>
+        <li><label><input type="checkbox"><span>Add to cart → <code>/checkout</code> → pay (Stripe + wallet balance + loyalty points)</span></label></li>
+        <li><label><input type="checkbox"><span><code>/orders</code> history · <code>/orders/[id]</code> live status</span></label></li>
+        <li><label><input type="checkbox"><span><code>/reservations</code> create/cancel · <code>/loyalty</code> redeem · <code>/topup</code> add funds</span></label></li>
+        <li><label><input type="checkbox"><span><code>/profile</code> edit + avatar upload (Cloudinary) · <code>/notifications</code> bell</span></label></li>
+        <li><label><input type="checkbox"><span>QR flow: scan <code>/qr</code> → table-scoped menu</span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-wait">WAITER</span><h3>sofia.esposito@…</h3><span class="device-tag">Phone-2 · /waiter</span></div>
+      <ul class="check" data-group="r-wait">
+        <li><label><input type="checkbox"><span>Table grid w/ live statuses; receives <code>CallWaiter</code> in real time</span></label></li>
+        <li><label><input type="checkbox"><span>Sees <code>OrderPlaced</code> / <code>OrderReady</code> for assigned tables</span></label></li>
+        <li><label><input type="checkbox"><span>Mark order served; trigger bill / handoff to cashier</span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-chef">CHEF / KDS</span><h3>alex.ferrari@…</h3><span class="device-tag">PC-1 · /kds</span></div>
+      <ul class="check" data-group="r-chef">
+        <li><label><input type="checkbox"><span>New tickets appear instantly on <code>OrderPlaced</code></span></label></li>
+        <li><label><input type="checkbox"><span>Advance item status → emits <code>ItemStatusChanged</code>; whole-order <code>OrderReady</code></span></label></li>
+        <li><label><input type="checkbox"><span>Ticket timers / aging visible</span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-cash">CASHIER / POS</span><h3>giulia.romano@…</h3><span class="device-tag">PC-2 · /pos</span></div>
+      <ul class="check" data-group="r-cash">
+        <li><label><input type="checkbox"><span>Open tables/checks, take cash payment, record on order</span></label></li>
+        <li><label><input type="checkbox"><span>Refund flow (<code>/admin/refunds</code> if Director); receipt/invoice</span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-cour">COURIER</span><h3>created via admin</h3><span class="device-tag">Phone-2 · /courier</span></div>
+      <ul class="check" data-group="r-cour">
+        <li><label><input type="checkbox"><span>Available deliveries list (live <code>/api/orders/deliveries</code>)</span></label></li>
+        <li><label><input type="checkbox"><span>Accept → assigned; checkpoint updates; mark delivered</span></label></li>
+        <li><label><input type="checkbox"><span>Empty state when no deliveries (no mock fallback now)</span></label></li>
+      </ul>
+
+      <div class="role-head"><span class="badge b-admin">ADMIN / DIRECTOR</span><h3>director@tablero.com</h3><span class="device-tag">PC-2 · /admin</span></div>
+      <ul class="check" data-group="r-admin">
+        <li><label><input type="checkbox"><span>Dashboard stats/charts · <code>/admin/revenue</code> analytics</span></label></li>
+        <li><label><input type="checkbox"><span><code>/admin/menu</code> CRUD (create item w/ Cloudinary upload, toggle availability)</span></label></li>
+        <li><label><input type="checkbox"><span><code>/admin/staff</code> create/role-change/deactivate · <code>/admin/tables</code> · <code>/admin/promotions</code></span></label></li>
+        <li><label><input type="checkbox"><span><code>/admin/reviews</code> publish / delete moderation</span></label></li>
+      </ul>
+    </section>
+
+    <!-- PHASE 4 -->
+    <section id="phase4">
+      <h2><span class="phase-num">PHASE 4</span> Cross-device real-time E2E <span class="star">★</span></h2>
+      <p class="section-lead">The headline test: proves SignalR + Kafka + the order pipeline across all 4 devices. Watch propagation latency — should be near-instant (&lt; 2s).</p>
+
+      <div class="scenario">
+        <h4><span class="star">★</span> Scenario A — Dine-in order lifecycle (all 4 devices)</h4>
+        <ol>
+          <li><b>Phone-1 (Customer)</b> scans <code>/qr</code> for a table → orders 3 items → pays.</li>
+          <li><b>PC-1 (KDS)</b> ticket appears automatically (<code>OrderPlaced</code>).</li>
+          <li><b>Phone-2 (Waiter)</b> sees the table go active (<code>TableUpdated</code>/<code>OrderPlaced</code>).</li>
+          <li><b>PC-1</b> chef marks items ready → <b>Phone-2</b> gets <code>OrderReady</code>; <b>Phone-1</b> <code>/orders/[id]</code> flips to READY.</li>
+          <li><b>PC-2 (POS)</b> cashier settles the check → table frees on Phone-2.</li>
+        </ol>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario B — Delivery → Courier</h4>
+        <ol>
+          <li>Phone-1 customer places a <b>delivery</b> order + pays.</li>
+          <li>PC-1 KDS prepares → READY.</li>
+          <li>Phone-2 (Courier) sees it in available list → accepts → checkpoints → delivered.</li>
+          <li>Customer <code>/delivery/[id]</code> tracks status live.</li>
+        </ol>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario C — Call Waiter</h4>
+        <ol><li>Phone-1 customer taps “call waiter” → <b>Phone-2 Waiter</b> gets <code>CallWaiter</code> toast within ~1s.</li></ol>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario D — Reservation</h4>
+        <ol><li>Phone-1 books a table → PC-2 Admin/Waiter sees it; cancel reflects on both.</li></ol>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario E — Notifications &amp; loyalty</h4>
+        <ol><li>Any qualifying action (order placed, bonus earned) → <code>Notify</code> bell badge increments on the customer device in real time.</li></ol>
+      </div>
+
+      <div class="scenario">
+        <h4>Scenario F — Concurrency</h4>
+        <ol><li>Two customers (Phone-1 + a PC tab) order the <b>last unit</b> of a low-stock item simultaneously → exactly one succeeds; the other sees sold-out.</li></ol>
+      </div>
+
+      <ul class="check" data-group="e2e">
+        <li><label><input type="checkbox"><span>Scenario A — Dine-in lifecycle propagates across all 4 devices</span></label></li>
+        <li><label><input type="checkbox"><span>Scenario B — Delivery → Courier</span></label></li>
+        <li><label><input type="checkbox"><span>Scenario C — Call Waiter</span></label></li>
+        <li><label><input type="checkbox"><span>Scenario D — Reservation</span></label></li>
+        <li><label><input type="checkbox"><span>Scenario E — Notifications &amp; loyalty</span></label></li>
+        <li><label><input type="checkbox"><span>Scenario F — Concurrency / last-unit race</span></label></li>
+      </ul>
+    </section>
+
+    <!-- PHASE 5 -->
+    <section id="phase5">
+      <h2><span class="phase-num">PHASE 5</span> Cross-cutting, negative &amp; security</h2>
+      <ul class="check" data-group="security">
+        <li><label><input type="checkbox"><span><b>Role gates:</b> logged-in Customer visits <code>/admin</code>,<code>/kds</code>,<code>/pos</code>,<code>/courier</code> → redirected to their home (not 500)</span></label></li>
+        <li><label><input type="checkbox"><span><b>Auth required:</b> API without cookie → 401; wrong role → 403</span></label></li>
+        <li><label><input type="checkbox"><span><b>Validation:</b> bad register/login/menu-create inputs → field errors, no crash</span></label></li>
+        <li><label><input type="checkbox"><span><b>Offline/degraded:</b> stop <code>order-service</code> → KDS/waiter fall back to polling, reconnect when back</span></label></li>
+        <li><label><input type="checkbox"><span><b>i18n completeness:</b> no raw keys (e.g. <code>menu.couldNotLoad</code>) in any of the 6 languages</span></label></li>
+        <li><label><input type="checkbox"><span><b>Multi-tab session:</b> logout in one tab logs out others</span></label></li>
+        <li><label><input type="checkbox"><span><b>Image fallback:</b> item with broken <code>imageUrl</code> hides gracefully</span></label></li>
+      </ul>
+    </section>
+
+    <!-- PHASE 6 -->
+    <section id="phase6">
+      <h2><span class="phase-num">PHASE 6</span> Logging &amp; evidence</h2>
+      <ul class="check" data-group="logging">
+        <li><label><input type="checkbox"><span>Keep <b>Seq</b> open on PC-2 to correlate each action with backend logs/events</span></label></li>
+        <li><label><input type="checkbox"><span>Watch DevTools console on each device for SignalR connect/disconnect and errors</span></label></li>
+      </ul>
+      <h3>Bug log template</h3>
+      <pre><code>[ID]  Role | Device | Route | Steps | Expected | Actual | Severity(S1-S4) | Logs/screenshot</code></pre>
+    </section>
+
+    <!-- PHASE 7 -->
+    <section id="phase7">
+      <h2><span class="phase-num">PHASE 7</span> Exit criteria — ship-ready</h2>
+      <div class="exit-grid">
+        <div class="exit-card"><span class="pass">✓</span> All 6 backend suites + Postman green</div>
+        <div class="exit-card"><span class="pass">✓</span> Frontend builds clean</div>
+        <div class="exit-card"><span class="pass">✓</span> All 8 roles' core flows pass</div>
+        <div class="exit-card"><span class="pass">✓</span> Scenarios A–F propagate in real time</div>
+        <div class="exit-card"><span class="pass">✓</span> All role gates enforced</div>
+        <div class="exit-card"><span class="pass">✓</span> 6 languages incl. Arabic RTL, no missing strings</div>
+        <div class="exit-card"><span class="pass">✓</span> Zero S1/S2 bugs open</div>
+      </div>
+      <div class="note tip" style="margin-top:22px"><strong>Next steps available:</strong> scaffold a Playwright E2E suite (login per role, menu→checkout, role-gate redirects, i18n smoke), or a SignalR probe script that connects to all 6 hubs and logs events to verify Phase 4 without eyeballing.</div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  Tablero — Restaurant Operating System · Test Plan · Generated <span id="gendate"></span> ·
+  <span id="footcount"></span> total checks · Print to PDF with <kbd>Ctrl/Cmd&nbsp;+&nbsp;P</kbd>
+</footer>
+
+<script>
+  // ---- Interactive checkboxes with localStorage persistence ----
+  const KEY = 'tablero-testplan-v1';
+  const boxes = Array.from(document.querySelectorAll('ul.check input[type=checkbox]'));
+  boxes.forEach((b,i)=>b.dataset.idx=i);
+
+  function load(){
+    let saved={};
+    try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+    boxes.forEach((b,i)=>{ if(saved[i]) b.checked=true; });
+  }
+  function save(){
+    const s={};
+    boxes.forEach((b,i)=>{ if(b.checked) s[i]=1; });
+    localStorage.setItem(KEY,JSON.stringify(s));
+  }
+  function refresh(){
+    const total=boxes.length;
+    const done=boxes.filter(b=>b.checked).length;
+    const pct=total?Math.round(done/total*100):0;
+    document.getElementById('barFill').style.width=pct+'%';
+    document.getElementById('pct').textContent=pct+'%';
+    document.getElementById('count').textContent=done+' / '+total+' checks';
+    document.getElementById('footcount').textContent=total;
+  }
+  boxes.forEach(b=>b.addEventListener('change',()=>{save();refresh();}));
+  function resetAll(){
+    if(!confirm('Clear all checkmarks?'))return;
+    boxes.forEach(b=>b.checked=false); save(); refresh();
+  }
+  load(); refresh();
+  document.getElementById('gendate').textContent=new Date().toISOString().slice(0,10);
+
+  // ---- TOC scroll-spy ----
+  const links=Array.from(document.querySelectorAll('nav.toc a'));
+  const map={};
+  links.forEach(a=>{ const id=a.getAttribute('href').slice(1); map[id]=a; });
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      if(map[e.target.id]) map[e.target.id].classList.add('active');
+    }});
+  },{rootMargin:'-30% 0px -60% 0px'});
+  document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

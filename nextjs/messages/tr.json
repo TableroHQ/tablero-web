@@ -24,7 +24,8 @@
     "tryAgain": "Tekrar dene",
     "unexpectedError": "Bu sayfada beklenmeyen bir hata oluştu.",
     "lightMode": "Aydınlık moda geç",
-    "nightMode": "Gece moduna geç"
+    "nightMode": "Gece moduna geç",
+    "noStaffAccess": "Personel sayfalarına erişiminiz yok"
   },
   "nav": {
     "home": "Ana sayfa",
@@ -450,7 +451,8 @@
     "refunds": "İadeler",
     "revenue": "Gelir",
     "admin": "Yönetici",
-    "backToConsumer": "Müşteri görünümüne dön"
+    "backToConsumer": "Müşteri görünümüne dön",
+    "signOut": "Çıkış yap"
   },
   "kds": {
     "title": "Mutfak Ekranı",

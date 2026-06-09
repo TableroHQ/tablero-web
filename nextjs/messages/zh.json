@@ -24,7 +24,8 @@
     "tryAgain": "重试",
     "unexpectedError": "此页面发生了意外错误。",
     "lightMode": "切换到浅色模式",
-    "nightMode": "切换到夜间模式"
+    "nightMode": "切换到夜间模式",
+    "noStaffAccess": "您无权访问员工页面"
   },
   "nav": {
     "home": "首页",
@@ -450,7 +451,8 @@
     "refunds": "退款",
     "revenue": "营收",
     "admin": "管理",
-    "backToConsumer": "返回顾客界面"
+    "backToConsumer": "返回顾客界面",
+    "signOut": "退出登录"
   },
   "kds": {
     "title": "厨房显示屏",

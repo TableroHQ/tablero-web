@@ -65,7 +65,7 @@ export default function ConsumerLayout({ children }) {
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <LanguageSwitcher />
             <ThemeToggle />
-            <NotificationBell />
+            {!isGuest && <NotificationBell />}
             {isCustomer && (
               <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-3 xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
                 <ShoppingBag size={16} /><span className="hidden xl:inline text-sm font-fn">{t('cart')}</span>
