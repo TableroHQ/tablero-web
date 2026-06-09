@@ -37,6 +37,26 @@ export default function Menu() {
   const router = useRouter();
   const isGuest = state.user.role === 'GUEST';
 
+  // Let the horizontal category bar be scrolled with a plain mouse wheel
+  // (not just a trackpad/touch). React registers `wheel` as passive, so we
+  // attach a non-passive native listener to be able to preventDefault.
+  const catsRef = React.useRef(null);
+  React.useEffect(() => {
+    const el = catsRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (e.deltaY === 0) return;
+      const max = el.scrollWidth - el.clientWidth;
+      if (max <= 0) return; // nothing to scroll
+      const atStart = el.scrollLeft <= 0 && e.deltaY < 0;
+      const atEnd = el.scrollLeft >= max && e.deltaY > 0;
+      if (!atStart && !atEnd) e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [cats]);
+
   React.useEffect(() => {
     if (!RESTAURANT_ID) {
       setLoading(false);
@@ -106,7 +126,7 @@ export default function Menu() {
             <Search size={16} className="text-ink-muted" />
             <input data-testid="menu-search" value={q} onChange={e => setQ(e.target.value)} placeholder={t('search')} className="bg-transparent flex-1 outline-none text-sm font-fn" />
           </div>
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
+          <div ref={catsRef} className="flex items-center gap-2 overflow-x-auto overscroll-x-contain scrollbar-none flex-1 min-w-0">
             {cats.map(c => (
               <button key={c} onClick={() => setCat(c)} data-testid={`menu-cat-${c.toLowerCase()}`}
                 className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30'}`}>
