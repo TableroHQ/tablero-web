@@ -20,7 +20,11 @@
     "noData": "Məlumat yoxdur",
     "active": "Aktiv",
     "suspended": "Bloklanmış",
-    "refresh": "Yenilə"
+    "refresh": "Yenilə",
+    "tryAgain": "Yenidən cəhd et",
+    "unexpectedError": "Bu səhifədə gözlənilməz xəta baş verdi.",
+    "lightMode": "İşıqlı rejimə keç",
+    "nightMode": "Gecə rejiminə keç"
   },
   "nav": {
     "home": "Ana səhifə",
@@ -319,7 +323,17 @@
     "pushNotifications": "Push bildirişlər",
     "pushNotificationsHint": "Tətbiqdaxili və mobil",
     "promotions": "Kampaniyalar",
-    "promotionsHint": "Aylıq aksiyalar"
+    "promotionsHint": "Aylıq aksiyalar",
+    "unreadShort": "{n} oxunmamış",
+    "markAll": "Hamısını işarələ",
+    "empty": "Sükut qızıldır.",
+    "viewAll": "Bütün bildirişlər →",
+    "secondsAgo": "{n} san əvvəl",
+    "minutesAgo": "{n} dəq əvvəl",
+    "hoursAgo": "{n} saat əvvəl",
+    "daysAgo": "{n} gün əvvəl",
+    "bellLabel": "Bildirişlər",
+    "bellLabelUnread": "Bildirişlər, {n} oxunmamış"
   },
   "profile": {
     "eyebrow": "Profil",
@@ -595,7 +609,9 @@
     "couldNotModerate": "Rəy idarə edilə bilmədi",
     "revenueEyebrow": "Gəlir",
     "noReviewsPending": "Moderasiyada rəy yoxdur",
-    "allBranches": "Bütün filiallar"
+    "allBranches": "Bütün filiallar",
+    "profitLabel": "Mənfəət (7g)",
+    "marginLabel": "Marja"
   },
   "adminStaff": {
     "title": "İşçi idarəetməsi",
@@ -1031,7 +1047,16 @@
     "upload": "Yüklə",
     "mDescription": "Təsvir",
     "mAllergens": "Allergenlər (vergüllə)",
-    "nameRequired": "Ad tələb olunur"
+    "nameRequired": "Ad tələb olunur",
+    "uploading": "Yüklənir…",
+    "imageTooLarge": "Şəkil 5 MB-dan kiçik olmalıdır.",
+    "uploadNotConfigured": "Şəkil yükləmə serverdə konfiqurasiya edilməyib.",
+    "uploadFailed": "Şəkil yüklənmədi.",
+    "mCostPrice": "Maya dəyəri",
+    "mStock": "Anbar",
+    "marginLabel": "Marja",
+    "thStock": "Anbar",
+    "thMargin": "Marja"
   },
   "adminTables": {
     "failedLoad": "Masalar yüklənmədi",

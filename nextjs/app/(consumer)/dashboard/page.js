@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Calendar, Coins, Receipt, ArrowRight, Wallet, Star, Bell, ChevronRight } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
 import { LOYALTY_NEXT_TARGET } from '@/lib/config';
@@ -58,7 +58,7 @@ export default function Dashboard() {
         <Link href="/menu" className="btn-primary inline-flex items-center gap-2" data-testid="dashboard-order-cta">{t('startOrder')} <ArrowRight size={16} /></Link>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-5 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-10">
         {loading ? (
           [0,1,2,3].map(i => <SkeletonStat key={i} className="lg:col-span-3" />)
         ) : (
@@ -71,7 +71,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
         <div className="lg:col-span-2 bg-white rounded-3xl border border-border p-6 md:p-8">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl">{t('upcomingReservations')}</h2>
@@ -115,7 +115,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2 bg-white rounded-3xl border border-border p-6 md:p-8">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl">{t('recentOrders')}</h2>

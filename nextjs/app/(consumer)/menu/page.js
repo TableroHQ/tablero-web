@@ -6,8 +6,8 @@ import { useStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
-import { IMG } from '@/lib/mock';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import Reveal from '@/components/Reveal';
 
 const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
 
@@ -25,10 +25,9 @@ function extractCats(items) {
   return ['All', ...cats]; // 'All' is a sentinel, translated at render time
 }
 
-const PLACEHOLDER_IMGS = [IMG.burger, IMG.pasta, IMG.salad, IMG.dessert];
-
 export default function Menu() {
   const t = useTranslations('menu');
+  const locale = useLocale();
   const [cat, setCat] = React.useState('All');
   const [q, setQ] = React.useState('');
   const [items, setItems] = React.useState([]);
@@ -43,14 +42,19 @@ export default function Menu() {
       setLoading(false);
       return;
     }
-    api.get(`/api/restaurants/${RESTAURANT_ID}/menu`)
+    // Ask the API for names/descriptions in the active UI language; the backend
+    // falls back to English for any locale it does not have a translation for.
+    api.get(`/api/restaurants/${RESTAURANT_ID}/menu`, {
+      headers: { 'Accept-Language': locale },
+    })
       .then((data) => {
-        const normalised = normaliseItems(data).map((item, idx) => ({
+        const normalised = normaliseItems(data).map((item) => ({
           ...item,
           cat: item.categoryName || item.cat || 'Other',
-          img: item.imageUrl || item.image || PLACEHOLDER_IMGS[idx % PLACEHOLDER_IMGS.length],
+          img: item.imageUrl || item.image || '',
           available: item.isAvailable !== false && item.available !== false,
           allergens: item.allergens ?? [],
+          tags: item.tags ?? [],
           desc: item.description || item.desc || '',
         }));
         setItems(normalised);
@@ -58,7 +62,9 @@ export default function Menu() {
       })
       .catch(() => toast.error(t('couldNotLoad')))
       .finally(() => setLoading(false));
-  }, []);
+    // Re-fetch when the language changes so the menu re-localizes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   const list = items.filter(m =>
     (cat === 'All' || m.cat === cat) &&
@@ -100,17 +106,18 @@ export default function Menu() {
       </div>
 
       {loading ? (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
           {[0,1,2,3,4,5].map(i => <SkeletonCard key={i} />)}
         </div>
       ) : list.length === 0 ? (
         <div className="mt-20 text-center text-ink-muted font-fn">{t('noItems')}</div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {list.map(m => (
-            <article key={m.id} className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+          {list.map((m, i) => (
+            <Reveal key={m.id} delay={Math.min(i, 8) * 60}>
+            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full">
               <div className="aspect-[4/3] relative overflow-hidden">
-                <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = PLACEHOLDER_IMGS[0]; }} />
+                <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
                 {!m.available && (
                   <div className="absolute inset-0 bg-ink/70 flex items-center justify-center">
                     <span className="chip bg-white text-ink"><AlertTriangle size={12} /> {t('soldOut')}</span>
@@ -124,6 +131,16 @@ export default function Menu() {
                   <span className="font-mono text-sm font-semibold">${Number(m.price).toFixed(2)}</span>
                 </div>
                 <p className="mt-2 text-sm text-ink-body leading-relaxed">{m.desc}</p>
+                {(m.isSpicy || m.isVegetarian || m.isVegan || m.isGlutenFree || Number(m.calories) > 0) && (
+                  <div className="mt-3 flex items-center gap-1.5 flex-wrap text-[11px] font-fn">
+                    {m.isVegan && <span className="chip bg-green-50 text-green-700">🌱 Vegan</span>}
+                    {!m.isVegan && m.isVegetarian && <span className="chip bg-green-50 text-green-700">Vegetarian</span>}
+                    {m.isGlutenFree && <span className="chip bg-amber-50 text-amber-700">Gluten-free</span>}
+                    {m.isSpicy && <span className="chip bg-red-50 text-red-700">🌶 Spicy</span>}
+                    {Number(m.calories) > 0 && <span className="chip bg-cream-sub text-ink-muted">{m.calories} kcal</span>}
+                    {Number(m.preparationTimeMinutes) > 0 && <span className="chip bg-cream-sub text-ink-muted">{m.preparationTimeMinutes} min</span>}
+                  </div>
+                )}
                 {m.allergens.length > 0 && (
                   <div className="mt-3 flex items-center gap-1 flex-wrap">
                     {m.allergens.map(a => <span key={a} className="text-[10px] font-mono uppercase tracking-wide bg-cream-sub px-2 py-0.5 rounded-full text-ink-muted">{a}</span>)}
@@ -142,6 +159,7 @@ export default function Menu() {
                 )}
               </div>
             </article>
+            </Reveal>
           ))}
         </div>
       )}

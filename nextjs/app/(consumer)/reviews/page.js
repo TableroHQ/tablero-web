@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Star, Loader2 } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { api } from '@/lib/client';
 import { toast } from 'sonner';
 
 const CATEGORIES = ['chef', 'waiter', 'cleanliness', 'service'];
@@ -26,9 +27,22 @@ export default function Reviews() {
     setSubmitting(true);
     try {
       const avg = Math.round(Object.values(ratings).reduce((s, v) => s + v, 0) / CATEGORIES.length);
+      const author = user.name || user.username || t('you');
+
+      // Persist to the backend so it shows up in admin moderation. The review feed
+      // below is local-only optimism; failure is non-fatal but surfaced to the user.
+      const restaurantId = user.restaurantId;
+      if (restaurantId) {
+        await api.post(`/api/restaurants/${restaurantId}/reviews`, {
+          rating: avg,
+          content: comment,
+          authorName: author,
+        });
+      }
+
       const review = {
         id: `rv_${Date.now()}`,
-        author: user.name || user.username || t('you'),
+        author,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         rating: avg,
         comment,
@@ -41,6 +55,8 @@ export default function Reviews() {
       setRatings({ chef: 5, waiter: 4, cleanliness: 5, service: 5 });
       setSubmitted(true);
       toast.success(t('submittedToast'));
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.response?.data?.error || t('addComment'));
     } finally {
       setSubmitting(false);
     }
@@ -52,7 +68,7 @@ export default function Reviews() {
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-xl">{t('intro')}</p>
 
-      <div className="grid lg:grid-cols-12 gap-6 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-10">
         <div className="lg:col-span-7 bg-white rounded-3xl border border-border p-7 md:p-8">
           {submitted ? (
             <div className="py-8 text-center">

@@ -151,6 +151,8 @@ export default function Checkout() {
       // 1. Create the order
       const orderBody = {
         tableId: null,
+        type: type === 'delivery' ? 'DELIVERY' : 'DINE_IN',
+        deliveryAddress: type === 'delivery' ? address : null,
         customerName: user.name || user.username || 'Guest',
         customerPhoneNumber: user.phone || null,
         specialRequest: type === 'delivery' ? `Delivery to: ${address}` : null,
@@ -222,7 +224,7 @@ export default function Checkout() {
         <div className="label-eyebrow">{t('eyebrow')}</div>
         <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
 
-        <div className="grid lg:grid-cols-12 gap-6 mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-10">
           <div className="lg:col-span-8 space-y-6">
             <div className="flex gap-2">
               {[['delivery', t('delivery')], ['table', t('orderAtTable')]].map(([k, l]) => (
@@ -285,7 +287,7 @@ export default function Checkout() {
 
             <div className="bg-white rounded-3xl border border-border p-6 md:p-7">
               <div className="label-eyebrow mb-4">{t('payment')}</div>
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <PayOption active={pay === 'balance'} onClick={() => setPay('balance')} icon={Wallet} title={t('accountBalance')} sub={`$${(user.balance || 0).toFixed(2)} available`} testid="pay-balance" />
                 <PayOption active={pay === 'card'} onClick={() => setPay('card')} icon={CreditCard} title={t('cardViaStripe')} sub="Visa, Mastercard, Apple Pay…" testid="pay-card" />
               </div>

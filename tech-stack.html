@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tablero · Frontend Technology Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Figtree:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --terracotta:#C8553D; --terracotta-dark:#A8432D; --terracotta-light:#E37A65;
+    --amber:#E4883A; --amber-dark:#C26A1A;
+    --cream:#FAFAF8; --cream-sub:#F2EFEB; --cream-warm:#EFEAE2;
+    --ink:#2C221E; --ink-body:#5C534D; --ink-muted:#8A817C;
+    --kds-bg:#1C1917; --kds-surface:#292524; --kds-surface2:#3A332E;
+    --ok:#437E55; --ok-bg:#EDF5F0; --warn:#E4883A; --warn-bg:#FDF3EB; --err:#D14949; --err-bg:#FCECEC;
+    --border:#E8E4DF; --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Figtree',system-ui,sans-serif;
+    background:var(--cream); color:var(--ink-body);
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:rgba(200,85,61,.2);color:var(--ink)}
+  .display{font-family:'Playfair Display',serif;letter-spacing:-.02em;color:var(--ink)}
+  .fn{font-family:'Outfit',sans-serif}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .eyebrow{font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--terracotta);font-weight:500}
+
+  /* ── Hero ─────────────────────────────────────────── */
+  header.hero{
+    background:linear-gradient(160deg,#2C221E 0%,#3A2A22 55%,#4a2c20 100%);
+    color:var(--cream); padding:84px 24px 110px; position:relative; overflow:hidden;
+  }
+  header.hero::after{
+    content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(200,85,61,.5),transparent 70%);filter:blur(20px);
+  }
+  .hero-inner{max-width:1080px;margin:0 auto;position:relative;z-index:1}
+  .hero .eyebrow{color:var(--terracotta-light)}
+  .hero h1{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(38px,6vw,68px);line-height:1.04;margin:14px 0 18px;letter-spacing:-.03em}
+  .hero p.lead{font-family:'Outfit',sans-serif;font-weight:300;font-size:clamp(16px,2.2vw,21px);color:rgba(250,250,248,.82);max-width:660px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+  .pill{
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    color:var(--cream);padding:7px 14px;border-radius:999px;backdrop-filter:blur(6px);
+  }
+  .pill b{color:var(--terracotta-light);font-weight:700}
+
+  /* ── Stats strip ──────────────────────────────────── */
+  .stats{max-width:1080px;margin:-58px auto 0;padding:0 24px;position:relative;z-index:3}
+  .stats-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);
+    border-radius:var(--radius);overflow:hidden;box-shadow:0 24px 50px -28px rgba(44,34,30,.4);
+  }
+  .stat{background:#fff;padding:26px 22px;text-align:center}
+  .stat .num{font-family:'Playfair Display',serif;font-size:34px;color:var(--terracotta);font-weight:700}
+  .stat .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-muted);margin-top:6px}
+
+  /* ── Layout ───────────────────────────────────────── */
+  main{max-width:1080px;margin:0 auto;padding:72px 24px 40px}
+  .section-head{margin:64px 0 28px}
+  .section-head:first-child{margin-top:0}
+  .section-head h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--ink);letter-spacing:-.02em}
+  .section-head p{font-family:'Outfit',sans-serif;color:var(--ink-body);margin-top:6px;max-width:680px}
+  .rule{height:3px;width:46px;background:var(--terracotta);border-radius:3px;margin-bottom:18px}
+
+  /* ── Tech card ────────────────────────────────────── */
+  .card{
+    background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+    margin-bottom:18px;overflow:hidden;transition:box-shadow .25s, transform .25s;
+  }
+  .card:hover{box-shadow:0 18px 40px -26px rgba(44,34,30,.45);transform:translateY(-2px)}
+  .card-top{display:flex;gap:16px;align-items:flex-start;padding:22px 24px 18px}
+  .badge{
+    flex-shrink:0;width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#fff;background:var(--terracotta);
+  }
+  .badge.amber{background:var(--amber)} .badge.ink{background:var(--ink)} .badge.ok{background:var(--ok)}
+  .badge.dark{background:var(--kds-surface)} .badge.blue{background:#3b6ea5}
+  .card-title{flex:1}
+  .card-title h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:19px;color:var(--ink);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .ver{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);background:var(--cream-sub);padding:2px 8px;border-radius:6px;font-weight:500}
+  .card-title .what{font-family:'Outfit',sans-serif;font-weight:300;color:var(--ink-body);font-size:14.5px;margin-top:3px}
+  .card-body{padding:0 24px 22px}
+
+  .why{
+    background:var(--cream-sub);border-left:3px solid var(--terracotta);border-radius:0 10px 10px 0;
+    padding:13px 16px;margin:4px 0 16px;font-size:14.5px;color:var(--ink-body);
+  }
+  .why b{color:var(--ink);font-family:'Outfit',sans-serif;font-weight:600}
+
+  .examples{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.examples{grid-template-columns:1fr}}
+  .ex{border:1px solid var(--border);border-radius:11px;overflow:hidden}
+  .ex-head{display:flex;align-items:center;gap:8px;padding:9px 13px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+  .ex.system .ex-head{background:var(--warn-bg);color:var(--amber-dark)}
+  .ex.user .ex-head{background:var(--ok-bg);color:var(--ok)}
+  .dot{width:7px;height:7px;border-radius:50%}
+  .ex.system .dot{background:var(--amber)} .ex.user .dot{background:var(--ok)}
+  .ex-body{padding:12px 14px;font-size:13.5px;color:var(--ink-body)}
+  .ex-body .scenario{color:var(--ink);font-weight:500;margin-bottom:6px;font-family:'Outfit',sans-serif}
+
+  code.inline{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--cream-warm);color:var(--terracotta-dark);padding:1.5px 6px;border-radius:5px}
+
+  pre{
+    background:var(--kds-bg);color:#E7E2DC;border-radius:11px;padding:15px 17px;overflow-x:auto;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;margin-top:10px;
+  }
+  pre .c{color:#8A817C;font-style:italic} pre .k{color:#E37A65} pre .s{color:#9DBF9E} pre .f{color:#E4A85E}
+
+  .grp{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .grp span{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--cream);border:1px solid var(--border);color:var(--ink-body);padding:4px 9px;border-radius:7px}
+
+  footer{background:var(--kds-bg);color:rgba(250,250,248,.6);text-align:center;padding:46px 24px;margin-top:60px;font-family:'Outfit',sans-serif;font-size:13.5px}
+  footer .display{color:var(--cream);font-size:22px;margin-bottom:8px}
+  footer a{color:var(--terracotta-light);text-decoration:none}
+
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+  .toc a{font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;text-decoration:none;color:var(--ink-body);background:#fff;border:1px solid var(--border);padding:7px 14px;border-radius:999px;transition:.2s}
+  .toc a:hover{border-color:var(--terracotta);color:var(--terracotta)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Frontend Architecture · Technology Dossier</div>
+    <h1>Tablero</h1>
+    <p class="lead">A multi-role <strong style="color:#fff">Restaurant Operating System</strong> — one Next.js frontend serving customers, waiters, chefs, cashiers, couriers and admins, with real-time kitchen displays, live order tracking, payments and six-language support.</p>
+    <div class="meta">
+      <span class="pill"><b>Next.js</b> 15 · App Router</span>
+      <span class="pill"><b>React</b> 19</span>
+      <span class="pill"><b>Tailwind</b> 3.4</span>
+      <span class="pill"><b>SignalR</b> real-time</span>
+      <span class="pill"><b>Stripe</b> payments</span>
+      <span class="pill"><b>Cloudinary</b> uploads</span>
+      <span class="pill"><b>Motion</b> system</span>
+      <span class="pill"><b>6</b> languages</span>
+    </div>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="num">35</div><div class="lbl">Routed Pages</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">User Roles</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">Locales (incl. RTL)</div></div>
+    <div class="stat"><div class="num">~8.3k</div><div class="lbl">Lines of UI Code</div></div>
+  </div>
+</section>
+
+<main>
+
+  <div class="section-head" style="margin-top:54px">
+    <h2 class="display">How to read this document</h2>
+    <p>Every technology below answers three questions: <b>What</b> it is, <b>Why</b> this project reached for it, and two <b>real examples</b> pulled straight from the codebase — one <span style="color:var(--amber-dark);font-weight:600">triggered by the system</span> (events, timers, the backend) and one <span style="color:var(--ok);font-weight:600">triggered by a user</span> (a click, a form, a tap).</p>
+    <div class="toc">
+      <a href="#core">Core Framework</a>
+      <a href="#design">Design System</a>
+      <a href="#ui">UI Primitives</a>
+      <a href="#data">Data &amp; Forms</a>
+      <a href="#realtime">Real-Time &amp; Payments</a>
+      <a href="#i18n">Internationalization</a>
+    </div>
+  </div>
+
+  <!-- ════════════ CORE ════════════ -->
+  <div class="section-head" id="core">
+    <div class="rule"></div>
+    <h2 class="display">Core Framework</h2>
+    <p>The runtime foundation — routing, rendering, server-side route protection and the BFF (backend-for-frontend) API layer.</p>
+  </div>
+
+  <!-- Next.js -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge ink">N</div>
+      <div class="card-title">
+        <h3>Next.js <span class="ver">^15.1.0</span> <span class="ver">App Router</span></h3>
+        <div class="what">React meta-framework providing file-based routing, server components, edge middleware and serverless API routes.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Tablero has eight role-based areas (<code class="inline">/admin</code>, <code class="inline">/kds</code>, <code class="inline">/pos</code>, <code class="inline">/waiter</code>, <code class="inline">/courier</code>, consumer). The App Router's route groups (<code class="inline">(consumer)</code>) and <b>Edge Middleware</b> let the app gate every URL by role <em>before</em> a page renders, and its API routes hold the JWT in <code class="inline">httpOnly</code> cookies so tokens never touch <code class="inline">localStorage</code>.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A CHEF requests <code class="inline">/admin/revenue</code></div>
+            <code class="inline">middleware.js</code> runs at the edge, reads the <code class="inline">tablero_role</code> cookie, sees the role isn't allowed, and redirects to that role's home (<code class="inline">/kds</code>) — no admin code is ever shipped to the browser.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A guest visits <code class="inline">/checkout</code> while logged out</div>
+            The matcher catches the auth-required path and bounces them to <code class="inline">/login?next=/checkout</code>, so after signing in they land exactly where they intended.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// middleware.js — server-side role gate (runs before render)</span>
+<span class="k">for</span> (<span class="k">const</span> { prefix, roles } <span class="k">of</span> ROLE_GATES) {
+  <span class="k">if</span> (pathname.startsWith(prefix)) {
+    <span class="k">if</span> (!auth) <span class="k">return</span> loginRedirect(request, pathname);
+    <span class="k">if</span> (!roles.includes(role))
+      <span class="k">return</span> NextResponse.redirect(<span class="k">new</span> URL(ROLE_HOME[role], request.url));
+  }
+}</pre>
+      <div class="grp"><span>app/ route groups</span><span>middleware.js (edge)</span><span>/api/auth/session route</span><span>/api/auth/refresh route</span><span>next.config.mjs image domains</span></div>
+    </div>
+  </div>
+
+  <!-- React -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge blue">⚛</div>
+      <div class="card-title">
+        <h3>React <span class="ver">^19.0.0</span></h3>
+        <div class="what">The component & state library underneath everything; hooks drive all client-side interactivity.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> The whole interface is component-driven. A hand-rolled <b>Context store</b> (<code class="inline">lib/store.js</code>) keeps the signed-in user, cart, notifications and preferences in one place, hydrated asynchronously from cookies on mount — no heavyweight state library needed.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">App boots</div>
+            A <code class="inline">useEffect</code> in <code class="inline">StoreProvider</code> restores the session from httpOnly cookies, decodes the JWT into a user object, and flips <code class="inline">hydrated:true</code> — components swap skeletons for real data.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Customer taps "Add to cart"</div>
+            <code class="inline">store.addToCart(item)</code> updates context immutably; if the item already exists its <code class="inline">qty</code> increments, and every subscribed component re-renders instantly.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>Context + useReducer-style store</span><span>useEffect / useState / useRef</span><span>'use client' boundaries</span><span>ErrorBoundary component</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════ DESIGN ════════════ -->
+  <div class="section-head" id="design">
+    <div class="rule"></div>
+    <h2 class="display">Design System &amp; Styling</h2>
+    <p>A bespoke "warm restaurant" visual language — terracotta &amp; cream tokens, four typefaces, and a dark "kitchen display" theme.</p>
+  </div>
+
+  <!-- Tailwind -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#38bdf8">T</div>
+      <div class="card-title">
+        <h3>Tailwind CSS <span class="ver">^3.4.17</span></h3>
+        <div class="what">Utility-first CSS engine, extended with the project's custom color/typography design tokens.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Tablero needs <em>two</em> coherent palettes — a warm cream UI for customers and a dark, high-contrast <code class="inline">kds</code> palette for the kitchen screen. Tailwind's <code class="inline">theme.extend</code> defines semantic tokens (<code class="inline">terracotta</code>, <code class="inline">cream</code>, <code class="inline">ink</code>, <code class="inline">kds.bg</code>, <code class="inline">ok/warn/err</code>) driven by CSS variables, so <code class="inline">darkMode:'class'</code> flips the whole app.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A kitchen ticket ages past 5 min</div>
+            The card border swaps to a token class — <code class="inline">border-t-err</code> with <code class="inline">animate-pulse-soft</code> — turning the ticket red so the line cook can't miss it.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User enables dark mode in preferences</div>
+            <code class="inline">ThemeApplier</code> toggles the <code class="inline">.dark</code> class on <code class="inline">&lt;html&gt;</code>; every <code class="inline">hsl(var(--…))</code> token re-resolves and the palette inverts.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// tailwind.config.js — semantic + brand tokens</span>
+colors: {
+  primary: { DEFAULT: <span class="s">'hsl(var(--primary))'</span> },
+  terracotta: { DEFAULT: <span class="s">'#C8553D'</span>, dark: <span class="s">'#A8432D'</span> },
+  kds: { bg: <span class="s">'#1C1917'</span>, surface: <span class="s">'#292524'</span> },
+  ok: { DEFAULT: <span class="s">'#437E55'</span> }, err: { DEFAULT: <span class="s">'#D14949'</span> },
+}</pre>
+      <div class="grp"><span>tailwindcss-animate</span><span>postcss + autoprefixer</span><span>cn() = clsx + tailwind-merge</span><span>class-variance-authority</span><span>darkMode: 'class'</span></div>
+    </div>
+  </div>
+
+  <!-- Fonts + cn -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge amber">Aa</div>
+      <div class="card-title">
+        <h3>Typography &amp; Class Utilities</h3>
+        <div class="what">Google Fonts (4 families) + <code class="inline">clsx</code>, <code class="inline">tailwind-merge</code> and <code class="inline">class-variance-authority</code> for conflict-free dynamic classes.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> The brand pairs <b>Playfair Display</b> (elegant headings), <b>Outfit</b> (functional UI), <b>Figtree</b> (body) and <b>JetBrains Mono</b> (data/labels). When components compute classes conditionally, <code class="inline">cn()</code> merges them so a later <code class="inline">bg-primary</code> always wins over an earlier <code class="inline">bg-cream</code> instead of both landing in the DOM.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A toast is themed at render</div>
+            The global <code class="inline">&lt;Toaster&gt;</code> applies <code class="inline">fontFamily:'Figtree'</code> and a 16px radius, so every system notification matches the brand automatically.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User hovers a notification row</div>
+            <code class="inline">cn()</code> resolves the conditional hover + unread + dark-mode classes into one clean className with no duplicate utilities fighting each other.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>Playfair Display</span><span>Outfit</span><span>Figtree</span><span>JetBrains Mono</span><span>lib/utils.js → cn()</span></div>
+    </div>
+  </div>
+
+  <!-- Motion -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#7c3aed">⤴</div>
+      <div class="card-title">
+        <h3>Motion &amp; Transitions <span class="ver">CSS · IntersectionObserver</span></h3>
+        <div class="what">A dependency-free motion layer — CSS keyframes &amp; Tailwind utilities, a reusable scroll-reveal, and App-Router route transitions — all gated by <code class="inline">prefers-reduced-motion</code>.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> The interface should feel alive without shipping a heavy animation runtime. Entrance, scroll-reveal and hover utilities live as tokens in <code class="inline">globals.css</code> (layered on the existing <code class="inline">tailwindcss-animate</code>); a reusable <code class="inline">&lt;Reveal&gt;</code> component fades content up the first time it scrolls into view; and a route-group <code class="inline">template.js</code> gives consumer pages a soft per-navigation transition. Operational real-time screens (<code class="inline">/kds</code>, <code class="inline">/pos</code>, <code class="inline">/waiter</code>, <code class="inline">/courier</code>) are deliberately left instant, and everything collapses to no-motion under reduced-motion — so polish never fights performance or accessibility.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A consumer route changes</div>
+            Next.js re-mounts <code class="inline">app/(consumer)/template.js</code> (a <em>template</em> mounts fresh per navigation, unlike a layout), replaying the <code class="inline">page-enter</code> keyframe so the new page fades and lifts in — no library, no layout shift.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A guest scrolls the landing page</div>
+            Each section's <code class="inline">&lt;Reveal&gt;</code> observes the viewport via <code class="inline">IntersectionObserver</code> and, the first time it enters, toggles <code class="inline">.reveal-in</code> to fade up with a staggered delay; above-the-fold content animates immediately.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// components/Reveal.jsx — reveal content the first time it enters view</span>
+<span class="k">const</span> io = <span class="k">new</span> IntersectionObserver(([e]) =&gt; {
+  <span class="k">if</span> (e.isIntersecting) { <span class="f">setShown</span>(<span class="k">true</span>); io.<span class="f">disconnect</span>(); }
+}, { threshold: <span class="f">.12</span> });
+<span class="c">/* globals.css */</span>
+.reveal    { opacity: <span class="f">0</span>; transform: translateY(var(--reveal-y,<span class="f">18px</span>)); transition: <span class="f">.65s</span>; }
+.reveal-in { opacity: <span class="f">1</span>; transform: none; }   <span class="c">/* never traps position:fixed children */</span>
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:<span class="f">1</span>; transform:none } }</pre>
+      <div class="grp"><span>tailwindcss-animate</span><span>CSS keyframes (globals.css)</span><span>IntersectionObserver</span><span>app/(consumer)/template.js</span><span>&lt;Reveal&gt; component</span><span>prefers-reduced-motion</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════ UI PRIMITIVES ════════════ -->
+  <div class="section-head" id="ui">
+    <div class="rule"></div>
+    <h2 class="display">UI Primitives &amp; Interaction</h2>
+    <p>Accessible, headless building blocks (Radix) plus specialised input/feedback widgets — all skinned with the Tailwind tokens above.</p>
+  </div>
+
+  <!-- Radix -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge ink">◐</div>
+      <div class="card-title">
+        <h3>Radix UI <span class="ver">25+ packages</span></h3>
+        <div class="what">Unstyled, fully-accessible primitives — dialogs, dropdowns, selects, tabs, tooltips, switches, accordions and more.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Building accessible overlays (focus traps, ARIA roles, keyboard nav) by hand is error-prone. Radix ships the behaviour headless; the project styles it with Tailwind to get the shadcn-style look while keeping WAI-ARIA correctness for free across all 35 pages.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A destructive action needs confirmation</div>
+            <code class="inline">@radix-ui/react-alert-dialog</code> opens, traps focus and announces itself to screen readers — e.g. admin suspending a staff member.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User opens a Select to pick a reservation slot</div>
+            <code class="inline">@radix-ui/react-select</code> handles arrow-key navigation, type-ahead and dismissal, so the slot picker is usable by keyboard and mouse alike.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>dialog</span><span>dropdown-menu</span><span>select</span><span>tabs</span><span>tooltip</span><span>switch</span><span>accordion</span><span>popover</span><span>avatar</span><span>+ 16 more</span></div>
+    </div>
+  </div>
+
+  <!-- lucide + sonner + others -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge amber">✦</div>
+      <div class="card-title">
+        <h3>Icons, Toasts &amp; Specialised Inputs</h3>
+        <div class="what"><code class="inline">lucide-react</code>, <code class="inline">sonner</code>, <code class="inline">input-otp</code>, <code class="inline">react-day-picker</code>, <code class="inline">cmdk</code>, <code class="inline">vaul</code>, <code class="inline">embla-carousel</code>, <code class="inline">react-resizable-panels</code>.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Each solves one job well: <b>lucide</b> = consistent SVG icon set; <b>sonner</b> = the global toast layer; <b>input-otp</b> = the 6-digit signup code; <b>react-day-picker</b> = reservation calendars; <b>cmdk</b> = command palette; <b>vaul</b> = mobile drawers; <b>embla</b> = menu/promo carousels.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Login succeeds</div>
+            <code class="inline">toast.success(t('welcomeToast'))</code> fires a richColors Sonner toast top-right; a failed call instead shows <code class="inline">toast.error(...)</code> with the server message.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User types the email verification code</div>
+            The <code class="inline">input-otp</code> field auto-advances across six boxes and submits when the last digit lands during registration step 2.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>lucide-react icons</span><span>sonner toaster (layout.js)</span><span>input-otp</span><span>react-day-picker</span><span>cmdk palette</span><span>vaul drawer</span><span>embla carousel</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════ DATA & FORMS ════════════ -->
+  <div class="section-head" id="data">
+    <div class="rule"></div>
+    <h2 class="display">Data Layer &amp; Forms</h2>
+    <p>How the frontend talks to the ASP.NET backend, validates input, and formats time.</p>
+  </div>
+
+  <!-- Axios -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge ok">⇄</div>
+      <div class="card-title">
+        <h3>Axios <span class="ver">^1.8.4</span></h3>
+        <div class="what">HTTP client wired with interceptors for JWT auth, silent token refresh and C#→JS key normalization.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> The C# gateway returns <b>PascalCase</b> JSON and protects routes with short-lived JWTs. Axios interceptors centralise three concerns once: attach <code class="inline">Bearer</code> tokens, transparently refresh on <code class="inline">401</code> and retry, and recursively lowercase every key to camelCase so React code stays idiomatic.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">An access token expires mid-session</div>
+            The response interceptor catches the <code class="inline">401</code>, calls <code class="inline">/api/auth/refresh</code> once (deduped across concurrent calls), updates the token and replays the original request — the user notices nothing.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User submits the login form</div>
+            <code class="inline">api.post('/api/auth/login', {…})</code> fires, the response is unwrapped &amp; camelCased, and <code class="inline">store.login()</code> persists the tokens to httpOnly cookies.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// lib/client.js — refresh-once-and-retry on 401</span>
+http.interceptors.response.use(res => res, <span class="k">async</span> err => {
+  <span class="k">if</span> (err.response?.status !== <span class="f">401</span> || err.config._retry) <span class="k">throw</span> err;
+  err.config._retry = <span class="k">true</span>;
+  refreshing ??= fetch(<span class="s">'/api/auth/refresh'</span>, { method: <span class="s">'POST'</span> })...
+  <span class="k">const</span> token = <span class="k">await</span> refreshing;
+  <span class="k">return</span> http(err.config); <span class="c">// replay original request</span>
+});</pre>
+      <div class="grp"><span>request interceptor → Bearer</span><span>response interceptor → refresh</span><span>normalizeKeys (PascalCase→camel)</span><span>in-memory token store</span><span>/api/loyalty · /reviews · /notifications/me · /users/me/preferences</span></div>
+    </div>
+  </div>
+
+  <!-- forms -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#d946a8">✓</div>
+      <div class="card-title">
+        <h3>Forms &amp; Validation</h3>
+        <div class="what"><code class="inline">react-hook-form</code> + <code class="inline">@hookform/resolvers</code> + <code class="inline">zod</code> for typed schema validation; <code class="inline">date-fns</code> for date math.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Forms are everywhere — login, multi-step registration, checkout, staff/menu CRUD, reviews. <b>Zod</b> declares the validation rules once as a schema, <b>react-hook-form</b> wires them to inputs with minimal re-renders, and the <b>resolver</b> bridges the two. <code class="inline">date-fns</code> handles reservation/delivery date formatting.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Server rejects a registration</div>
+            The backend's field errors map back onto the form: <code class="inline">Object.values(errData.errors).flat()</code> is surfaced inline and via toast, so each invalid field is annotated.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User blurs an empty password field</div>
+            Validation runs immediately and sets <code class="inline">errs.password = t('errPassword')</code>, blocking submit until the field is filled — no round-trip needed.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>zod schemas</span><span>react-hook-form</span><span>@hookform/resolvers</span><span>date-fns formatting</span><span>localized error messages</span></div>
+    </div>
+  </div>
+
+  <!-- Image upload -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#3448c5">↑</div>
+      <div class="card-title">
+        <h3>Image Upload <span class="ver">FormData · multipart</span></h3>
+        <div class="what">Menu-photo uploads sent as native <code class="inline">FormData</code> through the Axios client to the Cloudinary-backed media endpoint — no extra upload library.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Managers attach a photo to each dish. Rather than ship a heavyweight uploader, the menu editor builds a plain <code class="inline">FormData</code> and lets Axios post it as <code class="inline">multipart/form-data</code> (boundary set automatically) to the gateway, which signs &amp; stores the file on Cloudinary server-side and returns a permanent CDN URL. The browser only ever holds the file and the resulting <code class="inline">url</code>; the shared request interceptor still attaches the <code class="inline">Bearer</code> token, and a 5 MB client-side guard rejects oversized images before any bytes leave the device.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">The upload resolves</div>
+            The response is key-normalized to <code class="inline">{ url }</code> and written into the item form's <code class="inline">img</code> field, so the modal preview swaps from placeholder to the live Cloudinary thumbnail — and a <code class="inline">503</code> instead surfaces <code class="inline">uploadNotConfigured</code> as a toast.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Manager picks a dish photo</div>
+            The file input calls <code class="inline">uploadImage(file)</code>; it rejects anything over 5 MB with <code class="inline">toast.error</code>, else appends the file to a <code class="inline">FormData</code> and posts it to <code class="inline">/api/restaurants/{id}/media/upload</code>.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// app/admin/menu — multipart upload via the shared Axios client</span>
+<span class="k">const</span> fd = <span class="k">new</span> FormData();
+fd.<span class="f">append</span>(<span class="s">'file'</span>, file);                       <span class="c">// raw image, no JSON</span>
+<span class="k">const</span> { url } = <span class="k">await</span> api.<span class="f">post</span>(<span class="s">`/api/restaurants/${restaurantId}/media/upload`</span>, fd);
+setForm(f => ({ ...f, img: url }));            <span class="c">// store the returned CDN URL</span></pre>
+      <div class="grp"><span>FormData multipart</span><span>Axios auto-boundary</span><span>Bearer via interceptor</span><span>5 MB client guard</span><span>Cloudinary CDN url</span><span>admin/menu modal</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════ REALTIME & PAYMENTS ════════════ -->
+  <div class="section-head" id="realtime">
+    <div class="rule"></div>
+    <h2 class="display">Real-Time &amp; Payments</h2>
+    <p>The features that make Tablero feel <em>live</em> — push events from the kitchen and the road, charts, and secure card payments.</p>
+  </div>
+
+  <!-- SignalR -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#512bd4">⚡</div>
+      <div class="card-title">
+        <h3>SignalR <span class="ver">@microsoft/signalr ^10</span></h3>
+        <div class="what">WebSocket real-time client for the ASP.NET Core hubs — kitchen, waiter, table, notify, cashier, courier.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> A kitchen display and a courier map must update the instant the backend changes — polling is too slow and too chatty. SignalR keeps a JWT-authenticated socket open with <b>automatic reconnect</b> (back-off <code class="inline">0,2s,5s,10s,30s</code>) and <b>gracefully degrades to 15-second polling</b> if a hub isn't reachable, so screens never go stale.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Backend emits <code class="inline">OrderPlaced</code></div>
+            The KDS hub fires <code class="inline">conn.on('OrderPlaced', () =&gt; loadQueue())</code>; the new ticket pops onto the board and a chime plays — no refresh, no click.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Chef opens the kitchen screen</div>
+            On mount the page connects and calls <code class="inline">conn.invoke('JoinGroup', 'kitchen:'+restaurantId)</code>, subscribing only to that restaurant's order stream.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// lib/signalr.js — JWT auth + resilient reconnect</span>
+<span class="k">new</span> signalR.HubConnectionBuilder()
+  .withUrl(url, { accessTokenFactory: () => tokenStore.getAccess() })
+  .withAutomaticReconnect([<span class="f">0</span>, <span class="f">2000</span>, <span class="f">5000</span>, <span class="f">10000</span>, <span class="f">30000</span>])
+  .build();
+<span class="c">// app/kds — fall back to polling if the socket is down</span>
+<span class="k">if</span> (!hubConnected) setInterval(loadQueue, <span class="f">15000</span>);</pre>
+      <div class="grp"><span>6 hub routes</span><span>useHub() React hook</span><span>WebSockets + LongPolling</span><span>polling fallback</span><span>JoinGroup per restaurant</span></div>
+    </div>
+  </div>
+
+  <!-- Stripe -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#635bff">$</div>
+      <div class="card-title">
+        <h3>Stripe <span class="ver">react-stripe-js ^6 · stripe-js ^9</span></h3>
+        <div class="what">PCI-compliant card payments via Stripe Elements (<code class="inline">PaymentElement</code>) and PaymentIntents.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Customers top up wallet balance and pay checkout invoices. Stripe Elements renders the card UI inside an iframe Stripe controls, so raw card numbers never touch Tablero's servers — the app only handles a <code class="inline">clientSecret</code> and confirms the intent.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Order total is finalised</div>
+            The backend creates a PaymentIntent; the app mounts <code class="inline">&lt;Elements&gt;</code> with the returned <code class="inline">clientSecret</code> and themed appearance, revealing the secure payment step.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User clicks "Pay"</div>
+            <code class="inline">stripe.confirmPayment({ elements })</code> validates and charges the card; on success the cart clears and loyalty points are awarded; on error the message renders inline.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>loadStripe (singleton)</span><span>&lt;Elements&gt; provider</span><span>&lt;PaymentElement&gt;</span><span>useStripe / useElements</span><span>checkout + topup pages</span></div>
+    </div>
+  </div>
+
+  <!-- Recharts -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge ok">▦</div>
+      <div class="card-title">
+        <h3>Recharts <span class="ver">^3.6.0</span></h3>
+        <div class="what">Composable React charting (line, pie, responsive containers) for the admin analytics dashboards.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Directors and admins need revenue trends and category breakdowns at a glance. Recharts builds these declaratively from data arrays and its <code class="inline">ResponsiveContainer</code> keeps them fluid across screen sizes — the tooltips are even styled to match the brand's 12px radius.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Revenue page loads its dataset</div>
+            <code class="inline">&lt;LineChart data={dailyData}&gt;</code> renders the daily revenue trend and a <code class="inline">&lt;PieChart&gt;</code> splits sales by category automatically from the fetched arrays.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">Admin hovers a data point</div>
+            Recharts' <code class="inline">&lt;Tooltip&gt;</code> pops a branded card showing that day's exact figure under the cursor.
+          </div>
+        </div>
+      </div>
+      <div class="grp"><span>ResponsiveContainer</span><span>LineChart / Line</span><span>PieChart / Pie / Cell</span><span>XAxis · YAxis · Tooltip</span><span>admin/revenue · admin dashboard</span></div>
+    </div>
+  </div>
+
+  <!-- ════════════ I18N ════════════ -->
+  <div class="section-head" id="i18n">
+    <div class="rule"></div>
+    <h2 class="display">Internationalization &amp; Theming</h2>
+    <p>One codebase, six languages including right-to-left Arabic, plus persisted dark mode.</p>
+  </div>
+
+  <!-- next-intl -->
+  <div class="card">
+    <div class="card-top">
+      <div class="badge" style="background:#0ea5e9">文</div>
+      <div class="card-title">
+        <h3>next-intl <span class="ver">^4.13.0</span> &amp; next-themes <span class="ver">^0.4.6</span></h3>
+        <div class="what">Locale-aware translations (<code class="inline">useTranslations</code>) for 6 languages with RTL support, plus theme management.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="why"><b>Why here:</b> Tablero targets a multilingual market — <b>English, Russian, Azerbaijani, Turkish, Arabic and Chinese</b> (~1,200 keys each). next-intl loads only the active locale's messages on the server, supports rich placeholders (<code class="inline">t('minutesAgo', {n})</code>), and the root layout flips <code class="inline">dir="rtl"</code> for Arabic. next-themes / a custom <code class="inline">ThemeApplier</code> persists dark mode.</div>
+      <div class="examples">
+        <div class="ex system">
+          <div class="ex-head"><span class="dot"></span>System-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">A request arrives with <code class="inline">NEXT_LOCALE=ar</code></div>
+            <code class="inline">i18n/request.js</code> loads <code class="inline">messages/ar.json</code> server-side and the layout sets <code class="inline">dir="rtl"</code>, so the entire app mirrors for Arabic readers.
+          </div>
+        </div>
+        <div class="ex user">
+          <div class="ex-head"><span class="dot"></span>User-triggered</div>
+          <div class="ex-body">
+            <div class="scenario">User picks "Türkçe" in the LanguageSwitcher</div>
+            The <code class="inline">NEXT_LOCALE</code> cookie updates and every <code class="inline">useTranslations()</code> string — including pluralised relative times — re-renders in Turkish.
+          </div>
+        </div>
+      </div>
+<pre><span class="c">// i18n/request.js — load only the active locale, server-side</span>
+<span class="k">const</span> raw = cookieStore.get(<span class="s">'NEXT_LOCALE'</span>)?.value ?? <span class="s">'en'</span>;
+<span class="k">const</span> locale = SUPPORTED.includes(raw) ? raw : <span class="s">'en'</span>;
+<span class="k">return</span> { locale, messages: (<span class="k">await</span> import(<span class="s">`../messages/${locale}.json`</span>)).default };</pre>
+      <div class="grp"><span>en · ru · az · tr · ar · zh</span><span>~1,200 keys/locale</span><span>RTL for Arabic</span><span>NextIntlClientProvider</span><span>LanguageSwitcher component</span><span>next-themes dark mode</span></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="display">Tablero — Restaurant Operating System</div>
+  <div>Frontend technology dossier · generated from the live codebase · 2 Jun 2026</div>
+  <div style="margin-top:10px;font-size:12px;opacity:.7">Built with Next.js 15 · React 19 · Tailwind · SignalR · Stripe · Cloudinary · next-intl</div>
+</footer>
+
+</body>
+</html>

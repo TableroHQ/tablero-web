@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 import { ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import { api } from '@/lib/client';
@@ -189,7 +189,7 @@ export default function Auth() {
 
   // ─── render ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-[calc(100vh-72px)] grid lg:grid-cols-2">
+    <div className="min-h-[calc(100vh-72px)] grid grid-cols-1 lg:grid-cols-2">
       {/* Left panel */}
       <div className="relative hidden lg:block">
         <img src={IMG.texture} alt="" className="absolute inset-0 w-full h-full object-cover" />

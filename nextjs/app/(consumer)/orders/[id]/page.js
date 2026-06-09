@@ -79,7 +79,7 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2 bg-white rounded-3xl border border-border p-6 md:p-7">
           <div className="label-eyebrow mb-5">{t('items', { count: items.length })}</div>
           <div className="divide-y divide-border">

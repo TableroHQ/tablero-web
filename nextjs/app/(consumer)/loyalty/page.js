@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { Coins, Lock, Sparkles } from 'lucide-react';
-import { BONUSES, IMG } from '@/lib/mock';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
@@ -14,13 +13,37 @@ export default function Loyalty() {
   const { user } = state;
   const points = user.loyaltyPoints;
   const [redeeming, setRedeeming] = React.useState(null);
+  const [rewards, setRewards] = React.useState([]);
+
+  // Load the redeemable rewards catalogue from the server.
+  React.useEffect(() => {
+    api.get('/api/loyalty/rewards')
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        setRewards(list.map(r => ({ id: r.id, name: r.name, cost: r.pointsCost, img: r.imageUrl || '' })));
+      })
+      .catch(() => setRewards([]));
+  }, []);
+
+  // Load the server-side loyalty balance so points survive refreshes and reflect spend.
+  React.useEffect(() => {
+    if (!user.id) return;
+    api.get('/api/loyalty/balance')
+      .then(data => {
+        if (typeof data?.points === 'number') {
+          s.setBalance(user.balance, user.heldBalance, data.points);
+        }
+      })
+      .catch(() => {});
+  }, [user.id]);
 
   const redeem = async (b) => {
     if (b.cost > points) return toast.error(t('needMorePoints', { n: b.cost - points }));
     setRedeeming(b.id);
     try {
-      await api.post('/api/loyalty/redeem', { bonusId: b.id, bonusName: b.name, cost: b.cost });
-      s.setBalance(user.balance, user.heldBalance, points - b.cost);
+      const res = await api.post('/api/loyalty/redeem', { bonusId: b.id, bonusName: b.name, cost: b.cost });
+      const newPoints = typeof res?.points === 'number' ? res.points : points - b.cost;
+      s.setBalance(user.balance, user.heldBalance, newPoints);
       toast.success(t('redeemSuccessToast', { name: b.name }));
     } catch (err) {
       toast.error(err.response?.data?.message || t('couldNotRedeem'));
@@ -35,7 +58,7 @@ export default function Loyalty() {
       <h1 className="font-display text-5xl md:text-6xl mt-2 max-w-3xl">{t('title')}</h1>
       <p className="mt-3 text-ink-body max-w-xl">{t('subtitle')}</p>
 
-      <div className="grid lg:grid-cols-3 gap-6 mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
         <div className="lg:col-span-2 bg-gradient-to-br from-primary to-terracotta-dark text-white rounded-3xl p-8 md:p-10 relative overflow-hidden">
           <Sparkles className="absolute top-6 right-6 opacity-20" size={120} />
           <div className="label-eyebrow !text-white/70">{t('yourBalance')}</div>
@@ -57,13 +80,15 @@ export default function Loyalty() {
       </div>
 
       <h2 className="font-display text-3xl mt-14">{t('availableRewards')}</h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
-        {BONUSES.map(b => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
+        {rewards.map(b => {
           const locked = b.cost > points;
           return (
             <article key={b.id} className={`bg-white rounded-3xl border overflow-hidden ${locked ? 'opacity-70' : 'border-border hover:-translate-y-1 transition'}`} data-testid={`bonus-${b.id}`}>
-              <div className="aspect-square relative">
-                <img src={b.img} alt={b.name} className={`w-full h-full object-cover ${locked ? 'grayscale' : ''}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.src = IMG.burger; }} />
+              <div className="aspect-square relative bg-cream-sub">
+                {b.img
+                  ? <img src={b.img} alt={b.name} className={`w-full h-full object-cover ${locked ? 'grayscale' : ''}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
+                  : <div className="absolute inset-0 flex items-center justify-center text-secondary/40"><Coins size={48} /></div>}
                 {locked && <div className="absolute inset-0 bg-ink/40 flex items-center justify-center"><Lock className="text-white" size={28} /></div>}
               </div>
               <div className="p-5">

@@ -102,7 +102,7 @@ export default function Refunds() {
       {loading ? (
         <div className="py-16 flex justify-center"><Loader2 size={24} className="animate-spin text-ink-muted" /></div>
       ) : (
-        <div className="grid lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <div className="lg:col-span-7">
             <div className="bg-white rounded-2xl border border-border overflow-hidden">
               <div className="overflow-x-auto">

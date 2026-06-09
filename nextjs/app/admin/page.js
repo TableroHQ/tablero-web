@@ -2,10 +2,9 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
-import { SALES_DATA } from '@/lib/mock';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { TrendingUp, Euro, Users, Star, Check, X, ChevronDown, Loader2 } from 'lucide-react';
+import { TrendingUp, Euro, Users, Star, Check, X, ChevronDown, Loader2, Percent, ShoppingBag } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, BarChart, Bar } from 'recharts';
 import { toast } from 'sonner';
 
@@ -19,8 +18,9 @@ export default function Admin() {
   const [branch, setBranch] = React.useState('Downtown');
 
   const [stats, setStats] = React.useState({ revenue: null, orders: null, staff: null });
+  const [money, setMoney] = React.useState({ profit: null, margin: null });
   const [staffList, setStaffList] = React.useState([]);
-  const [rawPayments, setRawPayments] = React.useState([]);
+  const [chartData, setChartData] = React.useState([]);
   const [reviews, setReviews] = React.useState([]);
   const [loadingStats, setLoadingStats] = React.useState(true);
   const [loadingReviews, setLoadingReviews] = React.useState(true);
@@ -43,7 +43,6 @@ export default function Admin() {
         : [];
 
       const revenue = payments.filter(p => p.status === 'PAID').reduce((s, p) => s + Number(p.amount || 0), 0);
-      setRawPayments(payments);
       setStats({
         revenue: `$${revenue.toFixed(0)}`,
         orders: String(orders.length),
@@ -64,23 +63,31 @@ export default function Admin() {
       .finally(() => setLoadingReviews(false));
   }, [restaurantId]);
 
-  const chartData = React.useMemo(() => {
-    const paid = rawPayments.filter(p => p.status === 'PAID');
-    if (paid.length === 0) return SALES_DATA;
-    const revenueByDay = {};
-    const ordersByDay = {};
-    paid.forEach(p => {
-      const d = new Date(p.createdAt || p.paidAt || p.updatedAt);
-      const day = d.toLocaleDateString('en-US', { weekday: 'short' });
-      revenueByDay[day] = (revenueByDay[day] || 0) + Number(p.amount || 0);
-      ordersByDay[day] = (ordersByDay[day] || 0) + 1;
-    });
-    return WEEK_DAYS.map(day => ({
-      day,
-      revenue: Math.round(revenueByDay[day] || 0),
-      orders: ordersByDay[day] || 0,
-    }));
-  }, [rawPayments]);
+  // Daily revenue / cost / profit series from the orders analytics endpoint
+  // (last 7 days, zero-filled). Cost comes from each order line's snapshotted
+  // unit cost, so profit and margin are exact.
+  React.useEffect(() => {
+    api.get('/api/orders/analytics', { params: { days: 7 } })
+      .then(data => {
+        const list = Array.isArray(data) ? data : [];
+        setChartData(list.map(p => ({
+          day: new Date(`${p.date}T00:00:00`).toLocaleDateString('en-US', { weekday: 'short' }),
+          revenue: Math.round(Number(p.revenue) || 0),
+          profit: Math.round(Number(p.profit) || 0),
+          orders: Number(p.orders) || 0,
+        })));
+        const totalRevenue = list.reduce((s, p) => s + Number(p.revenue || 0), 0);
+        const totalProfit = list.reduce((s, p) => s + Number(p.profit || 0), 0);
+        setMoney({
+          profit: `$${totalProfit.toFixed(0)}`,
+          margin: totalRevenue > 0 ? `${((totalProfit / totalRevenue) * 100).toFixed(0)}%` : '—',
+        });
+      })
+      .catch(() => {
+        setChartData(WEEK_DAYS.map(day => ({ day, revenue: 0, profit: 0, orders: 0 })));
+        setMoney({ profit: '—', margin: '—' });
+      });
+  }, []);
 
   const moderateReview = async (id, action) => {
     try {
@@ -101,12 +108,12 @@ export default function Admin() {
       right={<BranchSelect value={branch} onChange={setBranch} />}>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Kpi icon={Euro} n={loadingStats ? '…' : (stats.revenue ?? '—')} l={t('revenueLabel')} />
-        <Kpi icon={TrendingUp} n={loadingStats ? '…' : (stats.orders ?? '—')} l={t('ordersLabel')} />
-        <Kpi icon={Users} n={loadingStats ? '…' : (stats.staff ?? '—')} l={t('staffLabel')} />
-        <Kpi icon={Star} n="4.74" l={t('ratingLabel')} trend="+0.06" />
+        <Kpi icon={TrendingUp} n={money.profit ?? '…'} l={t('profitLabel')} />
+        <Kpi icon={Percent} n={money.margin ?? '…'} l={t('marginLabel')} />
+        <Kpi icon={ShoppingBag} n={loadingStats ? '…' : (stats.orders ?? '—')} l={t('ordersLabel')} />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mt-5">
         <div className="lg:col-span-2 bg-white rounded-2xl border border-border p-5">
           <div className="flex justify-between items-center">
             <div>
@@ -152,7 +159,7 @@ export default function Admin() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-5 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <div className="bg-white rounded-2xl border border-border overflow-hidden">
           <div className="p-5 flex items-center justify-between border-b border-border">
             <div>
@@ -161,6 +168,7 @@ export default function Admin() {
             </div>
             <button className="text-xs font-mono text-primary uppercase tracking-widest" data-testid="manage-staff">{t('manage')}</button>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-cream-sub/50">
               <tr className="text-[10px] font-mono uppercase tracking-widest text-ink-muted">
@@ -187,6 +195,7 @@ export default function Admin() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         <div className="bg-white rounded-2xl border border-border p-5">

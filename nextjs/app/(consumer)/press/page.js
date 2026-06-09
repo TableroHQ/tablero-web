@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Download, Mail, ExternalLink, FileText, Image, Package } from 'lucide-react';
-import { IMG } from '@/lib/mock';
+import { IMG } from '@/lib/brand';
 
 const STATS = [
   { value: '12 k+', key: 'stat1Label' },
@@ -43,7 +43,7 @@ export default function Press() {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8 mt-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
         {/* Download kit */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-3xl border border-border p-7">

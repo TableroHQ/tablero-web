@@ -20,7 +20,11 @@
     "noData": "No data",
     "active": "Active",
     "suspended": "Suspended",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "tryAgain": "Try again",
+    "unexpectedError": "An unexpected error occurred on this page.",
+    "lightMode": "Switch to light mode",
+    "nightMode": "Switch to night mode"
   },
   "nav": {
     "home": "Home",
@@ -319,7 +323,17 @@
     "pushNotifications": "Push notifications",
     "pushNotificationsHint": "In-app and mobile",
     "promotions": "Promotions",
-    "promotionsHint": "Monthly food drops"
+    "promotionsHint": "Monthly food drops",
+    "unreadShort": "{n} unread",
+    "markAll": "Mark all",
+    "empty": "Silence is golden.",
+    "viewAll": "View all notifications →",
+    "secondsAgo": "{n}s ago",
+    "minutesAgo": "{n}m ago",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago",
+    "bellLabel": "Notifications",
+    "bellLabelUnread": "Notifications, {n} unread"
   },
   "profile": {
     "eyebrow": "Profile",
@@ -595,7 +609,9 @@
     "couldNotModerate": "Could not moderate review",
     "revenueEyebrow": "Revenue",
     "noReviewsPending": "No reviews pending moderation",
-    "allBranches": "All branches"
+    "allBranches": "All branches",
+    "profitLabel": "Profit (7d)",
+    "marginLabel": "Margin"
   },
   "adminStaff": {
     "title": "Staff management",
@@ -1031,7 +1047,16 @@
     "upload": "Upload",
     "mDescription": "Description",
     "mAllergens": "Allergens (comma)",
-    "nameRequired": "Name is required"
+    "nameRequired": "Name is required",
+    "uploading": "Uploading…",
+    "imageTooLarge": "Image must be 5 MB or smaller.",
+    "uploadNotConfigured": "Image uploads aren't configured on the server.",
+    "uploadFailed": "Image upload failed.",
+    "mCostPrice": "Cost price",
+    "mStock": "Stock",
+    "marginLabel": "Margin",
+    "thStock": "Stock",
+    "thMargin": "Margin"
   },
   "adminTables": {
     "failedLoad": "Failed to load tables",
