@@ -921,6 +921,8 @@
     "invalidAmount": "أدخل مبلغاً صالحاً",
     "notConfigured": "المطعم غير مُهيّأ — اضبط NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "تم إنشاء الدفعة · المعرّف {id}. أكملها عبر Stripe لإضافة الرصيد.",
+    "toppedUp": "تم شحن الرصيد · ${balance}",
+    "topupProcessing": "تم استلام الدفعة — سيتم تحديث رصيدك قريبًا.",
     "couldNotInitiate": "تعذّر بدء الدفع",
     "eyebrow": "شحن الرصيد",
     "title": "موّل محفظتك.",
@@ -936,7 +938,11 @@
     "fee": "الرسوم",
     "newBalance": "الرصيد الجديد",
     "processing": "جارٍ المعالجة…",
-    "pay": "ادفع ${amount}"
+    "pay": "ادفع ${amount}",
+    "securePayment": "دفع آمن",
+    "enterCardDetails": "أدخل تفاصيل البطاقة",
+    "securedByStripe": "مؤمّن بواسطة Stripe",
+    "confirmPayment": "تأكيد الدفع →"
   },
   "orderDetail": {
     "couldNotLoad": "تعذّر تحميل الطلب",

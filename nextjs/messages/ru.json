@@ -921,6 +921,8 @@
     "invalidAmount": "Введите корректную сумму",
     "notConfigured": "Ресторан не настроен — задайте NEXT_PUBLIC_RESTAURANT_ID",
     "paymentCreated": "Платёж создан · ID {id}. Завершите через Stripe для зачисления баланса.",
+    "toppedUp": "Баланс пополнен · ${balance}",
+    "topupProcessing": "Платёж получен — баланс обновится в ближайшее время.",
     "couldNotInitiate": "Не удалось инициировать платёж",
     "eyebrow": "Пополнение",
     "title": "Пополните кошелёк.",
@@ -936,7 +938,11 @@
     "fee": "Комиссия",
     "newBalance": "Новый баланс",
     "processing": "Обработка…",
-    "pay": "Оплатить ${amount}"
+    "pay": "Оплатить ${amount}",
+    "securePayment": "Безопасная оплата",
+    "enterCardDetails": "Введите данные карты",
+    "securedByStripe": "Защищено Stripe",
+    "confirmPayment": "Подтвердить оплату →"
   },
   "orderDetail": {
     "couldNotLoad": "Не удалось загрузить заказ",

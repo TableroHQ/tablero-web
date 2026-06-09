@@ -2,13 +2,126 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
 import { toast } from 'sonner';
-import { CreditCard, Wallet, ArrowLeft, Shield, Loader2, Check } from 'lucide-react';
+import { CreditCard, Wallet, ArrowLeft, Shield, Loader2, Check, Lock } from 'lucide-react';
 
-const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
-const NULL_ORDER_ID = '00000000-0000-0000-0000-000000000000';
+// Initialise once outside the component tree — Stripe warns against re-creating the promise.
+// NEXT_PUBLIC_STRIPE_KEY is the test publishable key; it must match the PaymentService test keys.
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY || '');
+
+// ---------------------------------------------------------------------------
+// Stripe confirmation step — shown after the top-up PaymentIntent is created.
+// The wallet is credited server-side by the Stripe webhook once the intent
+// succeeds, so on success we re-read the authoritative balance from the API.
+// ---------------------------------------------------------------------------
+function StripeStep({ clientSecret, intentId, onBack, onSuccess, t, tc }) {
+  const options = {
+    clientSecret,
+    appearance: {
+      theme: 'stripe',
+      variables: {
+        colorPrimary: '#E4883A',
+        borderRadius: '12px',
+        fontFamily: 'system-ui, sans-serif',
+      },
+    },
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-cream/90 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl border border-border shadow-xl w-full max-w-md p-8">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 text-sm text-ink-muted hover:text-ink mb-6 font-fn transition"
+          data-testid="stripe-back"
+        >
+          <ArrowLeft size={16} /> {tc('back')}
+        </button>
+
+        <div className="mb-6">
+          <div className="label-eyebrow mb-1">{t('securePayment')}</div>
+          <h2 className="font-display text-3xl">{t('enterCardDetails')}</h2>
+        </div>
+
+        <Elements stripe={stripePromise} options={options}>
+          <StripeForm intentId={intentId} onSuccess={onSuccess} t={t} />
+        </Elements>
+
+        <div className="mt-4 flex items-center justify-center gap-1.5 text-[11px] text-ink-muted font-mono">
+          <Lock size={11} /> {t('securedByStripe')}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StripeForm({ intentId, onSuccess, t }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [confirming, setConfirming] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
+  const handleConfirm = async () => {
+    if (!stripe || !elements) return;
+    setConfirming(true);
+    setError(null);
+
+    const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      // redirect: 'if_required' keeps the user on-page for card payments.
+      redirect: 'if_required',
+      confirmParams: {
+        return_url: `${window.location.origin}/dashboard`,
+      },
+    });
+
+    if (stripeError) {
+      setError(stripeError.message || t('couldNotInitiate'));
+      setConfirming(false);
+    } else {
+      // Prefer the id from the confirmed intent; fall back to the one we created with.
+      await onSuccess(paymentIntent?.id || intentId);
+    }
+  };
+
+  return (
+    <div className="space-y-5">
+      <PaymentElement options={{ layout: 'tabs' }} />
+
+      {error && (
+        <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 font-fn" data-testid="stripe-error">
+          {error}
+        </div>
+      )}
+
+      <button
+        onClick={handleConfirm}
+        disabled={!stripe || !elements || confirming}
+        className="w-full bg-primary hover:bg-terracotta-dark disabled:opacity-60 text-white py-4 rounded-full font-fn font-semibold transition inline-flex items-center justify-center gap-2"
+        data-testid="stripe-confirm"
+      >
+        {confirming ? (
+          <><Loader2 size={16} className="animate-spin" /> {t('processing')}</>
+        ) : (
+          t('confirmPayment')
+        )}
+      </button>
+    </div>
+  );
+}
+
+// Credit the wallet synchronously: ask the server to re-read the PaymentIntent from
+// Stripe and apply the top-up. This is idempotent with the webhook and works even when
+// the local webhook listener isn't running. Returns the COMPLETED balance, or null if
+// Stripe still reports the payment as not-yet-succeeded (rare — it reconciles via webhook).
+async function confirmCreditedBalance(intentId) {
+  const res = await api.post('/api/wallet/topup/confirm', { intentId });
+  return res.status === 'COMPLETED' ? res.balance : null;
+}
 
 export default function TopUp() {
   const t = useTranslations('topup');
@@ -17,36 +130,67 @@ export default function TopUp() {
   const { user } = state;
   const [amount, setAmount] = React.useState(50);
   const [processing, setProcessing] = React.useState(false);
-  const [paymentId, setPaymentId] = React.useState(null);
+  // When a PaymentIntent is created, holds { clientSecret } to render the Stripe step.
+  const [stripeCtx, setStripeCtx] = React.useState(null);
   const router = useRouter();
   const quick = [25, 50, 100, 200];
 
   const submit = async () => {
     if (amount <= 0) return toast.error(t('invalidAmount'));
-    if (!RESTAURANT_ID) return toast.error(t('notConfigured'));
     setProcessing(true);
     try {
-      const res = await api.post('/api/payments', {
-        orderId: NULL_ORDER_ID,
-        restaurantId: RESTAURANT_ID,
+      // Wallet top-up needs no order — funds belong to the authenticated user.
+      // Stripe provider returns an intentId + clientSecret (status PENDING); after the
+      // card is confirmed we credit the balance via the confirm endpoint (see below).
+      const res = await api.post('/api/wallet/topup', {
         amount,
         currency: 'USD',
         provider: 'Stripe',
       });
-      setPaymentId(res.id);
-      // Optimistic local balance update — server balance sync via /api/users/me after Stripe confirms
-      store.setBalance(user.balance + amount, user.heldBalance, user.loyaltyPoints);
-      toast.success(t('paymentCreated', { id: res.id?.slice(-8) }));
-      router.push('/dashboard');
+      if (!res.clientSecret) {
+        throw new Error('No Stripe client secret returned from server.');
+      }
+      setStripeCtx({ clientSecret: res.clientSecret, intentId: res.intentId });
     } catch (err) {
-      toast.error(err.response?.data?.message || t('couldNotInitiate'));
+      toast.error(err.response?.data?.message || err.message || t('couldNotInitiate'));
     } finally {
       setProcessing(false);
     }
   };
 
+  const handleStripeSuccess = async (intentId) => {
+    setStripeCtx(null);
+    try {
+      // Credit synchronously off the confirmed PaymentIntent — no waiting on the webhook.
+      const balance = await confirmCreditedBalance(intentId);
+      if (balance != null) {
+        store.setBalance(balance, user.heldBalance, user.loyaltyPoints);
+        toast.success(t('toppedUp', { balance: balance.toFixed(2) }));
+      } else {
+        // Stripe still reports the payment as not-yet-succeeded (e.g. async method
+        // "processing"); it reconciles via the webhook shortly.
+        toast.success(t('topupProcessing'));
+      }
+    } catch {
+      // Confirm failed; the payment still succeeded and reconciles via the webhook on next load.
+      toast.success(t('topupProcessing'));
+    }
+    router.push('/dashboard');
+  };
+
   return (
     <div className="max-w-[900px] mx-auto px-6 md:px-12 py-12">
+      {stripeCtx && (
+        <StripeStep
+          clientSecret={stripeCtx.clientSecret}
+          intentId={stripeCtx.intentId}
+          onBack={() => setStripeCtx(null)}
+          onSuccess={handleStripeSuccess}
+          t={t}
+          tc={tc}
+        />
+      )}
+
       <button onClick={() => router.back()} className="inline-flex items-center gap-2 text-sm text-ink-body hover:text-primary mb-6" data-testid="back"><ArrowLeft size={14} /> {tc('back')}</button>
       <div className="label-eyebrow">{t('eyebrow')}</div>
       <h1 className="font-display text-5xl md:text-6xl mt-2">{t('title')}</h1>
