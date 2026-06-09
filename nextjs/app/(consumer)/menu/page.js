@@ -106,7 +106,7 @@ export default function Menu() {
             <Search size={16} className="text-ink-muted" />
             <input data-testid="menu-search" value={q} onChange={e => setQ(e.target.value)} placeholder={t('search')} className="bg-transparent flex-1 outline-none text-sm font-fn" />
           </div>
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none flex-1 min-w-0">
             {cats.map(c => (
               <button key={c} onClick={() => setCat(c)} data-testid={`menu-cat-${c.toLowerCase()}`}
                 className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30'}`}>
