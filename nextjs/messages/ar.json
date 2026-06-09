@@ -31,6 +31,9 @@
     "home": "الرئيسية",
     "menu": "القائمة",
     "reserve": "حجز",
+    "contact": "تواصل معنا",
+    "ourStory": "قصتنا",
+    "helpCentre": "مركز المساعدة",
     "howItWorks": "كيف يعمل",
     "pricing": "الأسعار",
     "rewards": "المكافآت",
@@ -39,7 +42,8 @@
     "cart": "السلة",
     "signIn": "تسجيل الدخول",
     "signInRegister": "تسجيل الدخول / إنشاء حساب",
-    "myProfile": "ملفي الشخصي"
+    "myProfile": "ملفي الشخصي",
+    "pickup": "الاستلام"
   },
   "footer": {
     "tagline": "نظام تشغيل مطعم لكل من حول الطاولة — الضيوف والموظفون والمطبخ.",
@@ -118,7 +122,8 @@
     "welcomeToast": "أهلاً بعودتك!",
     "codeSentToast": "تم إرسال رمز التحقق — تحقق من صندوق الوارد",
     "accountCreatedToast": "تم إنشاء الحساب! يُرجى تسجيل الدخول.",
-    "invalidCredentials": "بيانات اعتماد غير صالحة"
+    "invalidCredentials": "بيانات اعتماد غير صالحة",
+    "errAllDigits": "أدخل جميع الأرقام الستة"
   },
   "forgotPw": {
     "backToSignIn": "العودة إلى تسجيل الدخول",
@@ -193,7 +198,11 @@
     "soldOut": "نفد اليوم",
     "signInToOrder": "سجّل الدخول للطلب",
     "addToOrder": "أضف إلى الطلب",
-    "couldNotLoad": "تعذّر تحميل القائمة"
+    "couldNotLoad": "تعذّر تحميل القائمة",
+    "addedToOrder": "تمت إضافة {name} إلى طلبك",
+    "inOrderCount": "{n} في الطلب",
+    "increase": "زيادة الكمية",
+    "decrease": "إنقاص الكمية"
   },
   "orders": {
     "eyebrow": "سجلّك",
@@ -241,7 +250,9 @@
     "cancelledToast": "تم إلغاء الحجز",
     "errSelectSlot": "يُرجى اختيار موعد",
     "couldNotConfirm": "تعذّر تأكيد الحجز",
-    "couldNotCancel": "تعذّر الإلغاء"
+    "couldNotCancel": "تعذّر الإلغاء",
+    "notConfigured": "المطعم غير مهيأ",
+    "errPhone": "يرجى إدخال رقم هاتف للتواصل"
   },
   "checkout": {
     "eyebrow": "الدفع",
@@ -281,7 +292,10 @@
     "orderPlacedToast": "تم تقديم الطلب! تم إخطار المطبخ.",
     "paymentConfirmedToast": "تم تأكيد الدفع! تم إخطار المطبخ.",
     "emptyCartError": "سلتك فارغة",
-    "itemsCount": "{n} أصناف"
+    "itemsCount": "{n} أصناف",
+    "notConfigured": "المطعم غير مهيأ",
+    "couldNotPlace": "تعذر تقديم طلبك",
+    "paymentFailed": "فشل الدفع. يرجى المحاولة مرة أخرى."
   },
   "loyalty": {
     "eyebrow": "كتالوج المكافآت",
@@ -369,7 +383,8 @@
     "couldNotSave": "تعذّر حفظ الملف الشخصي",
     "accountDeleted": "تم حذف الحساب",
     "errRequired": "مطلوب",
-    "errMin3": "3 أحرف على الأقل"
+    "errMin3": "3 أحرف على الأقل",
+    "couldNotDelete": "تعذر حذف الحساب"
   },
   "landing": {
     "eyebrow": "نظام تشغيل مطعم · تأسس 2026",
@@ -452,7 +467,11 @@
     "revenue": "الإيرادات",
     "admin": "الإدارة",
     "backToConsumer": "العودة إلى واجهة العميل",
-    "signOut": "تسجيل الخروج"
+    "signOut": "تسجيل الخروج",
+    "pickupQueue": "قائمة الاستلام",
+    "pickupHandoff": "تسليم الطلب",
+    "pickupPayments": "مدفوعات الاستلام",
+    "pickupOps": "عمليات الاستلام"
   },
   "kds": {
     "title": "شاشة المطبخ",
@@ -1278,5 +1297,139 @@
     "openMenu": "افتح القائمة",
     "signInForOrder": "سجّل الدخول للدفع من التطبيق → اكسب نقاطاً",
     "publicMenu": "قائمة عامة · لا يلزم تسجيل الدخول"
+  },
+  "pickup": {
+    "common": {
+      "live": "مباشر",
+      "polling": "استطلاع",
+      "refresh": "تحديث"
+    },
+    "create": {
+      "eyebrow": "استلام مجدول",
+      "title": "اطلب مسبقًا للاستلام",
+      "subtitle": "اختر أصنافك ووقت الاستلام. ادفع {percent}% الآن للتأكيد — والباقي عند الاستلام.",
+      "myOrders": "طلبات الاستلام الخاصة بي",
+      "pickupTime": "وقت الاستلام",
+      "readyHint": "نهدف إلى تجهيزه قبل هذا الوقت بنحو ١٠ دقائق.",
+      "noItemsYet": "لا أصناف بعد.",
+      "total": "الإجمالي",
+      "depositDue": "العربون ({percent}%) — مستحق الآن",
+      "remainingOnCollection": "المتبقي — عند الاستلام",
+      "payDeposit": "ادفع عربون {amount}",
+      "depositWallet": "يُخصم العربون من محفظة Tablero الخاصة بك.",
+      "noMenu": "لا توجد أصناف متاحة.",
+      "couldNotLoadMenu": "تعذّر تحميل القائمة.",
+      "addOneItem": "أضف صنفًا واحدًا على الأقل.",
+      "pickupFuture": "يجب أن يكون وقت الاستلام في المستقبل.",
+      "placedPaid": "تم إنشاء الطلب ودفع عربون 40%. سيجهّزه المطبخ قبل الاستلام.",
+      "depositFailed": "تم إنشاء الطلب، لكن تعذّر خصم العربون من محفظتك. اشحن وادفع من صفحة الطلب.",
+      "topUp": "شحن",
+      "createFailed": "تعذّر إنشاء طلب الاستلام.",
+      "decrease": "إنقاص",
+      "increase": "زيادة"
+    },
+    "detail": {
+      "back": "طلبات الاستلام الخاصة بي",
+      "items": "{count} صنف",
+      "live": "مباشر",
+      "polling": "استطلاع",
+      "pickupAt": "الاستلام في",
+      "cancelledMsg": "تم إلغاء هذا الطلب.",
+      "total": "الإجمالي",
+      "depositPaid": "العربون مدفوع (40%)",
+      "remaining": "المتبقي",
+      "paymentStatus": "حالة الدفع",
+      "payRemaining": "ادفع المتبقي {amount}",
+      "balancePaid": "تم دفع الرصيد بالكامل. شكرًا!",
+      "walletFail": "تعذّر الخصم من محفظتك. اشحن وحاول مجددًا.",
+      "topUp": "شحن",
+      "notFound": "الطلب غير موجود.",
+      "loadFail": "تعذّر تحميل هذا الطلب.",
+      "stepAwaitingDeposit": "بانتظار العربون",
+      "stepScheduled": "مجدول",
+      "stepBeingPrepared": "قيد التحضير",
+      "stepPrepared": "جاهز التحضير",
+      "stepReadyForPickup": "جاهز للاستلام",
+      "stepHandedOver": "تم التسليم",
+      "stepCompleted": "مكتمل"
+    },
+    "mine": {
+      "title": "طلبات الاستلام الخاصة بي",
+      "new": "جديد",
+      "none": "لا توجد طلبات استلام بعد.",
+      "loadFail": "تعذّر تحميل طلباتك.",
+      "items": "{count} صنف"
+    },
+    "chef": {
+      "title": "قائمة الاستلام",
+      "subtitle": "طلبات الاستلام المجدولة",
+      "none": "لا توجد طلبات استلام مجدولة.",
+      "loadFail": "تعذّر تحميل القائمة.",
+      "newOrder": "طلب استلام مجدول جديد",
+      "startPreparing": "بدء التحضير",
+      "markPrepared": "تحديد كجاهز",
+      "readyForPickup": "جاهز للاستلام",
+      "startedPreparing": "بدأ التحضير",
+      "markedPrepared": "تم تحديده كجاهز التحضير",
+      "markedReady": "تم تحديده جاهزًا للاستلام",
+      "actionFailed": "فشل الإجراء.",
+      "readyIn": "جاهز خلال {min} دقيقة",
+      "pickup": "الاستلام"
+    },
+    "waiter": {
+      "title": "تسليم الطلب",
+      "subtitle": "جاهز للتغليف",
+      "none": "لا طلبات جاهزة للاستلام.",
+      "loadFail": "تعذّر تحميل الطلبات الجاهزة.",
+      "readyAlert": "طلب استلام جاهز للتسليم",
+      "collectBalance": "تحصيل الرصيد",
+      "handOver": "تسليم",
+      "balance": "الرصيد",
+      "collected": "تم تسجيل الدفعة المتبقية — سيؤكدها أمين الصندوق.",
+      "collectFail": "تعذّر تسجيل الدفعة.",
+      "handedOver": "تم تسليم الطلب.",
+      "handOverFail": "تعذّر تسليم الطلب."
+    },
+    "cashier": {
+      "title": "مدفوعات الاستلام",
+      "subtitle": "العرابين والأرصدة والتأكيدات",
+      "loadFail": "تعذّر تحميل المدفوعات.",
+      "awaitConfirm": "رصيد بانتظار تأكيدك",
+      "colOrder": "الطلب",
+      "colType": "النوع",
+      "colAmount": "المبلغ",
+      "colStatus": "الحالة",
+      "colAction": "إجراء",
+      "noPayments": "لا مدفوعات.",
+      "confirm": "تأكيد",
+      "confirmed": "تم تأكيد الدفعة.",
+      "confirmFail": "تعذّر تأكيد الدفعة.",
+      "openTableBills": "فواتير الطاولات المفتوحة",
+      "noTableBills": "لا فواتير طاولات مفتوحة.",
+      "table": "طاولة",
+      "openOrders": "{count} طلب مفتوح"
+    },
+    "admin": {
+      "title": "عمليات الاستلام",
+      "subtitle": "نظرة مباشرة على الطلبات والمدفوعات",
+      "loadFail": "تعذّر تحميل لوحة الاستلام.",
+      "today": "اليوم",
+      "scheduled": "مجدول",
+      "preparing": "قيد التحضير",
+      "ready": "جاهز",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "totalSales": "إجمالي المبيعات",
+      "prepaid": "مدفوع مقدمًا",
+      "remainingUnpaid": "المتبقي غير المدفوع",
+      "awaitingCashier": "بانتظار الصندوق",
+      "liveOrders": "طلبات الاستلام المباشرة",
+      "colCustomer": "العميل",
+      "colPickup": "الاستلام",
+      "colStatus": "الحالة",
+      "colPayment": "الدفع",
+      "colTotal": "الإجمالي",
+      "none": "لا توجد طلبات استلام نشطة."
+    }
   }
 }

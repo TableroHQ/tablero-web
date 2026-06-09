@@ -31,6 +31,9 @@
     "home": "首页",
     "menu": "菜单",
     "reserve": "预订",
+    "contact": "联系我们",
+    "ourStory": "我们的故事",
+    "helpCentre": "帮助中心",
     "howItWorks": "运作方式",
     "pricing": "定价",
     "rewards": "奖励",
@@ -39,7 +42,8 @@
     "cart": "购物车",
     "signIn": "登录",
     "signInRegister": "登录 / 注册",
-    "myProfile": "我的资料"
+    "myProfile": "我的资料",
+    "pickup": "自取"
   },
   "footer": {
     "tagline": "为餐桌旁的每个人打造的餐厅操作系统——顾客、员工和厨房。",
@@ -118,7 +122,8 @@
     "welcomeToast": "欢迎回来!",
     "codeSentToast": "验证码已发送——请查收您的收件箱",
     "accountCreatedToast": "账户已创建!请登录。",
-    "invalidCredentials": "凭据无效"
+    "invalidCredentials": "凭据无效",
+    "errAllDigits": "请输入全部 6 位数字"
   },
   "forgotPw": {
     "backToSignIn": "返回登录",
@@ -193,7 +198,11 @@
     "soldOut": "今日售罄",
     "signInToOrder": "登录后点餐",
     "addToOrder": "加入订单",
-    "couldNotLoad": "无法加载菜单"
+    "couldNotLoad": "无法加载菜单",
+    "addedToOrder": "{name} 已加入您的订单",
+    "inOrderCount": "已点 {n} 份",
+    "increase": "增加数量",
+    "decrease": "减少数量"
   },
   "orders": {
     "eyebrow": "您的历史记录",
@@ -241,7 +250,9 @@
     "cancelledToast": "预订已取消",
     "errSelectSlot": "请选择一个时段",
     "couldNotConfirm": "无法确认预订",
-    "couldNotCancel": "无法取消"
+    "couldNotCancel": "无法取消",
+    "notConfigured": "餐厅未配置",
+    "errPhone": "请输入联系电话"
   },
   "checkout": {
     "eyebrow": "结账",
@@ -281,7 +292,10 @@
     "orderPlacedToast": "订单已提交!厨房已收到通知。",
     "paymentConfirmedToast": "支付已确认!厨房已收到通知。",
     "emptyCartError": "您的购物车是空的",
-    "itemsCount": "{n} 件"
+    "itemsCount": "{n} 件",
+    "notConfigured": "餐厅未配置",
+    "couldNotPlace": "无法提交您的订单",
+    "paymentFailed": "支付失败，请重试。"
   },
   "loyalty": {
     "eyebrow": "积分目录",
@@ -369,7 +383,8 @@
     "couldNotSave": "无法保存资料",
     "accountDeleted": "账户已删除",
     "errRequired": "必填",
-    "errMin3": "至少 3 个字符"
+    "errMin3": "至少 3 个字符",
+    "couldNotDelete": "无法删除账户"
   },
   "landing": {
     "eyebrow": "餐厅操作系统 · 创立于 2026",
@@ -452,7 +467,11 @@
     "revenue": "营收",
     "admin": "管理",
     "backToConsumer": "返回顾客界面",
-    "signOut": "退出登录"
+    "signOut": "退出登录",
+    "pickupQueue": "自取队列",
+    "pickupHandoff": "订单交接",
+    "pickupPayments": "自取付款",
+    "pickupOps": "自取运营"
   },
   "kds": {
     "title": "厨房显示屏",
@@ -1278,5 +1297,139 @@
     "openMenu": "打开菜单",
     "signInForOrder": "登录以从应用支付 → 赚取积分",
     "publicMenu": "公开菜单 · 无需登录"
+  },
+  "pickup": {
+    "common": {
+      "live": "实时",
+      "polling": "轮询",
+      "refresh": "刷新"
+    },
+    "create": {
+      "eyebrow": "预约自取",
+      "title": "提前下单自取",
+      "subtitle": "选择商品和取餐时间。现在支付 {percent}% 确认订单——其余取餐时支付。",
+      "myOrders": "我的自取订单",
+      "pickupTime": "取餐时间",
+      "readyHint": "我们将力争在该时间前约 10 分钟备好。",
+      "noItemsYet": "暂无商品。",
+      "total": "合计",
+      "depositDue": "定金（{percent}%）——现在支付",
+      "remainingOnCollection": "余款——取餐时支付",
+      "payDeposit": "支付 {amount} 定金",
+      "depositWallet": "定金将从您的 Tablero 钱包扣除。",
+      "noMenu": "暂无可选菜品。",
+      "couldNotLoadMenu": "无法加载菜单。",
+      "addOneItem": "请至少添加一个商品。",
+      "pickupFuture": "取餐时间必须在将来。",
+      "placedPaid": "订单已下，已支付 40% 定金。厨房会在取餐前备好。",
+      "depositFailed": "订单已创建，但无法从钱包扣除定金。请充值后在订单页支付。",
+      "topUp": "充值",
+      "createFailed": "无法创建自取订单。",
+      "decrease": "减少",
+      "increase": "增加"
+    },
+    "detail": {
+      "back": "我的自取订单",
+      "items": "{count} 件",
+      "live": "实时",
+      "polling": "轮询",
+      "pickupAt": "取餐",
+      "cancelledMsg": "该订单已取消。",
+      "total": "合计",
+      "depositPaid": "已付定金（40%）",
+      "remaining": "余款",
+      "paymentStatus": "支付状态",
+      "payRemaining": "支付余款 {amount}",
+      "balancePaid": "余款已全部付清。谢谢！",
+      "walletFail": "无法从钱包扣款。请充值后重试。",
+      "topUp": "充值",
+      "notFound": "未找到订单。",
+      "loadFail": "无法加载此订单。",
+      "stepAwaitingDeposit": "等待定金",
+      "stepScheduled": "已排期",
+      "stepBeingPrepared": "制作中",
+      "stepPrepared": "已备好",
+      "stepReadyForPickup": "可取餐",
+      "stepHandedOver": "已交付",
+      "stepCompleted": "已完成"
+    },
+    "mine": {
+      "title": "我的自取订单",
+      "new": "新建",
+      "none": "暂无自取订单。",
+      "loadFail": "无法加载您的订单。",
+      "items": "{count} 件"
+    },
+    "chef": {
+      "title": "自取队列",
+      "subtitle": "预约自取订单",
+      "none": "暂无预约自取订单。",
+      "loadFail": "无法加载队列。",
+      "newOrder": "新的预约自取订单",
+      "startPreparing": "开始制作",
+      "markPrepared": "标记备好",
+      "readyForPickup": "可取餐",
+      "startedPreparing": "已开始制作",
+      "markedPrepared": "已标记备好",
+      "markedReady": "已标记可取餐",
+      "actionFailed": "操作失败。",
+      "readyIn": "{min} 分钟后备好",
+      "pickup": "取餐"
+    },
+    "waiter": {
+      "title": "订单交接",
+      "subtitle": "待打包",
+      "none": "暂无可取餐订单。",
+      "loadFail": "无法加载可取餐订单。",
+      "readyAlert": "有自取订单可交接",
+      "collectBalance": "收取余款",
+      "handOver": "交付",
+      "balance": "余款",
+      "collected": "已记录余款——收银台将确认。",
+      "collectFail": "无法记录付款。",
+      "handedOver": "订单已交付。",
+      "handOverFail": "无法交付订单。"
+    },
+    "cashier": {
+      "title": "自取付款",
+      "subtitle": "定金、余款与确认",
+      "loadFail": "无法加载付款。",
+      "awaitConfirm": "有一笔余款待您确认",
+      "colOrder": "订单",
+      "colType": "类型",
+      "colAmount": "金额",
+      "colStatus": "状态",
+      "colAction": "操作",
+      "noPayments": "暂无付款。",
+      "confirm": "确认",
+      "confirmed": "付款已确认。",
+      "confirmFail": "无法确认付款。",
+      "openTableBills": "未结桌台账单",
+      "noTableBills": "暂无未结桌台账单。",
+      "table": "桌台",
+      "openOrders": "{count} 个未结订单"
+    },
+    "admin": {
+      "title": "自取运营",
+      "subtitle": "实时订单与付款概览",
+      "loadFail": "无法加载自取看板。",
+      "today": "今日",
+      "scheduled": "已排期",
+      "preparing": "制作中",
+      "ready": "可取餐",
+      "completed": "已完成",
+      "cancelled": "已取消",
+      "totalSales": "总销售额",
+      "prepaid": "已付定金",
+      "remainingUnpaid": "未付余款",
+      "awaitingCashier": "待收银确认",
+      "liveOrders": "实时自取订单",
+      "colCustomer": "客户",
+      "colPickup": "取餐",
+      "colStatus": "状态",
+      "colPayment": "支付",
+      "colTotal": "合计",
+      "none": "暂无进行中的自取订单。"
+    }
   }
 }

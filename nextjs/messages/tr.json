@@ -31,6 +31,9 @@
     "home": "Ana sayfa",
     "menu": "Menü",
     "reserve": "Rezervasyon",
+    "contact": "İletişim",
+    "ourStory": "Hikâyemiz",
+    "helpCentre": "Yardım merkezi",
     "howItWorks": "Nasıl çalışır",
     "pricing": "Fiyatlandırma",
     "rewards": "Ödüller",
@@ -39,7 +42,8 @@
     "cart": "Sepet",
     "signIn": "Giriş yap",
     "signInRegister": "Giriş yap / Kayıt ol",
-    "myProfile": "Profilim"
+    "myProfile": "Profilim",
+    "pickup": "Gel-Al"
   },
   "footer": {
     "tagline": "Masadaki herkes için bir restoran işletim sistemi — misafirler, personel ve mutfak.",
@@ -118,7 +122,8 @@
     "welcomeToast": "Tekrar hoş geldiniz!",
     "codeSentToast": "Doğrulama kodu gönderildi — gelen kutunuzu kontrol edin",
     "accountCreatedToast": "Hesap oluşturuldu! Lütfen giriş yapın.",
-    "invalidCredentials": "Geçersiz kimlik bilgileri"
+    "invalidCredentials": "Geçersiz kimlik bilgileri",
+    "errAllDigits": "6 rakamın tamamını girin"
   },
   "forgotPw": {
     "backToSignIn": "Girişe dön",
@@ -193,7 +198,11 @@
     "soldOut": "Bugün tükendi",
     "signInToOrder": "Sipariş için giriş yapın",
     "addToOrder": "Siparişe ekle",
-    "couldNotLoad": "Menü yüklenemedi"
+    "couldNotLoad": "Menü yüklenemedi",
+    "addedToOrder": "{name} siparişinize eklendi",
+    "inOrderCount": "siparişte {n}",
+    "increase": "Adedi artır",
+    "decrease": "Adedi azalt"
   },
   "orders": {
     "eyebrow": "Geçmişiniz",
@@ -241,7 +250,9 @@
     "cancelledToast": "Rezervasyon iptal edildi",
     "errSelectSlot": "Lütfen bir saat seçin",
     "couldNotConfirm": "Rezervasyon onaylanamadı",
-    "couldNotCancel": "İptal edilemedi"
+    "couldNotCancel": "İptal edilemedi",
+    "notConfigured": "Restoran yapılandırılmamış",
+    "errPhone": "Lütfen bir iletişim telefon numarası girin"
   },
   "checkout": {
     "eyebrow": "Ödeme",
@@ -281,7 +292,10 @@
     "orderPlacedToast": "Sipariş verildi! Mutfak bilgilendirildi.",
     "paymentConfirmedToast": "Ödeme onaylandı! Mutfak bilgilendirildi.",
     "emptyCartError": "Sepetiniz boş",
-    "itemsCount": "{n} ürün"
+    "itemsCount": "{n} ürün",
+    "notConfigured": "Restoran yapılandırılmamış",
+    "couldNotPlace": "Siparişiniz verilemedi",
+    "paymentFailed": "Ödeme başarısız. Lütfen tekrar deneyin."
   },
   "loyalty": {
     "eyebrow": "Bonus kataloğu",
@@ -369,7 +383,8 @@
     "couldNotSave": "Profil kaydedilemedi",
     "accountDeleted": "Hesap silindi",
     "errRequired": "Zorunlu",
-    "errMin3": "En az 3 karakter"
+    "errMin3": "En az 3 karakter",
+    "couldNotDelete": "Hesap silinemedi"
   },
   "landing": {
     "eyebrow": "Bir restoran işletim sistemi · 2026 kuruluşu",
@@ -452,7 +467,11 @@
     "revenue": "Gelir",
     "admin": "Yönetici",
     "backToConsumer": "Müşteri görünümüne dön",
-    "signOut": "Çıkış yap"
+    "signOut": "Çıkış yap",
+    "pickupQueue": "Gel-al kuyruğu",
+    "pickupHandoff": "Sipariş teslimi",
+    "pickupPayments": "Gel-al ödemeleri",
+    "pickupOps": "Gel-al operasyonları"
   },
   "kds": {
     "title": "Mutfak Ekranı",
@@ -1278,5 +1297,139 @@
     "openMenu": "Menüyü aç",
     "signInForOrder": "Uygulamadan ödemek için giriş yapın → puan kazanın",
     "publicMenu": "Herkese açık menü · giriş gerekmez"
+  },
+  "pickup": {
+    "common": {
+      "live": "Canlı",
+      "polling": "Yoklama",
+      "refresh": "Yenile"
+    },
+    "create": {
+      "eyebrow": "Planlı gel-al",
+      "title": "Gel-al için önceden sipariş ver",
+      "subtitle": "Ürünleri ve teslim saatini seç. Onay için şimdi %{percent} öde — kalanı teslimde.",
+      "myOrders": "Gel-al siparişlerim",
+      "pickupTime": "Teslim saati",
+      "readyHint": "Bu saatten ~10 dk önce hazır etmeyi hedefliyoruz.",
+      "noItemsYet": "Henüz ürün yok.",
+      "total": "Toplam",
+      "depositDue": "Kapora (%{percent}) — şimdi ödenecek",
+      "remainingOnCollection": "Kalan — teslimde",
+      "payDeposit": "{amount} kapora öde",
+      "depositWallet": "Kapora Tablero cüzdanınızdan tahsil edilir.",
+      "noMenu": "Uygun menü ürünü yok.",
+      "couldNotLoadMenu": "Menü yüklenemedi.",
+      "addOneItem": "En az bir ürün ekleyin.",
+      "pickupFuture": "Teslim saati gelecekte olmalı.",
+      "placedPaid": "Sipariş verildi ve %40 kapora ödendi. Mutfak teslimden önce hazırlayacak.",
+      "depositFailed": "Sipariş oluşturuldu ancak kapora cüzdanınızdan tahsil edilemedi. Yükleyip sipariş sayfasından ödeyin.",
+      "topUp": "Yükle",
+      "createFailed": "Gel-al siparişi oluşturulamadı.",
+      "decrease": "Azalt",
+      "increase": "Artır"
+    },
+    "detail": {
+      "back": "Gel-al siparişlerim",
+      "items": "{count} ürün",
+      "live": "Canlı",
+      "polling": "Yoklama",
+      "pickupAt": "Teslim",
+      "cancelledMsg": "Bu sipariş iptal edildi.",
+      "total": "Toplam",
+      "depositPaid": "Kapora ödendi (%40)",
+      "remaining": "Kalan",
+      "paymentStatus": "Ödeme durumu",
+      "payRemaining": "Kalanı öde {amount}",
+      "balancePaid": "Bakiye tamamen ödendi. Teşekkürler!",
+      "walletFail": "Cüzdanınızdan tahsil edilemedi. Yükleyip tekrar deneyin.",
+      "topUp": "Yükle",
+      "notFound": "Sipariş bulunamadı.",
+      "loadFail": "Bu sipariş yüklenemedi.",
+      "stepAwaitingDeposit": "Kapora bekleniyor",
+      "stepScheduled": "Planlandı",
+      "stepBeingPrepared": "Hazırlanıyor",
+      "stepPrepared": "Hazırlandı",
+      "stepReadyForPickup": "Teslime hazır",
+      "stepHandedOver": "Teslim edildi",
+      "stepCompleted": "Tamamlandı"
+    },
+    "mine": {
+      "title": "Gel-al siparişlerim",
+      "new": "Yeni",
+      "none": "Henüz gel-al siparişi yok.",
+      "loadFail": "Siparişleriniz yüklenemedi.",
+      "items": "{count} ürün"
+    },
+    "chef": {
+      "title": "Gel-al kuyruğu",
+      "subtitle": "Planlı gel-al siparişleri",
+      "none": "Planlı gel-al siparişi yok.",
+      "loadFail": "Kuyruk yüklenemedi.",
+      "newOrder": "Yeni planlı gel-al siparişi",
+      "startPreparing": "Hazırlamaya başla",
+      "markPrepared": "Hazırlandı işaretle",
+      "readyForPickup": "Teslime hazır",
+      "startedPreparing": "Hazırlık başladı",
+      "markedPrepared": "Hazırlandı olarak işaretlendi",
+      "markedReady": "Teslime hazır işaretlendi",
+      "actionFailed": "İşlem başarısız.",
+      "readyIn": "{min} dk içinde hazır",
+      "pickup": "Teslim"
+    },
+    "waiter": {
+      "title": "Sipariş teslimi",
+      "subtitle": "Paketlemeye hazır",
+      "none": "Teslime hazır sipariş yok.",
+      "loadFail": "Hazır siparişler yüklenemedi.",
+      "readyAlert": "Bir gel-al siparişi teslime hazır",
+      "collectBalance": "Bakiyeyi al",
+      "handOver": "Teslim et",
+      "balance": "Bakiye",
+      "collected": "Kalan ödeme kaydedildi — kasiyer onaylayacak.",
+      "collectFail": "Ödeme kaydedilemedi.",
+      "handedOver": "Sipariş teslim edildi.",
+      "handOverFail": "Sipariş teslim edilemedi."
+    },
+    "cashier": {
+      "title": "Gel-al ödemeleri",
+      "subtitle": "Kaporalar, bakiyeler ve onaylar",
+      "loadFail": "Ödemeler yüklenemedi.",
+      "awaitConfirm": "Bir bakiye onayınızı bekliyor",
+      "colOrder": "Sipariş",
+      "colType": "Tür",
+      "colAmount": "Tutar",
+      "colStatus": "Durum",
+      "colAction": "İşlem",
+      "noPayments": "Ödeme yok.",
+      "confirm": "Onayla",
+      "confirmed": "Ödeme onaylandı.",
+      "confirmFail": "Ödeme onaylanamadı.",
+      "openTableBills": "Açık masa hesapları",
+      "noTableBills": "Açık masa hesabı yok.",
+      "table": "Masa",
+      "openOrders": "{count} açık sipariş"
+    },
+    "admin": {
+      "title": "Gel-al operasyonları",
+      "subtitle": "Canlı sipariş ve ödeme genel görünümü",
+      "loadFail": "Gel-al panosu yüklenemedi.",
+      "today": "Bugün",
+      "scheduled": "Planlandı",
+      "preparing": "Hazırlanıyor",
+      "ready": "Hazır",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal",
+      "totalSales": "Toplam satış",
+      "prepaid": "Ön ödeme",
+      "remainingUnpaid": "Ödenmemiş kalan",
+      "awaitingCashier": "Kasiyer bekliyor",
+      "liveOrders": "Canlı gel-al siparişleri",
+      "colCustomer": "Müşteri",
+      "colPickup": "Teslim",
+      "colStatus": "Durum",
+      "colPayment": "Ödeme",
+      "colTotal": "Toplam",
+      "none": "Aktif gel-al siparişi yok."
+    }
   }
 }

@@ -14,12 +14,13 @@ export const HUB_URLS = {
   notify:  `${BASE}/hubs/notify`,
   cashier: `${BASE}/hubs/cashier`,
   courier: `${BASE}/hubs/courier`,
+  admin:   `${BASE}/hubs/admin`,
 };
 
 /**
  * Build a HubConnection for the given hub with JWT auth and automatic reconnect.
  *
- * @param {'kitchen'|'waiter'|'table'|'notify'|'cashier'|'courier'} hub
+ * @param {'kitchen'|'waiter'|'table'|'notify'|'cashier'|'courier'|'admin'} hub
  * @returns {signalR.HubConnection}
  */
 export function createHubConnection(hub) {

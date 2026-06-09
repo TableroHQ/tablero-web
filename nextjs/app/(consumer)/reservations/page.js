@@ -120,8 +120,8 @@ export default function Reservations() {
   const confirm = async () => {
     if (isGuest) return router.push('/login?next=/reservations');
     if (!slot) return toast.error(t('errSelectSlot'));
-    if (!RESTAURANT_ID) return toast.error('Restaurant not configured');
-    if (!phone.trim()) return toast.error('Please enter a contact phone number');
+    if (!RESTAURANT_ID) return toast.error(t('notConfigured'));
+    if (!phone.trim()) return toast.error(t('errPhone'));
     setConfirming(true);
     try {
       const customerName = (user.firstName && user.lastName)

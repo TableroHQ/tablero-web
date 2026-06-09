@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Plus, Search, AlertTriangle, LogIn } from 'lucide-react';
+import { Plus, Minus, Search, AlertTriangle, LogIn } from 'lucide-react';
 import { SkeletonCard } from '@/components/Skeleton';
 import { useStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
@@ -52,7 +52,14 @@ export default function Menu() {
           ...item,
           cat: item.categoryName || item.cat || 'Other',
           img: item.imageUrl || item.image || '',
-          available: item.isAvailable !== false && item.available !== false,
+          // Prefer the server's authoritative isOrderable (active + available +
+          // in stock); fall back to availability/stock for older payloads so a
+          // zero-stock item shows "Sold out" instead of failing at checkout.
+          available: item.isOrderable !== undefined
+            ? item.isOrderable
+            : (item.isAvailable !== false
+                && item.available !== false
+                && (item.stockQuantity == null || item.stockQuantity > 0)),
           allergens: item.allergens ?? [],
           tags: item.tags ?? [],
           desc: item.description || item.desc || '',
@@ -79,8 +86,13 @@ export default function Menu() {
       return;
     }
     store.addToCart(m);
-    toast.success(`${m.name} added to your order`);
+    toast.success(t('addedToOrder', { name: m.name }));
   };
+
+  // Stepper controls for items already in the cart — increment/decrement the
+  // quantity in place so the diner can see and adjust how many they've ordered.
+  const inc = (m) => { store.addToCart(m); };
+  const dec = (m, qty) => { qty <= 1 ? store.removeCart(m.id) : store.changeQty(m.id, -1); };
 
   return (
     <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-12 md:py-16">
@@ -113,9 +125,11 @@ export default function Menu() {
         <div className="mt-20 text-center text-ink-muted font-fn">{t('noItems')}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-          {list.map((m, i) => (
+          {list.map((m, i) => {
+            const qty = state.cart.find(c => c.id === m.id)?.qty || 0;
+            return (
             <Reveal key={m.id} delay={Math.min(i, 8) * 60}>
-            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full">
+            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full flex flex-col">
               <div className="aspect-[4/3] relative overflow-hidden">
                 <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
                 {!m.available && (
@@ -125,12 +139,12 @@ export default function Menu() {
                 )}
                 <span className="absolute top-3 left-3 chip bg-white/90 text-ink-body">{m.cat}</span>
               </div>
-              <div className="p-5">
+              <div className="p-5 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="font-display text-xl text-ink">{m.name}</h3>
-                  <span className="font-mono text-sm font-semibold">${Number(m.price).toFixed(2)}</span>
+                  <span className="font-mono text-sm font-semibold shrink-0">${Number(m.price).toFixed(2)}</span>
                 </div>
-                <p className="mt-2 text-sm text-ink-body leading-relaxed">{m.desc}</p>
+                <p className="mt-2 text-sm text-ink-body leading-relaxed line-clamp-2">{m.desc}</p>
                 {(m.isSpicy || m.isVegetarian || m.isVegan || m.isGlutenFree || Number(m.calories) > 0) && (
                   <div className="mt-3 flex items-center gap-1.5 flex-wrap text-[11px] font-fn">
                     {m.isVegan && <span className="chip bg-green-50 text-green-700">🌱 Vegan</span>}
@@ -146,21 +160,36 @@ export default function Menu() {
                     {m.allergens.map(a => <span key={a} className="text-[10px] font-mono uppercase tracking-wide bg-cream-sub px-2 py-0.5 rounded-full text-ink-muted">{a}</span>)}
                   </div>
                 )}
-                {isGuest ? (
-                  <button onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
-                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-full border-2 border-primary text-primary font-fn font-medium hover:bg-primary hover:text-white transition">
-                    <LogIn size={16} /> {t('signInToOrder')}
-                  </button>
-                ) : (
-                  <button disabled={!m.available} onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
-                    className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-white font-fn font-medium hover:bg-terracotta-dark transition disabled:bg-cream-sub disabled:text-ink-muted">
-                    <Plus size={16} /> {t('addToOrder')}
-                  </button>
-                )}
+                <div className="mt-auto pt-5">
+                  {isGuest ? (
+                    <button onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-full border-2 border-primary text-primary font-fn font-medium hover:bg-primary hover:text-white transition">
+                      <LogIn size={16} /> {t('signInToOrder')}
+                    </button>
+                  ) : qty > 0 ? (
+                    <div className="flex items-center justify-between rounded-full bg-primary text-white px-2 py-1.5" data-testid={`menu-stepper-${m.id}`}>
+                      <button onClick={() => dec(m, qty)} aria-label={t('decrease')} data-testid={`menu-dec-${m.id}`}
+                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
+                        <Minus size={16} />
+                      </button>
+                      <span className="font-fn font-medium text-sm" data-testid={`menu-qty-${m.id}`}>{t('inOrderCount', { n: qty })}</span>
+                      <button disabled={!m.available} onClick={() => inc(m)} aria-label={t('increase')} data-testid={`menu-inc-${m.id}`}
+                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 transition disabled:opacity-40">
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <button disabled={!m.available} onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-white font-fn font-medium hover:bg-terracotta-dark transition disabled:bg-cream-sub disabled:text-ink-muted">
+                      <Plus size={16} /> {t('addToOrder')}
+                    </button>
+                  )}
+                </div>
               </div>
             </article>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

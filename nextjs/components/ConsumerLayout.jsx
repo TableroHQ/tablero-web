@@ -21,15 +21,18 @@ export default function ConsumerLayout({ children }) {
   const isCustomer = state.user.role === 'USER';
 
   const PUBLIC_NAV = [
-    { to: '/',            label: t('home') },
-    { to: '/menu',        label: t('menu') },
-    { to: '/reservations', label: t('reserve') },
+    { to: '/',        label: t('home') },
+    { to: '/menu',    label: t('menu') },
+    { to: '/contact', label: t('contact') },
+    { to: '/about',   label: t('ourStory') },
+    { to: '/help',    label: t('helpCentre') },
   ];
   const GUEST_NAV = [
     { to: '/#how-it-works', label: t('howItWorks') },
     { to: '/#pricing',      label: t('pricing') },
   ];
   const AUTH_NAV = [
+    { to: '/pickup',    label: t('pickup') },
     { to: '/loyalty',   label: t('rewards') },
     { to: '/orders',    label: t('orders') },
     { to: '/dashboard', label: t('myTablero') },
@@ -47,16 +50,16 @@ export default function ConsumerLayout({ children }) {
     <div className="min-h-screen bg-background text-foreground">
       <header className="glass-nav sticky top-0 z-50 border-b border-border/60" data-testid="consumer-header">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 h-[72px] flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 shrink-0" data-testid="brand-link">
-            <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0" data-testid="brand-link">
+            <img src={IMG.logoMark} alt="Tablero" className="h-11 w-11 object-contain" />
             <span className="font-display text-2xl font-semibold text-ink hidden min-[360px]:inline">Tablero</span>
           </Link>
-          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-2">
+          <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-2">
             {NAV.map(n => {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
                 <Link key={n.to} href={n.to} data-testid={`nav-${n.label.toLowerCase()}`}
-                  className={`px-3 xl:px-4 py-2 rounded-full text-sm font-fn font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
+                  className={`px-3 2xl:px-4 py-2 rounded-full text-sm font-fn font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
                   {n.label}
                 </Link>
               );
@@ -67,8 +70,8 @@ export default function ConsumerLayout({ children }) {
             <ThemeToggle />
             {!isGuest && <NotificationBell />}
             {isCustomer && (
-              <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-3 xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
-                <ShoppingBag size={16} /><span className="hidden xl:inline text-sm font-fn">{t('cart')}</span>
+              <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
+                <ShoppingBag size={16} /><span className="hidden 2xl:inline text-sm font-fn">{t('cart')}</span>
                 {cartCount > 0 && <span className="h-5 w-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">{cartCount}</span>}
               </Link>
             )}
@@ -77,20 +80,20 @@ export default function ConsumerLayout({ children }) {
                 <User size={16} /><span className="text-sm font-fn">{t('signIn')}</span>
               </Link>
             ) : (
-              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-3 xl:px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="profile-cta">
+              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="profile-cta">
                 {state.user.avatar
                   ? <img src={state.user.avatar} alt="" className="h-5 w-5 rounded-full object-cover" />
                   : <User size={16} />}
-                <span className="hidden xl:inline text-sm font-fn whitespace-nowrap max-w-[120px] truncate">{state.user.firstName || (state.user.name || '').split(' ')[0] || state.user.username || t('myProfile')}</span>
+                <span className="hidden 2xl:inline text-sm font-fn whitespace-nowrap max-w-[120px] truncate">{state.user.firstName || (state.user.name || '').split(' ')[0] || state.user.username || t('myProfile')}</span>
               </Link>
             )}
-            <button className="lg:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
+            <button className="xl:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
               {open ? <X size={22} /> : <MenuIcon size={22} />}
             </button>
           </div>
         </div>
         {open && (
-          <div className="lg:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2">
+          <div className="xl:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2">
             {NAV.map(n => {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
@@ -109,8 +112,8 @@ export default function ConsumerLayout({ children }) {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <img src={IMG.logo} alt="Tablero" className="h-9 w-9 rounded-full object-cover" />
-              <span className="font-display text-2xl text-cream">Tablero</span>
+              <img src={IMG.logoMark} alt="Tablero" className="h-14 w-14 object-contain" />
+              <span className="font-display text-3xl text-cream">Tablero</span>
             </div>
             <p className="text-sm text-cream/70 leading-relaxed max-w-xs">{tf('tagline')}</p>
             <div className="mt-6 flex items-center gap-3">

@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { ChefHat, Bell, Wallet, Bike, Gauge, LogOut, UtensilsCrossed, Grid3x3, Users, Megaphone, BarChart3, Undo2, MessageSquareWarning, Menu as MenuIcon, X } from 'lucide-react';
+import { ChefHat, Bell, Wallet, Bike, Gauge, LogOut, UtensilsCrossed, Grid3x3, Users, Megaphone, BarChart3, Undo2, MessageSquareWarning, Menu as MenuIcon, X, Clock, Package } from 'lucide-react';
 import { IMG } from '@/lib/brand';
 import { api } from '@/lib/client';
 import NotificationBell from '@/components/NotificationBell';
@@ -30,10 +30,14 @@ export default function OpsLayout({ children, dark = false, title, subtitle, rig
 
   const OPS = [
     { to: '/kds',              label: t('kitchen'),    icon: ChefHat,              roles: ['CHEF']    },
+    { to: '/kds/pickup',       label: t('pickupQueue'), icon: Clock,               roles: ['CHEF']    },
     { to: '/waiter',           label: t('waiter'),     icon: Bell,                 roles: ['WAITER']  },
+    { to: '/waiter/pickup',    label: t('pickupHandoff'), icon: Package,           roles: ['WAITER']  },
     { to: '/pos',              label: t('cashierPos'), icon: Wallet,               roles: ['CASHIER'] },
+    { to: '/pos/pickup',       label: t('pickupPayments'), icon: Clock,           roles: ['CASHIER'] },
     { to: '/courier',          label: t('courier'),    icon: Bike,                 roles: ['COURIER'] },
     { to: '/admin',            label: t('dashboard'),  icon: Gauge,                section: t('admin'), roles: DIRECTOR },
+    { to: '/admin/pickup',     label: t('pickupOps'),  icon: Clock,                section: t('admin'), roles: DIRECTOR },
     { to: '/admin/menu',       label: t('menu'),       icon: UtensilsCrossed,      section: t('admin'), roles: DIRECTOR },
     { to: '/admin/tables',     label: t('tables'),     icon: Grid3x3,              section: t('admin'), roles: DIRECTOR },
     { to: '/admin/staff',      label: t('staff'),      icon: Users,                section: t('admin'), roles: DIRECTOR },

@@ -31,6 +31,9 @@
     "home": "Home",
     "menu": "Menu",
     "reserve": "Reserve",
+    "contact": "Contact",
+    "ourStory": "Our story",
+    "helpCentre": "Help centre",
     "howItWorks": "How it works",
     "pricing": "Pricing",
     "rewards": "Rewards",
@@ -39,7 +42,8 @@
     "cart": "Cart",
     "signIn": "Sign in",
     "signInRegister": "Sign in / Register",
-    "myProfile": "My Profile"
+    "myProfile": "My Profile",
+    "pickup": "Pickup"
   },
   "footer": {
     "tagline": "A restaurant operating system for everyone at the table — guests, staff, and the kitchen.",
@@ -118,7 +122,8 @@
     "welcomeToast": "Welcome back!",
     "codeSentToast": "Verification code sent — check your inbox",
     "accountCreatedToast": "Account created! Please sign in.",
-    "invalidCredentials": "Invalid credentials"
+    "invalidCredentials": "Invalid credentials",
+    "errAllDigits": "Enter all 6 digits"
   },
   "forgotPw": {
     "backToSignIn": "Back to sign in",
@@ -193,7 +198,11 @@
     "soldOut": "86'd today",
     "signInToOrder": "Sign in to order",
     "addToOrder": "Add to order",
-    "couldNotLoad": "Could not load menu"
+    "couldNotLoad": "Could not load menu",
+    "addedToOrder": "{name} added to your order",
+    "inOrderCount": "{n} in order",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity"
   },
   "orders": {
     "eyebrow": "Your history",
@@ -241,7 +250,9 @@
     "cancelledToast": "Reservation cancelled",
     "errSelectSlot": "Please select a time slot",
     "couldNotConfirm": "Could not confirm reservation",
-    "couldNotCancel": "Could not cancel"
+    "couldNotCancel": "Could not cancel",
+    "notConfigured": "Restaurant not configured",
+    "errPhone": "Please enter a contact phone number"
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -281,7 +292,10 @@
     "orderPlacedToast": "Order placed! Kitchen notified.",
     "paymentConfirmedToast": "Payment confirmed! Kitchen notified.",
     "emptyCartError": "Your cart is empty",
-    "itemsCount": "{n} items"
+    "itemsCount": "{n} items",
+    "notConfigured": "Restaurant not configured",
+    "couldNotPlace": "Could not place your order",
+    "paymentFailed": "Payment failed. Please try again."
   },
   "loyalty": {
     "eyebrow": "Bonus catalogue",
@@ -369,7 +383,8 @@
     "couldNotSave": "Could not save profile",
     "accountDeleted": "Account deleted",
     "errRequired": "Required",
-    "errMin3": "Min 3 characters"
+    "errMin3": "Min 3 characters",
+    "couldNotDelete": "Could not delete account"
   },
   "landing": {
     "eyebrow": "A restaurant operating system · est. 2026",
@@ -452,7 +467,11 @@
     "revenue": "Revenue",
     "admin": "Admin",
     "backToConsumer": "Back to consumer",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "pickupQueue": "Pickup queue",
+    "pickupHandoff": "Pickup handoff",
+    "pickupPayments": "Pickup payments",
+    "pickupOps": "Pickup ops"
   },
   "kds": {
     "title": "Kitchen Display",
@@ -1278,5 +1297,139 @@
     "openMenu": "Open menu",
     "signInForOrder": "Sign in to pay from app → earn points",
     "publicMenu": "Public menu · no sign-in required"
+  },
+  "pickup": {
+    "common": {
+      "live": "Live",
+      "polling": "Polling",
+      "refresh": "Refresh"
+    },
+    "create": {
+      "eyebrow": "Scheduled pickup",
+      "title": "Order ahead for pickup",
+      "subtitle": "Pick your items and a collection time. Pay {percent}% now to confirm — the rest on collection.",
+      "myOrders": "My pickup orders",
+      "pickupTime": "Pickup time",
+      "readyHint": "We aim to have it ready ~10 min before this time.",
+      "noItemsYet": "No items yet.",
+      "total": "Total",
+      "depositDue": "Deposit ({percent}%) — due now",
+      "remainingOnCollection": "Remaining — on collection",
+      "payDeposit": "Pay {amount} deposit",
+      "depositWallet": "Deposit is charged to your Tablero wallet.",
+      "noMenu": "No menu items available.",
+      "couldNotLoadMenu": "Could not load the menu.",
+      "addOneItem": "Add at least one item.",
+      "pickupFuture": "Pickup time must be in the future.",
+      "placedPaid": "Order placed and 40% deposit paid. The kitchen will get it ready before pickup.",
+      "depositFailed": "Order created, but the deposit could not be charged to your wallet. Top up and pay from the order page.",
+      "topUp": "Top up",
+      "createFailed": "Could not create the pickup order.",
+      "decrease": "Decrease",
+      "increase": "Increase"
+    },
+    "detail": {
+      "back": "My pickup orders",
+      "items": "{count} item(s)",
+      "live": "Live",
+      "polling": "Polling",
+      "pickupAt": "Pickup at",
+      "cancelledMsg": "This order was cancelled.",
+      "total": "Total",
+      "depositPaid": "Deposit paid (40%)",
+      "remaining": "Remaining",
+      "paymentStatus": "Payment status",
+      "payRemaining": "Pay remaining {amount}",
+      "balancePaid": "Balance paid in full. Thank you!",
+      "walletFail": "Could not charge your wallet. Top up and try again.",
+      "topUp": "Top up",
+      "notFound": "Order not found.",
+      "loadFail": "Could not load this order.",
+      "stepAwaitingDeposit": "Awaiting deposit",
+      "stepScheduled": "Scheduled",
+      "stepBeingPrepared": "Being prepared",
+      "stepPrepared": "Prepared",
+      "stepReadyForPickup": "Ready for pickup",
+      "stepHandedOver": "Handed over",
+      "stepCompleted": "Completed"
+    },
+    "mine": {
+      "title": "My pickup orders",
+      "new": "New",
+      "none": "No pickup orders yet.",
+      "loadFail": "Could not load your pickup orders.",
+      "items": "{count} item(s)"
+    },
+    "chef": {
+      "title": "Pickup queue",
+      "subtitle": "Scheduled pickup orders",
+      "none": "No scheduled pickup orders.",
+      "loadFail": "Could not load the pickup queue.",
+      "newOrder": "New scheduled pickup order",
+      "startPreparing": "Start preparing",
+      "markPrepared": "Mark prepared",
+      "readyForPickup": "Ready for pickup",
+      "startedPreparing": "Started preparing",
+      "markedPrepared": "Marked prepared",
+      "markedReady": "Marked ready for pickup",
+      "actionFailed": "Action failed.",
+      "readyIn": "ready in {min}m",
+      "pickup": "Pickup"
+    },
+    "waiter": {
+      "title": "Pickup handoff",
+      "subtitle": "Ready for packaging",
+      "none": "No orders ready for pickup.",
+      "loadFail": "Could not load ready pickup orders.",
+      "readyAlert": "A pickup order is ready for handoff",
+      "collectBalance": "Collect balance",
+      "handOver": "Hand over",
+      "balance": "Balance",
+      "collected": "Remaining payment recorded — cashier will confirm.",
+      "collectFail": "Could not record payment.",
+      "handedOver": "Order handed over.",
+      "handOverFail": "Could not hand over order."
+    },
+    "cashier": {
+      "title": "Pickup payments",
+      "subtitle": "Deposits, balances & confirmations",
+      "loadFail": "Could not load payments.",
+      "awaitConfirm": "A balance is awaiting your confirmation",
+      "colOrder": "Order",
+      "colType": "Type",
+      "colAmount": "Amount",
+      "colStatus": "Status",
+      "colAction": "Action",
+      "noPayments": "No payments.",
+      "confirm": "Confirm",
+      "confirmed": "Payment confirmed.",
+      "confirmFail": "Could not confirm payment.",
+      "openTableBills": "Open table bills",
+      "noTableBills": "No open table bills.",
+      "table": "Table",
+      "openOrders": "{count} open order(s)"
+    },
+    "admin": {
+      "title": "Pickup operations",
+      "subtitle": "Live order & payment overview",
+      "loadFail": "Could not load the pickup dashboard.",
+      "today": "Today",
+      "scheduled": "Scheduled",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "totalSales": "Total sales",
+      "prepaid": "Prepaid",
+      "remainingUnpaid": "Remaining unpaid",
+      "awaitingCashier": "Awaiting cashier",
+      "liveOrders": "Live pickup orders",
+      "colCustomer": "Customer",
+      "colPickup": "Pickup",
+      "colStatus": "Status",
+      "colPayment": "Payment",
+      "colTotal": "Total",
+      "none": "No active pickup orders."
+    }
   }
 }
