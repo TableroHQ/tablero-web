@@ -295,7 +295,8 @@
     "itemsCount": "{n} 件",
     "notConfigured": "餐厅未配置",
     "couldNotPlace": "无法提交您的订单",
-    "paymentFailed": "支付失败，请重试。"
+    "paymentFailed": "支付失败，请重试。",
+    "addressRequired": "请输入配送地址。"
   },
   "loyalty": {
     "eyebrow": "积分目录",
@@ -987,7 +988,8 @@
     "stSERVED": "已上菜",
     "stCOMPLETED": "已完成",
     "stCANCELLED": "已取消",
-    "stQUEUED": "排队中"
+    "stQUEUED": "排队中",
+    "fees": "费用与服务"
   },
   "delivery": {
     "order": "订单",

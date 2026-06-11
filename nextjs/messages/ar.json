@@ -295,7 +295,8 @@
     "itemsCount": "{n} أصناف",
     "notConfigured": "المطعم غير مهيأ",
     "couldNotPlace": "تعذر تقديم طلبك",
-    "paymentFailed": "فشل الدفع. يرجى المحاولة مرة أخرى."
+    "paymentFailed": "فشل الدفع. يرجى المحاولة مرة أخرى.",
+    "addressRequired": "يرجى إدخال عنوان التوصيل."
   },
   "loyalty": {
     "eyebrow": "كتالوج المكافآت",
@@ -987,7 +988,8 @@
     "stSERVED": "تم التقديم",
     "stCOMPLETED": "مكتمل",
     "stCANCELLED": "ملغى",
-    "stQUEUED": "في الانتظار"
+    "stQUEUED": "في الانتظار",
+    "fees": "الرسوم والخدمة"
   },
   "delivery": {
     "order": "الطلب",

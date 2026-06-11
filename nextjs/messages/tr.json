@@ -295,7 +295,8 @@
     "itemsCount": "{n} ürün",
     "notConfigured": "Restoran yapılandırılmamış",
     "couldNotPlace": "Siparişiniz verilemedi",
-    "paymentFailed": "Ödeme başarısız. Lütfen tekrar deneyin."
+    "paymentFailed": "Ödeme başarısız. Lütfen tekrar deneyin.",
+    "addressRequired": "Lütfen bir teslimat adresi girin."
   },
   "loyalty": {
     "eyebrow": "Bonus kataloğu",
@@ -987,7 +988,8 @@
     "stSERVED": "Servis edildi",
     "stCOMPLETED": "Tamamlandı",
     "stCANCELLED": "İptal edildi",
-    "stQUEUED": "Kuyrukta"
+    "stQUEUED": "Kuyrukta",
+    "fees": "Ücretler ve servis"
   },
   "delivery": {
     "order": "Sipariş",

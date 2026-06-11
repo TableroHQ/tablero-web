@@ -41,6 +41,10 @@ export default function OrderDetail() {
 
   const items = order.items || order.orderItems || [];
   const sub = items.reduce((s, i) => s + Number(i.price || i.unitPrice || 0) * Number(i.quantity || i.qty || 1), 0);
+  // The backend total is authoritative — don't invent a service charge the
+  // customer was never billed. Any difference vs the line subtotal is fees.
+  const total = Number(order.totalAmount ?? order.total) || sub;
+  const fees = Math.max(0, total - sub);
   const stage = STEPS.indexOf(order.status);
   const currentStage = stage >= 0 ? stage : 0;
 
@@ -102,10 +106,12 @@ export default function OrderDetail() {
           </div>
           <hr className="my-5 border-border" />
           <div className="flex justify-between text-sm font-mono"><span>{t('subtotal')}</span><span>${sub.toFixed(2)}</span></div>
-          <div className="flex justify-between text-sm font-mono"><span>{t('service15')}</span><span>${(sub * 0.15).toFixed(2)}</span></div>
+          {fees > 0 && (
+            <div className="flex justify-between text-sm font-mono"><span>{t('fees')}</span><span>${fees.toFixed(2)}</span></div>
+          )}
           <div className="flex justify-between items-end mt-2">
             <span className="font-fn font-semibold">{t('total')}</span>
-            <span className="font-display text-3xl">${(sub * 1.15).toFixed(2)}</span>
+            <span className="font-display text-3xl">${total.toFixed(2)}</span>
           </div>
         </div>
 

@@ -295,7 +295,8 @@
     "itemsCount": "{n} позиций",
     "notConfigured": "Ресторан не настроен",
     "couldNotPlace": "Не удалось оформить заказ",
-    "paymentFailed": "Платёж не прошёл. Повторите попытку."
+    "paymentFailed": "Платёж не прошёл. Повторите попытку.",
+    "addressRequired": "Пожалуйста, укажите адрес доставки."
   },
   "loyalty": {
     "eyebrow": "Каталог бонусов",
@@ -987,7 +988,8 @@
     "stSERVED": "Подан",
     "stCOMPLETED": "Завершён",
     "stCANCELLED": "Отменён",
-    "stQUEUED": "В очереди"
+    "stQUEUED": "В очереди",
+    "fees": "Сборы и обслуживание"
   },
   "delivery": {
     "order": "Заказ",

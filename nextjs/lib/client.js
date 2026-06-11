@@ -60,7 +60,14 @@ export const tokenStore = {
     if (typeof window === 'undefined') return null;
     try {
       const r = await fetch('/api/auth/session');
-      const { accessToken } = await r.json();
+      let { accessToken } = await r.json();
+      if (!accessToken) {
+        // The access cookie lives 15 min but the refresh cookie lives 7 days —
+        // try a refresh before declaring the session gone, otherwise a returning
+        // user would be logged out (and the refresh cookie wiped) needlessly.
+        const rr = await fetch('/api/auth/refresh', { method: 'POST' });
+        if (rr.ok) ({ accessToken } = await rr.json());
+      }
       if (!accessToken) return null;
       _access = accessToken;
       const claims = _claimsFromToken(accessToken);

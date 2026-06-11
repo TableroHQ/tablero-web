@@ -295,7 +295,8 @@
     "itemsCount": "{n} items",
     "notConfigured": "Restaurant not configured",
     "couldNotPlace": "Could not place your order",
-    "paymentFailed": "Payment failed. Please try again."
+    "paymentFailed": "Payment failed. Please try again.",
+    "addressRequired": "Please enter a delivery address."
   },
   "loyalty": {
     "eyebrow": "Bonus catalogue",
@@ -987,7 +988,8 @@
     "stSERVED": "Served",
     "stCOMPLETED": "Completed",
     "stCANCELLED": "Cancelled",
-    "stQUEUED": "Queued"
+    "stQUEUED": "Queued",
+    "fees": "Fees & service"
   },
   "delivery": {
     "order": "Order",
