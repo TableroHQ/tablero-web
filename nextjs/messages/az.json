@@ -295,7 +295,8 @@
     "itemsCount": "{n} məhsul",
     "notConfigured": "Restoran konfiqurasiya edilməyib",
     "couldNotPlace": "Sifariş verilə bilmədi",
-    "paymentFailed": "Ödəniş alınmadı. Yenidən cəhd edin."
+    "paymentFailed": "Ödəniş alınmadı. Yenidən cəhd edin.",
+    "addressRequired": "Zəhmət olmasa çatdırılma ünvanını daxil edin."
   },
   "loyalty": {
     "eyebrow": "Bonus kataloqu",
@@ -987,7 +988,8 @@
     "stSERVED": "Verildi",
     "stCOMPLETED": "Tamamlandı",
     "stCANCELLED": "Ləğv edildi",
-    "stQUEUED": "Növbədə"
+    "stQUEUED": "Növbədə",
+    "fees": "Xidmət haqları"
   },
   "delivery": {
     "order": "Sifariş",

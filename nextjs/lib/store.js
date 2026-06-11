@@ -101,10 +101,12 @@ export function StoreProvider({ children }) {
       setState(s => ({ ...s, user: { ...fromToken, ...profilePatch } }));
     },
 
-    // Called on logout — clears tokens and resets to guest
+    // Called on logout — clears tokens and resets to guest.
+    // hydrated stays true: hydration already happened this session, and pages
+    // that gate rendering on it would otherwise wait forever.
     logout: () => {
       tokenStore.clear();
-      setState({ ...defaultState });
+      setState({ ...defaultState, hydrated: true });
     },
 
     // Merge profile data from GET /api/users/me into the user object.
@@ -176,7 +178,7 @@ export function StoreProvider({ children }) {
       return oid;
     },
 
-    reset: () => { tokenStore.clear(); setState(defaultState); },
+    reset: () => { tokenStore.clear(); setState({ ...defaultState, hydrated: true }); },
   }), [state]);
 
   return <Ctx.Provider value={[state, store]}>{children}</Ctx.Provider>;

@@ -44,7 +44,10 @@ export default function Auth() {
   const searchParams = useSearchParams();
   const [, store] = useStore();
   const isEmail = identifier.includes('@');
-  const nextPath = searchParams.get('next');
+  // Only follow internal paths — a ?next= pointing at another origin ('//evil.com'
+  // or 'https://…') would turn login into an open redirect.
+  const rawNext = searchParams.get('next');
+  const nextPath = rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : null;
 
   // countdown timer for resend
   React.useEffect(() => {

@@ -146,6 +146,7 @@ export default function Checkout() {
   const placeOrder = async () => {
     if (cart.length === 0) return toast.error(t('emptyCartError'));
     if (!RESTAURANT_ID) return toast.error(t('notConfigured'));
+    if (type === 'delivery' && address.trim().length < 5) return toast.error(t('addressRequired'));
     setPlacing(true);
     try {
       // 1. Create the order
