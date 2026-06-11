@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Plus, Minus, Search, AlertTriangle, LogIn } from 'lucide-react';
+import { Plus, Minus, Search, AlertTriangle, LogIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SkeletonCard } from '@/components/Skeleton';
 import { useStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
@@ -56,6 +56,62 @@ export default function Menu() {
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
   }, [cats]);
+
+  // Click-and-hold drag to scroll the category row (in addition to the
+  // wheel). Move/up are bound on window so the drag keeps working even when
+  // the cursor leaves the bar; a `moved` guard + capture-phase click handler
+  // stop a drag from also selecting the category under the cursor.
+  React.useEffect(() => {
+    const el = catsRef.current;
+    if (!el) return;
+    let down = false, startX = 0, startScroll = 0, moved = false;
+    const onDown = (e) => {
+      if (e.button !== 0) return; // left button only
+      down = true; moved = false;
+      startX = e.clientX;
+      startScroll = el.scrollLeft;
+      el.style.cursor = 'grabbing';
+    };
+    const onMove = (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      el.scrollLeft = startScroll - dx;
+    };
+    const onUp = () => { down = false; el.style.cursor = ''; };
+    const onClick = (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); } };
+    el.addEventListener('pointerdown', onDown);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    el.addEventListener('click', onClick, true);
+    return () => {
+      el.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      el.removeEventListener('click', onClick, true);
+    };
+  }, [cats]);
+
+  // Visible ‹ › arrows make it obvious the category row scrolls (the bar
+  // hides its scrollbar). Each arrow shows only when there's room to move
+  // that way; clicking scrolls by most of a screenful.
+  const [catArrows, setCatArrows] = React.useState({ left: false, right: false });
+  const updateCatArrows = React.useCallback(() => {
+    const el = catsRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setCatArrows({ left: el.scrollLeft > 4, right: el.scrollLeft < max - 4 });
+  }, []);
+  React.useEffect(() => {
+    updateCatArrows();
+    window.addEventListener('resize', updateCatArrows);
+    return () => window.removeEventListener('resize', updateCatArrows);
+  }, [cats, updateCatArrows]);
+  const scrollCats = (dir) => {
+    const el = catsRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.max(el.clientWidth * 0.8, 160), behavior: 'smooth' });
+  };
 
   React.useEffect(() => {
     if (!RESTAURANT_ID) {
@@ -126,13 +182,28 @@ export default function Menu() {
             <Search size={16} className="text-ink-muted" />
             <input data-testid="menu-search" value={q} onChange={e => setQ(e.target.value)} placeholder={t('search')} className="bg-transparent flex-1 outline-none text-sm font-fn" />
           </div>
-          <div ref={catsRef} className="flex items-center gap-2 overflow-x-auto overscroll-x-contain scrollbar-none flex-1 min-w-0">
-            {cats.map(c => (
-              <button key={c} onClick={() => setCat(c)} data-testid={`menu-cat-${c.toLowerCase()}`}
-                className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30'}`}>
-                {c === 'All' ? t('all') : c}
+          <div className="relative flex items-center flex-1 min-w-0">
+            {catArrows.left && (
+              <button type="button" aria-label="Scroll categories left" onClick={() => scrollCats(-1)}
+                className="absolute left-0 z-10 grid place-items-center h-8 w-8 rounded-full bg-white border border-border text-ink shadow-md hover:bg-cream-sub">
+                <ChevronLeft size={16} />
               </button>
-            ))}
+            )}
+            <div ref={catsRef} onScroll={updateCatArrows}
+              className="flex items-center gap-2 overflow-x-auto overscroll-x-contain scrollbar-none cursor-grab select-none flex-1 min-w-0">
+              {cats.map(c => (
+                <button key={c} onClick={() => setCat(c)} data-testid={`menu-cat-${c.toLowerCase()}`}
+                  className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30'}`}>
+                  {c === 'All' ? t('all') : c}
+                </button>
+              ))}
+            </div>
+            {catArrows.right && (
+              <button type="button" aria-label="Scroll categories right" onClick={() => scrollCats(1)}
+                className="absolute right-0 z-10 grid place-items-center h-8 w-8 rounded-full bg-white border border-border text-ink shadow-md hover:bg-cream-sub">
+                <ChevronRight size={16} />
+              </button>
+            )}
           </div>
         </div>
       </div>
