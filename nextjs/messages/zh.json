@@ -252,7 +252,8 @@
     "couldNotConfirm": "无法确认预订",
     "couldNotCancel": "无法取消",
     "notConfigured": "餐厅未配置",
-    "errPhone": "请输入联系电话"
+    "errPhone": "请输入联系电话",
+    "details": "点餐与分享"
   },
   "checkout": {
     "eyebrow": "结账",
@@ -1433,5 +1434,46 @@
       "colTotal": "合计",
       "none": "暂无进行中的自取订单。"
     }
+  },
+  "reservationDetail": {
+    "eyebrow": "预订",
+    "backToReservations": "← 返回预订列表",
+    "notFound": "未找到该预订，或您无权访问",
+    "partySize": "{n} 位客人",
+    "table": "餐桌",
+    "orders": "订单",
+    "addOrder": "添加订单",
+    "closeMenu": "关闭菜单",
+    "loadingMenu": "正在加载菜单…",
+    "searchMenu": "搜索菜单…",
+    "noMenuMatches": "没有符合搜索的菜品",
+    "pickerTotal": "合计",
+    "placeOrder": "下单",
+    "placing": "正在下单…",
+    "orderPlaced": "订单已添加到您的预订",
+    "couldNotPlaceOrder": "下单失败",
+    "pickSomething": "请先选择至少一道菜",
+    "noOrders": "还没有订单 — 来添加第一个吧",
+    "couldNotLoadMenu": "菜单加载失败",
+    "members": "同行成员",
+    "you": "您",
+    "shareTitle": "分享预订",
+    "shareHint": "出示二维码，朋友扫码即可加入此预订并添加自己的订单。",
+    "memberShareHint": "只有预订发起人可以分享。您在这里添加的订单会记到共享餐桌上。",
+    "inactiveShareHint": "此预订已不再有效，无法分享。",
+    "showQr": "显示二维码",
+    "copyLink": "复制链接",
+    "linkCopied": "链接已复制",
+    "couldNotCopy": "链接复制失败",
+    "newLink": "生成新链接",
+    "linkRotated": "已生成新链接 — 旧的二维码已失效",
+    "stopSharing": "停止分享",
+    "sharingStopped": "已停止分享",
+    "couldNotShare": "分享设置更新失败",
+    "joiningTitle": "正在加入预订…",
+    "joinSuccess": "成功！您已加入该预订。",
+    "joinFailed": "该分享链接无效或已被撤销",
+    "joinFailedTitle": "无法加入",
+    "joinInvalidLink": "该链接缺少邀请码"
   }
 }

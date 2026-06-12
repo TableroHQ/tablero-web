@@ -283,14 +283,17 @@ export default function Reservations() {
               <div className="mt-4 space-y-3">
                 {myReservations.map(r => (
                   <div key={r.id} className="flex items-center justify-between p-4 rounded-2xl bg-cream-sub/50">
-                    <div>
+                    <Link href={`/reservations/${r.id}`} className="min-w-0 group" data-testid={`reservation-link-${r.id}`}>
                       {(() => { const { date, time } = fmtResDatetime(r.reservationStartAt); return (
-                        <div className="font-fn font-medium">{date} · {time}</div>
+                        <div className="font-fn font-medium group-hover:text-primary transition">{date} · {time}</div>
                       ); })()}
                       <div className="text-xs text-ink-muted font-mono">{r.partySize} {r.partySize === 1 ? t('guest') : t('guests')}</div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-2">
                       <span className={`chip text-xs ${r.status === 'CONFIRMED' ? 'bg-ok-bg text-ok' : r.status === 'CANCELLED' ? 'bg-err-bg text-err' : 'bg-cream-sub text-ink-muted'}`}>{r.status}</span>
+                      {!['CANCELLED', 'COMPLETED', 'NO_SHOW'].includes(r.status) && (
+                        <Link href={`/reservations/${r.id}`} className="text-xs text-primary hover:underline font-fn whitespace-nowrap" data-testid={`reservation-details-${r.id}`}>{t('details')}</Link>
+                      )}
                       {r.status === 'CONFIRMED' && (
                         <button onClick={() => cancel(r.id)} className="text-xs text-err hover:underline font-fn">{t('cancel')}</button>
                       )}

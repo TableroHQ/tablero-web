@@ -252,7 +252,8 @@
     "couldNotConfirm": "Could not confirm reservation",
     "couldNotCancel": "Could not cancel",
     "notConfigured": "Restaurant not configured",
-    "errPhone": "Please enter a contact phone number"
+    "errPhone": "Please enter a contact phone number",
+    "details": "Order & share"
   },
   "checkout": {
     "eyebrow": "Checkout",
@@ -1433,5 +1434,46 @@
       "colTotal": "Total",
       "none": "No active pickup orders."
     }
+  },
+  "reservationDetail": {
+    "eyebrow": "Reservation",
+    "backToReservations": "← Back to reservations",
+    "notFound": "Reservation not found or you don't have access to it",
+    "partySize": "{n} guests",
+    "table": "Table",
+    "orders": "Orders",
+    "addOrder": "Add order",
+    "closeMenu": "Close menu",
+    "loadingMenu": "Loading menu…",
+    "searchMenu": "Search the menu…",
+    "noMenuMatches": "No dishes match your search",
+    "pickerTotal": "Total",
+    "placeOrder": "Place order",
+    "placing": "Placing…",
+    "orderPlaced": "Order added to your reservation",
+    "couldNotPlaceOrder": "Could not place the order",
+    "pickSomething": "Pick at least one dish first",
+    "noOrders": "No orders yet — add the first one",
+    "couldNotLoadMenu": "Could not load the menu",
+    "members": "Party",
+    "you": "you",
+    "shareTitle": "Share reservation",
+    "shareHint": "Show a QR code your friends can scan to join this reservation and add their own orders.",
+    "memberShareHint": "Only the reservation owner can share it. Orders you add here land on the shared table.",
+    "inactiveShareHint": "This reservation is no longer active, so it can't be shared.",
+    "showQr": "Show QR code",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "couldNotCopy": "Could not copy the link",
+    "newLink": "Generate new link",
+    "linkRotated": "New link generated — old QR codes no longer work",
+    "stopSharing": "Stop sharing",
+    "sharingStopped": "Sharing stopped",
+    "couldNotShare": "Could not update sharing",
+    "joiningTitle": "Joining reservation…",
+    "joinSuccess": "You're in! Reservation joined.",
+    "joinFailed": "This share link is invalid or has been revoked",
+    "joinFailedTitle": "Could not join",
+    "joinInvalidLink": "This link is missing its invite code"
   }
 }

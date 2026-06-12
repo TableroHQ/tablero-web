@@ -252,7 +252,8 @@
     "couldNotConfirm": "Rezervasyon onaylanamadı",
     "couldNotCancel": "İptal edilemedi",
     "notConfigured": "Restoran yapılandırılmamış",
-    "errPhone": "Lütfen bir iletişim telefon numarası girin"
+    "errPhone": "Lütfen bir iletişim telefon numarası girin",
+    "details": "Sipariş & paylaş"
   },
   "checkout": {
     "eyebrow": "Ödeme",
@@ -1433,5 +1434,46 @@
       "colTotal": "Toplam",
       "none": "Aktif gel-al siparişi yok."
     }
+  },
+  "reservationDetail": {
+    "eyebrow": "Rezervasyon",
+    "backToReservations": "← Rezervasyonlara dön",
+    "notFound": "Rezervasyon bulunamadı veya erişim izniniz yok",
+    "partySize": "{n} kişi",
+    "table": "Masa",
+    "orders": "Siparişler",
+    "addOrder": "Sipariş ekle",
+    "closeMenu": "Menüyü kapat",
+    "loadingMenu": "Menü yükleniyor…",
+    "searchMenu": "Menüde ara…",
+    "noMenuMatches": "Aramanızla eşleşen yemek yok",
+    "pickerTotal": "Toplam",
+    "placeOrder": "Sipariş ver",
+    "placing": "Gönderiliyor…",
+    "orderPlaced": "Sipariş rezervasyonunuza eklendi",
+    "couldNotPlaceOrder": "Sipariş verilemedi",
+    "pickSomething": "Önce en az bir yemek seçin",
+    "noOrders": "Henüz sipariş yok — ilkini ekleyin",
+    "couldNotLoadMenu": "Menü yüklenemedi",
+    "members": "Grup",
+    "you": "siz",
+    "shareTitle": "Rezervasyonu paylaş",
+    "shareHint": "Arkadaşlarınızın okutarak rezervasyona katılıp kendi siparişlerini ekleyebileceği bir QR kod gösterin.",
+    "memberShareHint": "Rezervasyonu yalnızca sahibi paylaşabilir. Buradan eklediğiniz siparişler ortak masaya gider.",
+    "inactiveShareHint": "Bu rezervasyon artık aktif değil, bu yüzden paylaşılamaz.",
+    "showQr": "QR kodu göster",
+    "copyLink": "Bağlantıyı kopyala",
+    "linkCopied": "Bağlantı kopyalandı",
+    "couldNotCopy": "Bağlantı kopyalanamadı",
+    "newLink": "Yeni bağlantı oluştur",
+    "linkRotated": "Yeni bağlantı oluşturuldu — eski QR kodlar artık çalışmaz",
+    "stopSharing": "Paylaşımı durdur",
+    "sharingStopped": "Paylaşım durduruldu",
+    "couldNotShare": "Paylaşım güncellenemedi",
+    "joiningTitle": "Rezervasyona katılınıyor…",
+    "joinSuccess": "Katıldınız! Rezervasyona dahil oldunuz.",
+    "joinFailed": "Bu paylaşım bağlantısı geçersiz veya iptal edilmiş",
+    "joinFailedTitle": "Katılamadınız",
+    "joinInvalidLink": "Bu bağlantıda davet kodu eksik"
   }
 }
