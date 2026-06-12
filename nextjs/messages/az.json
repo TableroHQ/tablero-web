@@ -252,7 +252,8 @@
     "couldNotConfirm": "Rezervasiya təsdiqlənə bilmədi",
     "couldNotCancel": "Ləğv etmək mümkün olmadı",
     "notConfigured": "Restoran konfiqurasiya edilməyib",
-    "errPhone": "Zəhmət olmasa əlaqə telefon nömrəsini daxil edin"
+    "errPhone": "Zəhmət olmasa əlaqə telefon nömrəsini daxil edin",
+    "details": "Sifariş & paylaş"
   },
   "checkout": {
     "eyebrow": "Sifariş rəsmiləşdirmə",
@@ -1433,5 +1434,46 @@
       "colTotal": "Cəmi",
       "none": "Aktiv götürmə sifarişi yoxdur."
     }
+  },
+  "reservationDetail": {
+    "eyebrow": "Rezervasiya",
+    "backToReservations": "← Rezervasiyalara qayıt",
+    "notFound": "Rezervasiya tapılmadı və ya ona girişiniz yoxdur",
+    "partySize": "{n} qonaq",
+    "table": "Masa",
+    "orders": "Sifarişlər",
+    "addOrder": "Sifariş əlavə et",
+    "closeMenu": "Menyunu bağla",
+    "loadingMenu": "Menyu yüklənir…",
+    "searchMenu": "Menyuda axtar…",
+    "noMenuMatches": "Axtarışınıza uyğun yemək yoxdur",
+    "pickerTotal": "Cəmi",
+    "placeOrder": "Sifariş ver",
+    "placing": "Göndərilir…",
+    "orderPlaced": "Sifariş rezervasiyanıza əlavə olundu",
+    "couldNotPlaceOrder": "Sifariş verilə bilmədi",
+    "pickSomething": "Əvvəlcə ən azı bir yemək seçin",
+    "noOrders": "Hələ sifariş yoxdur — ilkini əlavə edin",
+    "couldNotLoadMenu": "Menyu yüklənə bilmədi",
+    "members": "Qrup",
+    "you": "siz",
+    "shareTitle": "Rezervasiyanı paylaş",
+    "shareHint": "Dostlarınızın skan edib rezervasiyaya qoşula və öz sifarişlərini əlavə edə biləcəyi QR kod göstərin.",
+    "memberShareHint": "Rezervasiyanı yalnız sahibi paylaşa bilər. Burada əlavə etdiyiniz sifarişlər ortaq masaya gedir.",
+    "inactiveShareHint": "Bu rezervasiya artıq aktiv deyil, ona görə paylaşıla bilməz.",
+    "showQr": "QR kodu göstər",
+    "copyLink": "Linki kopyala",
+    "linkCopied": "Link kopyalandı",
+    "couldNotCopy": "Link kopyalana bilmədi",
+    "newLink": "Yeni link yarat",
+    "linkRotated": "Yeni link yaradıldı — köhnə QR kodlar artıq işləmir",
+    "stopSharing": "Paylaşımı dayandır",
+    "sharingStopped": "Paylaşım dayandırıldı",
+    "couldNotShare": "Paylaşım yenilənə bilmədi",
+    "joiningTitle": "Rezervasiyaya qoşulursunuz…",
+    "joinSuccess": "Qoşuldunuz! Rezervasiyaya daxil oldunuz.",
+    "joinFailed": "Bu paylaşım linki etibarsızdır və ya ləğv edilib",
+    "joinFailedTitle": "Qoşulmaq mümkün olmadı",
+    "joinInvalidLink": "Bu linkdə dəvət kodu çatışmır"
   }
 }

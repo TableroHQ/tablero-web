@@ -252,7 +252,8 @@
     "couldNotConfirm": "تعذّر تأكيد الحجز",
     "couldNotCancel": "تعذّر الإلغاء",
     "notConfigured": "المطعم غير مهيأ",
-    "errPhone": "يرجى إدخال رقم هاتف للتواصل"
+    "errPhone": "يرجى إدخال رقم هاتف للتواصل",
+    "details": "اطلب وشارك"
   },
   "checkout": {
     "eyebrow": "الدفع",
@@ -1433,5 +1434,46 @@
       "colTotal": "الإجمالي",
       "none": "لا توجد طلبات استلام نشطة."
     }
+  },
+  "reservationDetail": {
+    "eyebrow": "الحجز",
+    "backToReservations": "← العودة إلى الحجوزات",
+    "notFound": "الحجز غير موجود أو ليس لديك صلاحية الوصول إليه",
+    "partySize": "{n} ضيوف",
+    "table": "الطاولة",
+    "orders": "الطلبات",
+    "addOrder": "إضافة طلب",
+    "closeMenu": "إغلاق القائمة",
+    "loadingMenu": "جارٍ تحميل القائمة…",
+    "searchMenu": "ابحث في القائمة…",
+    "noMenuMatches": "لا توجد أطباق تطابق بحثك",
+    "pickerTotal": "المجموع",
+    "placeOrder": "إرسال الطلب",
+    "placing": "جارٍ الإرسال…",
+    "orderPlaced": "تمت إضافة الطلب إلى حجزك",
+    "couldNotPlaceOrder": "تعذّر إرسال الطلب",
+    "pickSomething": "اختر طبقًا واحدًا على الأقل أولًا",
+    "noOrders": "لا توجد طلبات بعد — أضف الطلب الأول",
+    "couldNotLoadMenu": "تعذّر تحميل القائمة",
+    "members": "المجموعة",
+    "you": "أنت",
+    "shareTitle": "مشاركة الحجز",
+    "shareHint": "اعرض رمز QR ليمسحه أصدقاؤك وينضموا إلى هذا الحجز ويضيفوا طلباتهم الخاصة.",
+    "memberShareHint": "مالك الحجز فقط يمكنه مشاركته. الطلبات التي تضيفها هنا تذهب إلى الطاولة المشتركة.",
+    "inactiveShareHint": "هذا الحجز لم يعد نشطًا، لذا لا يمكن مشاركته.",
+    "showQr": "عرض رمز QR",
+    "copyLink": "نسخ الرابط",
+    "linkCopied": "تم نسخ الرابط",
+    "couldNotCopy": "تعذّر نسخ الرابط",
+    "newLink": "إنشاء رابط جديد",
+    "linkRotated": "تم إنشاء رابط جديد — رموز QR القديمة لم تعد تعمل",
+    "stopSharing": "إيقاف المشاركة",
+    "sharingStopped": "تم إيقاف المشاركة",
+    "couldNotShare": "تعذّر تحديث المشاركة",
+    "joiningTitle": "جارٍ الانضمام إلى الحجز…",
+    "joinSuccess": "تم! لقد انضممت إلى الحجز.",
+    "joinFailed": "رابط المشاركة هذا غير صالح أو تم إلغاؤه",
+    "joinFailedTitle": "تعذّر الانضمام",
+    "joinInvalidLink": "هذا الرابط لا يحتوي على رمز الدعوة"
   }
 }
