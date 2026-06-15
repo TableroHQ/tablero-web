@@ -29,6 +29,7 @@ export default function Profile() {
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [dirty, setDirty] = React.useState(false);
   const [fieldErrors, setFieldErrors] = React.useState({});
+  const [restaurantName, setRestaurantName] = React.useState('');
 
   React.useEffect(() => {
     const handler = (e) => {
@@ -65,6 +66,15 @@ export default function Profile() {
         });
       });
   }, []);
+
+  // Resolve the restaurant id to a human-readable name for the security card.
+  const restaurantId = state.user.restaurantId;
+  React.useEffect(() => {
+    if (!restaurantId) { setRestaurantName(''); return; }
+    api.get(`/api/restaurants/${restaurantId}`)
+      .then((data) => setRestaurantName(data?.name ?? ''))
+      .catch(() => setRestaurantName(''));
+  }, [restaurantId]);
 
   const save = async () => {
     const errs = {};
@@ -168,7 +178,7 @@ export default function Profile() {
           <Card title={t('security')}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Info label={t('role')}         value={user.role || '—'} />
-              <Info label={t('restaurant')}   value={user.restaurantId || '—'} />
+              <Info label={t('restaurant')}   value={restaurantName || (user.restaurantId ? '…' : '—')} />
               <Info label={t('jwtRotation')}  value={t('jwtValue')} />
               <Info label={t('refreshToken')} value={t('refreshValue')} />
             </div>

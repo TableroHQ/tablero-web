@@ -38,8 +38,17 @@ export default function ConsumerLayout({ children }) {
     { to: '/dashboard', label: t('myTablero') },
   ];
 
+  // Logged-in customers get a focused app nav — the marketing pages (Contact,
+  // Our Story, Help Centre) stay reachable from the footer and would otherwise
+  // overflow the header alongside the app links.
+  const CUSTOMER_NAV = [
+    { to: '/',        label: t('home') },
+    { to: '/menu',    label: t('menu') },
+    ...AUTH_NAV,
+  ];
+
   const NAV = isCustomer
-    ? [...PUBLIC_NAV, ...AUTH_NAV]
+    ? CUSTOMER_NAV
     : isGuest
       ? [...PUBLIC_NAV, ...GUEST_NAV]
       : PUBLIC_NAV;
