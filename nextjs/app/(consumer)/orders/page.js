@@ -48,7 +48,7 @@ export default function OrdersPage() {
           <div className="py-24 text-center">
             <ShoppingBag size={48} className="mx-auto text-ink-muted/40 mb-4" />
             <p className="text-ink-muted text-sm font-fn">{t('noOrders')}</p>
-            <Link href="/menu" className="mt-6 inline-block btn-primary">{t('browseMenu')}</Link>
+            <Link href="/menu" className="mt-6 inline-block btn-primary hover-sheen">{t('browseMenu')}</Link>
           </div>
         ) : (
           <div className="bg-white rounded-3xl border border-border overflow-hidden">
@@ -72,7 +72,7 @@ export default function OrdersPage() {
                     const statusChip = STATUS_CHIP[o.status] || 'bg-cream-sub text-ink-muted';
                     const isActive = !['SERVED', 'CANCELLED', 'COMPLETED'].includes(o.status);
                     return (
-                      <tr key={o.id} className="border-t border-border hover:bg-cream-sub/20 transition" data-testid={`order-row-${o.id}`}>
+                      <tr key={o.id} className="group border-t border-border hover:bg-cream-sub/30 transition-colors duration-200" data-testid={`order-row-${o.id}`}>
                         <td className="p-4 pl-6">
                           <div className="font-fn font-semibold">#{o.id?.slice(-4)}</div>
                           <div className="text-[11px] font-mono text-ink-muted">{o.id?.slice(-12)}</div>
@@ -99,8 +99,8 @@ export default function OrdersPage() {
                           </span>
                         </td>
                         <td className="p-4 pr-6 text-right">
-                          <Link href={`/orders/${o.id}`} className="inline-flex items-center gap-1 text-xs font-fn font-medium text-primary hover:underline" data-testid={`order-detail-${o.id}`}>
-                            View <ArrowRight size={12} />
+                          <Link href={`/orders/${o.id}`} className="inline-flex items-center gap-1 text-xs font-fn font-medium text-primary link-underline tap" data-testid={`order-detail-${o.id}`}>
+                            View <ArrowRight size={12} className="icon-nudge" />
                           </Link>
                         </td>
                       </tr>

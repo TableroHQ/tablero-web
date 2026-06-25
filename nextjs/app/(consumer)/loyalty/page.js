@@ -6,6 +6,7 @@ import { api } from '@/lib/client';
 import { toast } from 'sonner';
 import { LOYALTY_TIER_GOLD } from '@/lib/config';
 import { useTranslations } from 'next-intl';
+import Reveal from '@/components/Reveal';
 
 export default function Loyalty() {
   const t = useTranslations('loyalty');
@@ -59,17 +60,17 @@ export default function Loyalty() {
       <p className="mt-3 text-ink-body max-w-xl">{t('subtitle')}</p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
-        <div className="lg:col-span-2 bg-gradient-to-br from-primary to-terracotta-dark text-white rounded-3xl p-8 md:p-10 relative overflow-hidden">
-          <Sparkles className="absolute top-6 right-6 opacity-20" size={120} />
+        <div className="lg:col-span-2 bg-gradient-to-br from-primary to-terracotta-dark text-white rounded-3xl p-8 md:p-10 relative overflow-hidden hover-lift">
+          <Sparkles className="absolute top-6 right-6 opacity-20 animate-float" size={120} />
           <div className="label-eyebrow !text-white/70">{t('yourBalance')}</div>
-          <div className="font-display text-7xl md:text-8xl mt-2">{points.toLocaleString()}</div>
+          <div key={points} className="font-display text-7xl md:text-8xl mt-2 animate-pop origin-left">{points.toLocaleString()}</div>
           <div className="font-mono text-sm opacity-80">{t('points')}</div>
           <div className="mt-8 max-w-md">
             <div className="flex justify-between text-xs font-mono mb-2"><span>{t('nextTier')}</span><span>{LOYALTY_TIER_GOLD.toLocaleString()}</span></div>
-            <div className="h-2 rounded-full bg-white/20 overflow-hidden"><div className="h-full bg-secondary" style={{ width: `${Math.min(100, (points / LOYALTY_TIER_GOLD) * 100)}%` }} /></div>
+            <div className="h-2 rounded-full bg-white/20 overflow-hidden"><div className="h-full bg-secondary transition-all duration-700 ease-out" style={{ width: `${Math.min(100, (points / LOYALTY_TIER_GOLD) * 100)}%` }} /></div>
           </div>
         </div>
-        <div className="bg-white rounded-3xl border border-border p-7">
+        <div className="bg-white rounded-3xl border border-border p-7 card-interactive">
           <div className="label-eyebrow">{t('howItWorks')}</div>
           <ul className="mt-4 space-y-3 text-sm text-ink-body">
             <li className="flex gap-3"><span className="font-mono text-primary">01</span> {t('step1')}</li>
@@ -81,26 +82,28 @@ export default function Loyalty() {
 
       <h2 className="font-display text-3xl mt-14">{t('availableRewards')}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
-        {rewards.map(b => {
+        {rewards.map((b, i) => {
           const locked = b.cost > points;
           return (
-            <article key={b.id} className={`bg-white rounded-3xl border overflow-hidden ${locked ? 'opacity-70' : 'border-border hover:-translate-y-1 transition'}`} data-testid={`bonus-${b.id}`}>
-              <div className="aspect-square relative bg-cream-sub">
+            <Reveal key={b.id} delay={Math.min(i, 8) * 60}>
+            <article className={`group bg-white rounded-3xl border border-border overflow-hidden h-full ${locked ? 'opacity-70' : 'card-interactive'}`} data-testid={`bonus-${b.id}`}>
+              <div className="aspect-square relative bg-cream-sub overflow-hidden">
                 {b.img
-                  ? <img src={b.img} alt={b.name} className={`w-full h-full object-cover ${locked ? 'grayscale' : ''}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
-                  : <div className="absolute inset-0 flex items-center justify-center text-secondary/40"><Coins size={48} /></div>}
+                  ? <img src={b.img} alt={b.name} className={`w-full h-full object-cover transition-transform duration-700 ${locked ? 'grayscale' : 'group-hover:scale-105'}`} onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
+                  : <div className="absolute inset-0 flex items-center justify-center text-secondary/40"><Coins size={48} className={locked ? '' : 'hover-wiggle'} /></div>}
                 {locked && <div className="absolute inset-0 bg-ink/40 flex items-center justify-center"><Lock className="text-white" size={28} /></div>}
               </div>
               <div className="p-5">
                 <h3 className="font-fn font-semibold">{b.name}</h3>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="chip bg-secondary/10 text-secondary"><Coins size={12} /> {b.cost} {t('pts')}</span>
-                  <button onClick={() => redeem(b)} disabled={locked || redeeming === b.id} className="text-sm font-fn font-medium text-primary disabled:text-ink-muted disabled:no-underline hover:underline" data-testid={`redeem-${b.id}`}>
+                  <button onClick={() => redeem(b)} disabled={locked || redeeming === b.id} className={`text-sm font-fn font-medium text-primary disabled:text-ink-muted tap ${locked || redeeming === b.id ? '' : 'link-underline'}`} data-testid={`redeem-${b.id}`}>
                     {redeeming === b.id ? t('redeeming') : locked ? t('need', { n: b.cost - points }) : t('redeem')}
                   </button>
                 </div>
               </div>
             </article>
+            </Reveal>
           );
         })}
       </div>

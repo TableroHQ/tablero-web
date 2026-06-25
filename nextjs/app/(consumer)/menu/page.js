@@ -193,7 +193,7 @@ export default function Menu() {
               className="flex items-center gap-2 overflow-x-auto overscroll-x-contain scrollbar-none cursor-grab select-none flex-1 min-w-0">
               {cats.map(c => (
                 <button key={c} onClick={() => setCat(c)} data-testid={`menu-cat-${c.toLowerCase()}`}
-                  className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30'}`}>
+                  className={`px-4 py-2 rounded-full text-sm font-fn whitespace-nowrap tap transition ${cat === c ? 'bg-ink text-white dark:bg-primary dark:text-white' : 'bg-white border border-border text-ink-body hover:border-ink/30 hover:bg-cream-sub'}`}>
                   {c === 'All' ? t('all') : c}
                 </button>
               ))}
@@ -220,7 +220,7 @@ export default function Menu() {
             const qty = state.cart.find(c => c.id === m.id)?.qty || 0;
             return (
             <Reveal key={m.id} delay={Math.min(i, 8) * 60}>
-            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm hover:shadow-lg transition group h-full flex flex-col">
+            <article className="bg-white rounded-3xl overflow-hidden border border-border shadow-sm card-interactive group h-full flex flex-col">
               <div className="aspect-[4/3] relative overflow-hidden">
                 <img src={m.img} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" onError={e => { e.currentTarget.onerror = null; e.currentTarget.style.display = 'none'; }} />
                 {!m.available && (
@@ -254,25 +254,25 @@ export default function Menu() {
                 <div className="mt-auto pt-5">
                   {isGuest ? (
                     <button onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-full border-2 border-primary text-primary font-fn font-medium hover:bg-primary hover:text-white transition">
+                      className="w-full flex items-center justify-center gap-2 py-3 rounded-full border-2 border-primary text-primary font-fn font-medium hover:bg-primary hover:text-white tap transition">
                       <LogIn size={16} /> {t('signInToOrder')}
                     </button>
                   ) : qty > 0 ? (
                     <div className="flex items-center justify-between rounded-full bg-primary text-white px-2 py-1.5" data-testid={`menu-stepper-${m.id}`}>
                       <button onClick={() => dec(m, qty)} aria-label={t('decrease')} data-testid={`menu-dec-${m.id}`}
-                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
+                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 tap transition">
                         <Minus size={16} />
                       </button>
-                      <span className="font-fn font-medium text-sm" data-testid={`menu-qty-${m.id}`}>{t('inOrderCount', { n: qty })}</span>
+                      <span key={qty} className="font-fn font-medium text-sm animate-pop" data-testid={`menu-qty-${m.id}`}>{t('inOrderCount', { n: qty })}</span>
                       <button disabled={!m.available} onClick={() => inc(m)} aria-label={t('increase')} data-testid={`menu-inc-${m.id}`}
-                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 transition disabled:opacity-40">
+                        className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/20 tap transition disabled:opacity-40">
                         <Plus size={16} />
                       </button>
                     </div>
                   ) : (
                     <button disabled={!m.available} onClick={() => add(m)} data-testid={`menu-add-${m.id}`}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-white font-fn font-medium hover:bg-terracotta-dark transition disabled:bg-cream-sub disabled:text-ink-muted">
-                      <Plus size={16} /> {t('addToOrder')}
+                      className="group/btn w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-white font-fn font-medium hover:bg-terracotta-dark tap transition disabled:bg-cream-sub disabled:text-ink-muted">
+                      <Plus size={16} className="transition-transform duration-300 group-hover/btn:rotate-90" /> {t('addToOrder')}
                     </button>
                   )}
                 </div>
