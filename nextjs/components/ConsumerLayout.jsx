@@ -59,8 +59,8 @@ export default function ConsumerLayout({ children }) {
     <div className="min-h-screen bg-background text-foreground">
       <header className="glass-nav sticky top-0 z-50 border-b border-border/60" data-testid="consumer-header">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 h-[72px] flex items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0" data-testid="brand-link">
-            <img src={IMG.logoMark} alt="Tablero" className="h-11 w-11 object-contain" />
+          <Link href="/" className="group flex items-center gap-2 sm:gap-2.5 shrink-0 tap" data-testid="brand-link">
+            <img src={IMG.logoMark} alt="Tablero" className="h-11 w-11 object-contain transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-105" />
             <span className="font-display text-2xl font-semibold text-ink hidden min-[360px]:inline">Tablero</span>
           </Link>
           <nav className="hidden xl:flex items-center gap-0.5 2xl:gap-2">
@@ -68,7 +68,7 @@ export default function ConsumerLayout({ children }) {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
                 <Link key={n.to} href={n.to} data-testid={`nav-${n.label.toLowerCase()}`}
-                  className={`px-3 2xl:px-4 py-2 rounded-full text-sm font-fn font-medium whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
+                  className={`px-3 2xl:px-4 py-2 rounded-full text-sm font-fn font-medium whitespace-nowrap tap transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'text-ink-body hover:bg-cream-sub'}`}>
                   {n.label}
                 </Link>
               );
@@ -79,34 +79,34 @@ export default function ConsumerLayout({ children }) {
             <ThemeToggle />
             {!isGuest && <NotificationBell />}
             {isCustomer && (
-              <Link href="/checkout" className="hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm transition relative" data-testid="cart-button">
-                <ShoppingBag size={16} /><span className="hidden 2xl:inline text-sm font-fn">{t('cart')}</span>
-                {cartCount > 0 && <span className="h-5 w-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">{cartCount}</span>}
+              <Link href="/checkout" className="group hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-cream-sub hover:bg-cream-warm tap transition relative" data-testid="cart-button">
+                <ShoppingBag size={16} className="hover-wiggle" /><span className="hidden 2xl:inline text-sm font-fn">{t('cart')}</span>
+                {cartCount > 0 && <span key={cartCount} className="h-5 w-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center animate-pop">{cartCount}</span>}
               </Link>
             )}
             {isGuest ? (
-              <Link href={`/login?next=${encodeURIComponent(pathname)}`} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="signin-cta">
+              <Link href={`/login?next=${encodeURIComponent(pathname)}`} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 tap hover-sheen transition" data-testid="signin-cta">
                 <User size={16} /><span className="text-sm font-fn">{t('signIn')}</span>
               </Link>
             ) : (
-              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 transition" data-testid="profile-cta">
+              <Link href="/profile" className="hidden sm:flex items-center gap-2 px-3 2xl:px-4 py-2 rounded-full bg-ink text-white hover:bg-ink-body dark:bg-primary dark:hover:bg-primary/80 tap transition" data-testid="profile-cta">
                 {state.user.avatar
                   ? <img src={state.user.avatar} alt="" className="h-5 w-5 rounded-full object-cover" />
                   : <User size={16} />}
                 <span className="hidden 2xl:inline text-sm font-fn whitespace-nowrap max-w-[120px] truncate">{state.user.firstName || (state.user.name || '').split(' ')[0] || state.user.username || t('myProfile')}</span>
               </Link>
             )}
-            <button className="xl:hidden p-2" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
+            <button className="xl:hidden p-2 tap" onClick={() => setOpen(o => !o)} data-testid="mobile-menu-toggle">
               {open ? <X size={22} /> : <MenuIcon size={22} />}
             </button>
           </div>
         </div>
         {open && (
-          <div className="xl:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2">
+          <div className="xl:hidden border-t border-border/60 bg-background/95 px-6 py-4 flex flex-col gap-2 animate-fade-down">
             {NAV.map(n => {
               const isActive = n.to === '/' ? pathname === '/' : pathname.startsWith(n.to);
               return (
-                <Link key={n.to} href={n.to} className={`py-2 font-fn ${isActive ? 'text-primary' : 'text-ink-body'}`}>{n.label}</Link>
+                <Link key={n.to} href={n.to} className={`py-2 font-fn w-fit link-underline ${isActive ? 'text-primary' : 'text-ink-body'}`}>{n.label}</Link>
               );
             })}
             {isGuest
@@ -134,7 +134,7 @@ export default function ConsumerLayout({ children }) {
                 { href: 'https://linkedin.com',  Icon: Linkedin,  label: 'LinkedIn' },
               ].map(({ href, Icon, label }) => (
                 <a key={href} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className="h-9 w-9 rounded-full bg-white/10 hover:bg-primary transition flex items-center justify-center text-cream/70 hover:text-white">
+                  className="h-9 w-9 rounded-full bg-white/10 hover:bg-primary tap transition-all duration-200 hover:-translate-y-0.5 hover:scale-110 flex items-center justify-center text-cream/70 hover:text-white">
                   <Icon size={15} />
                 </a>
               ))}
@@ -151,7 +151,7 @@ export default function ConsumerLayout({ children }) {
                 ['/#how-it-works', tf('forDirectors')],
                 ['/qr',            tf('qrOrdering')],
               ].map(([to, label]) => (
-                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition">{label}</Link></li>
+                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition link-underline inline-block w-fit">{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -166,7 +166,7 @@ export default function ConsumerLayout({ children }) {
                 ['/#pricing', tf('comparePlans')],
                 ['/#pricing', tf('freeTrial')],
               ].map(([to, label]) => (
-                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition">{label}</Link></li>
+                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition link-underline inline-block w-fit">{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -181,7 +181,7 @@ export default function ConsumerLayout({ children }) {
                 ['/reviews',      tf('reviews')],
                 ['/about',        tf('ourStory')],
               ].map(([to, label]) => (
-                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition">{label}</Link></li>
+                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition link-underline inline-block w-fit">{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -193,14 +193,14 @@ export default function ConsumerLayout({ children }) {
                 ['mailto:hello@tablero.com', 'hello@tablero.com'],
                 ['tel:+15550001234',         '+1 (555) 000-1234'],
               ].map(([to, label]) => (
-                <li key={label}><a href={to} className="text-sm text-cream/70 hover:text-cream transition">{label}</a></li>
+                <li key={label}><a href={to} className="text-sm text-cream/70 hover:text-cream transition link-underline inline-block w-fit">{label}</a></li>
               ))}
               {[
                 ['/contact', tf('liveChat')],
                 ['/help',    tf('helpCentre')],
                 ['/press',   tf('pressEnquiries')],
               ].map(([to, label]) => (
-                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition">{label}</Link></li>
+                <li key={label}><Link href={to} className="text-sm text-cream/70 hover:text-cream transition link-underline inline-block w-fit">{label}</Link></li>
               ))}
             </ul>
           </div>
@@ -211,7 +211,7 @@ export default function ConsumerLayout({ children }) {
             <span className="text-xs text-cream/40 font-mono">{tf('copyright')}</span>
             <div className="flex items-center gap-5">
               {[['/privacy', tf('privacy')], ['/terms', tf('terms')], ['/cookies', tf('cookies')]].map(([to, label]) => (
-                <Link key={label} href={to} className="text-xs text-cream/40 hover:text-cream/70 transition font-mono">{label}</Link>
+                <Link key={label} href={to} className="text-xs text-cream/40 hover:text-cream/70 transition font-mono link-underline inline-block w-fit">{label}</Link>
               ))}
             </div>
           </div>

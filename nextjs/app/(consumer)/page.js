@@ -69,7 +69,7 @@ export default function Landing() {
               {t('heroSubtitle')}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/reservations" className="btn-primary inline-flex items-center gap-2" data-testid="hero-reserve">{t('reserveTable')} <ArrowRight size={16} /></Link>
+              <Link href="/reservations" className="btn-primary hover-sheen group inline-flex items-center gap-2" data-testid="hero-reserve">{t('reserveTable')} <ArrowRight size={16} className="icon-nudge" /></Link>
               <Link href="/menu" className="btn-outline inline-flex items-center gap-2" data-testid="hero-menu">{t('exploreMenu')}</Link>
             </div>
             <div className="mt-12 flex flex-wrap gap-8">
@@ -96,7 +96,7 @@ export default function Landing() {
                 <ArrowRight size={18} className="text-ink-muted" />
               </div>
             </div>
-            <div className="absolute -top-6 -left-6 hidden md:block bg-white rounded-2xl shadow-xl p-4 w-56">
+            <div className="absolute -top-6 -left-6 hidden md:block bg-white rounded-2xl shadow-xl p-4 w-56 animate-float">
               <div className="flex items-center gap-1 text-warn mb-1">{Array.from({ length: 5 }).map((_, i) => <Star key={i} size={14} fill="currentColor" />)}</div>
               <p className="text-xs text-ink-body italic">{t('bestReview')}</p>
               <div className="text-[10px] font-mono text-ink-muted mt-2">— SOFIA M.</div>
@@ -119,8 +119,8 @@ export default function Landing() {
               { icon: Sparkles, title: t('feature3Title'), text: t('feature3Text') },
             ].map((c, i) => (
               <Reveal key={c.title} delay={i * 90}>
-                <div className="bg-white rounded-3xl p-7 hover:-translate-y-1 transition-transform shadow-sm hover:shadow-md h-full">
-                  <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5"><c.icon size={22} /></div>
+                <div className="group bg-white rounded-3xl p-7 border border-transparent card-interactive shadow-sm h-full">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-5 transition-colors duration-300 group-hover:bg-primary group-hover:text-white"><c.icon size={22} className="hover-wiggle" /></div>
                   <h3 className="font-fn font-semibold text-xl text-ink">{c.title}</h3>
                   <p className="mt-2 text-sm text-ink-body leading-relaxed">{c.text}</p>
                 </div>
@@ -138,7 +138,7 @@ export default function Landing() {
               <div className="label-eyebrow">{t('tonightsHighlights')}</div>
               <h2 className="font-display text-4xl md:text-5xl mt-2">{t('madeWithCare')}</h2>
             </div>
-            <Link href="/menu" className="btn-outline inline-flex items-center gap-2" data-testid="see-menu">{t('fullMenu')} <ArrowRight size={14} /></Link>
+            <Link href="/menu" className="btn-outline group inline-flex items-center gap-2" data-testid="see-menu">{t('fullMenu')} <ArrowRight size={14} className="icon-nudge" /></Link>
           </Reveal>
           <Reveal delay={80}>
           {previewItems ? (
@@ -223,7 +223,7 @@ export default function Landing() {
             ].map((plan, i) => (
               <Reveal key={plan.name} delay={i * 90}>
                 <div
-                className={`rounded-3xl p-7 flex flex-col border h-full ${plan.highlight ? 'bg-ink text-cream border-ink shadow-2xl scale-[1.03] dark:bg-primary/20 dark:text-foreground dark:border-primary/60' : 'bg-white border-border shadow-sm'}`}>
+                className={`rounded-3xl p-7 flex flex-col border h-full hover-lift ${plan.highlight ? 'bg-ink text-cream border-ink shadow-2xl scale-[1.03] dark:bg-primary/20 dark:text-foreground dark:border-primary/60' : 'bg-white border-border shadow-sm'}`}>
                 <div className={`label-eyebrow mb-3 ${plan.highlight ? '!text-cream/50 dark:!text-foreground/50' : ''}`}>{plan.name}</div>
                 <div className="flex items-end gap-1 mb-2">
                   <span className={`font-display text-5xl ${plan.highlight ? 'text-cream dark:text-foreground' : 'text-ink'}`}>{plan.price}</span>
@@ -239,7 +239,7 @@ export default function Landing() {
                   ))}
                 </ul>
                 <Link href="/login"
-                  className={`w-full py-3 rounded-full text-center font-fn font-medium text-sm transition ${plan.highlight ? 'bg-primary text-white hover:bg-terracotta-dark' : 'border border-ink text-ink hover:bg-ink hover:text-white'}`}>
+                  className={`w-full py-3 rounded-full text-center font-fn font-medium text-sm tap transition ${plan.highlight ? 'bg-primary text-white hover:bg-terracotta-dark hover-sheen' : 'border border-ink text-ink hover:bg-ink hover:text-white'}`}>
                   {plan.cta}
                 </Link>
                 </div>
@@ -293,7 +293,7 @@ function FoodCard({ item, className, big }) {
         <div className={`font-display ${big ? 'text-3xl md:text-4xl' : 'text-2xl'} mt-1`}>{item.name}</div>
         <div className="mt-2 flex items-center justify-between">
           <span className="font-mono text-sm">${Number(item.price).toFixed(2)}</span>
-          <span className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1 text-sm">{tc('view')} <ArrowRight size={14} /></span>
+          <span className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex items-center gap-1 text-sm">{tc('view')} <ArrowRight size={14} className="icon-nudge" /></span>
         </div>
       </div>
     </Link>

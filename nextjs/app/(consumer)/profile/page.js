@@ -135,12 +135,12 @@ export default function Profile() {
         <div className="lg:col-span-2 space-y-6">
           <Card title={t('identity')}>
             <div className="flex items-center gap-5">
-              <div className="relative">
-                <div className="h-20 w-20 rounded-full bg-primary/10 text-primary flex items-center justify-center font-display text-3xl uppercase">
+              <div className="group relative">
+                <div className="h-20 w-20 rounded-full bg-primary/10 text-primary flex items-center justify-center font-display text-3xl uppercase transition-transform duration-300 group-hover:scale-105">
                   {initials}
                 </div>
-                <button className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-ink text-white flex items-center justify-center" data-testid="change-avatar" aria-label="Change profile photo">
-                  <Camera size={14} />
+                <button className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-ink text-white flex items-center justify-center tap hover:bg-primary transition-colors duration-200" data-testid="change-avatar" aria-label="Change profile photo">
+                  <Camera size={14} className="hover-wiggle" />
                 </button>
               </div>
               <div>
@@ -166,11 +166,11 @@ export default function Profile() {
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <button onClick={save} disabled={loading} className="btn-primary disabled:opacity-50" data-testid="save-profile">
+              <button onClick={save} disabled={loading} className="btn-primary hover-sheen disabled:opacity-50" data-testid="save-profile">
                 {loading ? tc('saving') : t('saveChanges')}
               </button>
-              <Link href="/forgot-password" className="btn-outline inline-flex items-center gap-2" data-testid="reset-password-link">
-                <Shield size={14} /> {t('resetPassword')}
+              <Link href="/forgot-password" className="btn-outline group inline-flex items-center gap-2" data-testid="reset-password-link">
+                <Shield size={14} className="hover-wiggle" /> {t('resetPassword')}
               </Link>
             </div>
           </Card>
@@ -186,22 +186,22 @@ export default function Profile() {
 
           <Card title={t('dangerZone')} tone="err">
             <div className="flex flex-wrap gap-3">
-              <button onClick={logout} className="px-5 py-2.5 rounded-full bg-cream-sub text-ink font-fn inline-flex items-center gap-2" data-testid="logout">
-                <LogOut size={14} /> {t('signOut')}
+              <button onClick={logout} className="group px-5 py-2.5 rounded-full bg-cream-sub hover:bg-cream-warm text-ink font-fn inline-flex items-center gap-2 tap transition-colors duration-200" data-testid="logout">
+                <LogOut size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" /> {t('signOut')}
               </button>
               {confirmDelete ? (
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap animate-fade-in">
                   <span className="text-sm text-err font-fn">{t('permanentWarning')}</span>
-                  <button onClick={deleteAccount} className="px-5 py-2.5 rounded-full bg-err text-white font-fn inline-flex items-center gap-2" data-testid="delete-confirm">
+                  <button onClick={deleteAccount} className="px-5 py-2.5 rounded-full bg-err hover:bg-err/90 text-white font-fn inline-flex items-center gap-2 tap transition-colors duration-200" data-testid="delete-confirm">
                     <Trash2 size={14} /> {t('yesDelete')}
                   </button>
-                  <button onClick={() => setConfirmDelete(false)} className="px-5 py-2.5 rounded-full bg-cream-sub text-ink font-fn" data-testid="delete-cancel">
+                  <button onClick={() => setConfirmDelete(false)} className="px-5 py-2.5 rounded-full bg-cream-sub hover:bg-cream-warm text-ink font-fn tap transition-colors duration-200" data-testid="delete-cancel">
                     {tc('cancel')}
                   </button>
                 </div>
               ) : (
-                <button onClick={() => setConfirmDelete(true)} className="px-5 py-2.5 rounded-full bg-err-bg text-err font-fn inline-flex items-center gap-2" data-testid="delete-account">
-                  <Trash2 size={14} /> {t('deleteMyAccount')}
+                <button onClick={() => setConfirmDelete(true)} className="group px-5 py-2.5 rounded-full bg-err-bg hover:bg-err hover:text-white text-err font-fn inline-flex items-center gap-2 tap transition-colors duration-200" data-testid="delete-account">
+                  <Trash2 size={14} className="hover-wiggle" /> {t('deleteMyAccount')}
                 </button>
               )}
             </div>
@@ -209,17 +209,17 @@ export default function Profile() {
         </div>
 
         <aside>
-          <div className="bg-ink text-cream rounded-3xl p-6">
+          <div className="bg-ink text-cream rounded-3xl p-6 hover-lift">
             <div className="label-eyebrow !text-cream/60">{t('wallet')}</div>
             <div className="font-display text-5xl mt-2">${(user.balance || 0).toFixed(2)}</div>
             <div className="text-xs font-mono text-cream/60 mt-1">{t('availableHeld')} ${(user.heldBalance || 0).toFixed(2)}</div>
-            <Link href="/topup" className="mt-4 w-full block text-center py-3 rounded-full bg-primary text-white font-fn font-medium" data-testid="topup-link">{t('topUp')}</Link>
+            <Link href="/topup" className="mt-4 w-full block text-center py-3 rounded-full bg-primary hover:bg-terracotta-dark text-white font-fn font-medium tap hover-sheen transition-colors duration-200" data-testid="topup-link">{t('topUp')}</Link>
           </div>
-          <div className="bg-white rounded-3xl border border-border p-6 mt-4">
+          <div className="bg-white rounded-3xl border border-border p-6 mt-4 card-interactive">
             <div className="label-eyebrow">{t('loyalty')}</div>
             <div className="font-display text-4xl mt-2">{(user.loyaltyPoints || 0).toLocaleString()}</div>
             <div className="text-xs font-mono text-ink-muted">{t('points')}</div>
-            <Link href="/loyalty" className="mt-3 block text-sm text-primary font-fn">{t('browseRewards')}</Link>
+            <Link href="/loyalty" className="mt-3 inline-block text-sm text-primary font-fn link-underline w-fit">{t('browseRewards')}</Link>
           </div>
         </aside>
       </div>
@@ -241,15 +241,15 @@ function Field({ icon: Icon, label, value, onChange, testid, fieldId, error }) {
   return (
     <div data-testid={testid}>
       <label htmlFor={id} className="label-eyebrow">{label}</label>
-      <div className="mt-2 relative">
-        <Icon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted" />
+      <div className="mt-2 relative group">
+        <Icon size={14} className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors duration-200 ${error ? 'text-err' : 'text-ink-muted group-focus-within:text-primary'}`} />
         <input
           id={id}
           value={value}
           onChange={e => onChange(e.target.value)}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={error ? `${id}-err` : undefined}
-          className={`w-full bg-cream-sub rounded-xl pl-11 pr-4 py-3 font-fn outline-none focus:ring-2 ${error ? 'focus:ring-err ring-1 ring-err' : 'focus:ring-primary'}`}
+          className={`w-full bg-cream-sub rounded-xl pl-11 pr-4 py-3 font-fn outline-none transition-shadow duration-200 focus:ring-2 ${error ? 'focus:ring-err ring-1 ring-err' : 'focus:ring-primary'}`}
         />
       </div>
       {error && (
@@ -261,7 +261,7 @@ function Field({ icon: Icon, label, value, onChange, testid, fieldId, error }) {
 
 function Info({ label, value }) {
   return (
-    <div className="p-4 rounded-2xl bg-cream-sub/50">
+    <div className="p-4 rounded-2xl bg-cream-sub/50 hover:bg-cream-sub transition-colors duration-200">
       <div className="label-eyebrow !text-[9px]">{label}</div>
       <div className="font-fn text-sm mt-1">{value}</div>
     </div>
