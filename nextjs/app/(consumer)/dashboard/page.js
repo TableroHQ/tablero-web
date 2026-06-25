@@ -55,7 +55,7 @@ export default function Dashboard() {
           <h1 className="font-display text-5xl md:text-6xl mt-2">{t('hello', { name: user.firstName || (user.name || 'there').split(' ')[0] })}</h1>
           <p className="text-ink-body mt-2">{t('subtitle')}</p>
         </div>
-        <Link href="/menu" className="btn-primary inline-flex items-center gap-2" data-testid="dashboard-order-cta">{t('startOrder')} <ArrowRight size={16} /></Link>
+        <Link href="/menu" className="btn-primary hover-sheen group inline-flex items-center gap-2" data-testid="dashboard-order-cta">{t('startOrder')} <ArrowRight size={16} className="icon-nudge" /></Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-10">
@@ -75,7 +75,7 @@ export default function Dashboard() {
         <div className="lg:col-span-2 bg-white rounded-3xl border border-border p-6 md:p-8">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl">{t('upcomingReservations')}</h2>
-            <Link href="/reservations" className="text-sm text-primary font-fn flex items-center gap-1">{t('newReservation')} <ChevronRight size={14} /></Link>
+            <Link href="/reservations" className="group text-sm text-primary font-fn flex items-center gap-1 tap">{t('newReservation')} <ChevronRight size={14} className="icon-nudge" /></Link>
           </div>
           {loading ? (
             <div className="mt-5 divide-y divide-border">
@@ -86,8 +86,8 @@ export default function Dashboard() {
               {reservations.length === 0 ? (
                 <div className="py-8 text-center text-ink-muted text-sm">{t('noUpcomingReservations')}</div>
               ) : reservations.map(r => (
-                <div key={r.id} className="py-4 flex items-center gap-4" data-testid={`reservation-${r.id}`}>
-                  <div className="h-14 w-14 rounded-2xl bg-cream-sub flex flex-col items-center justify-center font-mono">
+                <div key={r.id} className="group py-4 px-3 -mx-3 rounded-2xl flex items-center gap-4 hover:bg-cream-sub/50 transition-colors duration-200" data-testid={`reservation-${r.id}`}>
+                  <div className="h-14 w-14 rounded-2xl bg-cream-sub flex flex-col items-center justify-center font-mono transition-transform duration-300 group-hover:scale-105">
                     <span className="text-[10px] text-ink-muted">{r.reservationStartAt ? new Date(r.reservationStartAt).toLocaleString('en', { month: 'short' }).toUpperCase() : '—'}</span>
                     <span className="text-lg font-bold">{r.reservationStartAt ? new Date(r.reservationStartAt).getDate() : '—'}</span>
                   </div>
@@ -110,7 +110,7 @@ export default function Dashboard() {
             <div className="mt-5 h-2 rounded-full bg-cream-sub overflow-hidden">
               <div className="h-full bg-primary transition-all duration-700" style={{ width: `${loyaltyPct}%` }} />
             </div>
-            <Link href="/loyalty" className="mt-5 btn-outline inline-flex items-center gap-2" data-testid="loyalty-cta">{t('viewCatalogue')} <ArrowRight size={14} /></Link>
+            <Link href="/loyalty" className="mt-5 btn-outline group inline-flex items-center gap-2" data-testid="loyalty-cta">{t('viewCatalogue')} <ArrowRight size={14} className="icon-nudge" /></Link>
           </div>
         </div>
       </div>
@@ -130,14 +130,14 @@ export default function Dashboard() {
               {orders.length === 0 ? (
                 <div className="py-8 text-center text-ink-muted text-sm">{t('noOrders')}</div>
               ) : orders.map(o => (
-                <div key={o.id} className="py-4 flex items-center gap-4" data-testid={`order-${o.id}`}>
-                  <div className="h-12 w-12 rounded-xl bg-cream-sub flex items-center justify-center text-ink-muted"><Receipt size={18} /></div>
+                <div key={o.id} className="group py-4 px-3 -mx-3 rounded-2xl flex items-center gap-4 hover:bg-cream-sub/50 transition-colors duration-200" data-testid={`order-${o.id}`}>
+                  <div className="h-12 w-12 rounded-xl bg-cream-sub flex items-center justify-center text-ink-muted transition-colors duration-300 group-hover:bg-primary/10 group-hover:text-primary"><Receipt size={18} /></div>
                   <div className="flex-1">
                     <div className="font-fn font-semibold">{o.tableId ? t('dineIn') : t('takeaway')} · {(o.items || o.orderItems || []).length} items</div>
                     <div className="text-sm text-ink-body">{o.createdAt ? new Date(o.createdAt).toLocaleDateString() : o.date}</div>
                   </div>
                   <div className="font-mono text-sm font-semibold">${Number(o.total || o.totalAmount || 0).toFixed(2)}</div>
-                  <Link href={`/orders/${o.id}`} className="text-xs text-primary font-fn">{tc('view')}</Link>
+                  <Link href={`/orders/${o.id}`} className="text-xs text-primary font-fn link-underline">{tc('view')}</Link>
                 </div>
               ))}
             </div>
@@ -164,8 +164,8 @@ export default function Dashboard() {
 function Stat({ label, value, sub, icon: Icon, accent, testid }) {
   const map = { primary: 'bg-primary/10 text-primary', ink: 'bg-ink/5 text-ink', amber: 'bg-warn-bg text-warn', ok: 'bg-ok-bg text-ok' };
   return (
-    <div className="lg:col-span-3 bg-white rounded-3xl border border-border p-6" data-testid={testid}>
-      <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${map[accent]}`}><Icon size={18} /></div>
+    <div className="group lg:col-span-3 bg-white rounded-3xl border border-border p-6 card-interactive" data-testid={testid}>
+      <div className={`h-10 w-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${map[accent]}`}><Icon size={18} className="hover-wiggle" /></div>
       <div className="label-eyebrow mt-5">{label}</div>
       <div className="font-display text-4xl mt-1 text-ink">{value}</div>
       <div className="text-xs text-ink-muted mt-1 font-mono uppercase">{sub}</div>
