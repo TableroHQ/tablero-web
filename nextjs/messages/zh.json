@@ -297,7 +297,10 @@
     "notConfigured": "餐厅未配置",
     "couldNotPlace": "无法提交您的订单",
     "paymentFailed": "支付失败，请重试。",
-    "addressRequired": "请输入配送地址。"
+    "addressRequired": "请输入配送地址。",
+    "tableLabel": "您的餐桌",
+    "selectTablePlaceholder": "选择您的餐桌",
+    "tableRequired": "请选择一张餐桌"
   },
   "loyalty": {
     "eyebrow": "积分目录",

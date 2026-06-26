@@ -297,7 +297,10 @@
     "notConfigured": "Restoran konfiqurasiya edilməyib",
     "couldNotPlace": "Sifariş verilə bilmədi",
     "paymentFailed": "Ödəniş alınmadı. Yenidən cəhd edin.",
-    "addressRequired": "Zəhmət olmasa çatdırılma ünvanını daxil edin."
+    "addressRequired": "Zəhmət olmasa çatdırılma ünvanını daxil edin.",
+    "tableLabel": "Masanız",
+    "selectTablePlaceholder": "Masanızı seçin",
+    "tableRequired": "Zəhmət olmasa masa seçin"
   },
   "loyalty": {
     "eyebrow": "Bonus kataloqu",
