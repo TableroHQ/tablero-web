@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2, MapPin, Wallet, CreditCard, Coins, Plus, Minus, Loader2, ArrowLeft, Lock } from 'lucide-react';
+import { Trash2, MapPin, Wallet, CreditCard, Coins, Plus, Minus, Loader2, ArrowLeft, Lock, Utensils } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useStore } from '@/lib/store';
@@ -128,10 +128,21 @@ export default function Checkout() {
   const [pay, setPay] = React.useState('balance');
   const [type, setType] = React.useState('delivery');
   const [address, setAddress] = React.useState('');
+  const [tables, setTables] = React.useState([]);
+  const [tableId, setTableId] = React.useState('');
   const [placing, setPlacing] = React.useState(false);
   // When provider is Stripe, holds { clientSecret, orderId } to render Stripe step
   const [stripeCtx, setStripeCtx] = React.useState(null);
   const router = useRouter();
+
+  // Load tables for the "Order at table" picker. A dine-in order needs a
+  // tableId, otherwise it lands tableless and never reaches the POS floor.
+  React.useEffect(() => {
+    if (!RESTAURANT_ID) return;
+    api.get(`/api/restaurants/${RESTAURANT_ID}/tables`)
+      .then(d => setTables(Array.isArray(d) ? d : d?.items ?? []))
+      .catch(() => {});
+  }, []);
 
   const sub = cart.reduce(
     (acc, i) => acc + Number(i.price || i.unitPrice || 0) * Number(i.qty || i.quantity || 1),
@@ -147,12 +158,16 @@ export default function Checkout() {
     if (cart.length === 0) return toast.error(t('emptyCartError'));
     if (!RESTAURANT_ID) return toast.error(t('notConfigured'));
     if (type === 'delivery' && address.trim().length < 5) return toast.error(t('addressRequired'));
+    if (type === 'table' && !tableId) return toast.error(t('tableRequired'));
     setPlacing(true);
     try {
-      // 1. Create the order
+      // 1. Create the order. "Order at table" is a real dine-in order tied to a
+      // table so it shows up on the POS floor; send the enum token the backend
+      // expects ("DINEIN", not "DINE_IN", which fails to parse and silently
+      // falls back to a tableless default).
       const orderBody = {
-        tableId: null,
-        type: type === 'delivery' ? 'DELIVERY' : 'DINE_IN',
+        tableId: type === 'table' ? tableId : null,
+        type: type === 'delivery' ? 'DELIVERY' : 'DINEIN',
         deliveryAddress: type === 'delivery' ? address : null,
         customerName: user.name || user.username || 'Guest',
         customerPhoneNumber: user.phone || null,
@@ -244,6 +259,24 @@ export default function Checkout() {
                       placeholder={t('addressPlaceholder')}
                       className="w-full bg-cream-sub rounded-xl px-4 py-3 font-fn outline-none focus:ring-2 focus:ring-primary" />
                     <DeliveryMap address={address} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {type === 'table' && (
+              <div className="bg-white rounded-3xl border border-border p-6 md:p-7">
+                <div className="label-eyebrow mb-4">{t('tableLabel')}</div>
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center"><Utensils size={20} /></div>
+                  <div className="flex-1">
+                    <select data-testid="table-select" value={tableId} onChange={e => setTableId(e.target.value)}
+                      className="w-full bg-cream-sub rounded-xl px-4 py-3 font-fn outline-none focus:ring-2 focus:ring-primary">
+                      <option value="">{t('selectTablePlaceholder')}</option>
+                      {tables.map(tb => (
+                        <option key={tb.id} value={tb.id}>{tb.label || tb.tableNumber || tb.id?.slice(-4)}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>

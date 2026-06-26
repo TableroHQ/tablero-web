@@ -297,7 +297,10 @@
     "notConfigured": "المطعم غير مهيأ",
     "couldNotPlace": "تعذر تقديم طلبك",
     "paymentFailed": "فشل الدفع. يرجى المحاولة مرة أخرى.",
-    "addressRequired": "يرجى إدخال عنوان التوصيل."
+    "addressRequired": "يرجى إدخال عنوان التوصيل.",
+    "tableLabel": "طاولتك",
+    "selectTablePlaceholder": "اختر طاولتك",
+    "tableRequired": "الرجاء اختيار طاولة"
   },
   "loyalty": {
     "eyebrow": "كتالوج المكافآت",

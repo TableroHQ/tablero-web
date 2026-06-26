@@ -297,7 +297,10 @@
     "notConfigured": "Restaurant not configured",
     "couldNotPlace": "Could not place your order",
     "paymentFailed": "Payment failed. Please try again.",
-    "addressRequired": "Please enter a delivery address."
+    "addressRequired": "Please enter a delivery address.",
+    "tableLabel": "Your table",
+    "selectTablePlaceholder": "Select your table",
+    "tableRequired": "Please select a table"
   },
   "loyalty": {
     "eyebrow": "Bonus catalogue",
