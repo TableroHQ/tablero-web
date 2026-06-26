@@ -8,7 +8,14 @@ import { createHubConnection, startHub } from '@/lib/signalr';
 import { Bell, Volume2, Printer, Loader2, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 
-const fmtTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+// Elapsed time since the ticket was placed. Stays mm:ss for the first hour,
+// then rolls up to "Hh Mm" / "Dd Hh" so stale (e.g. days-old) tickets don't
+// show a runaway minute count like "34327:39".
+const fmtTime = (s) => {
+  if (s < 3600) return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
+  return `${Math.floor(s / 86400)}d ${Math.floor((s % 86400) / 3600)}h`;
+};
 
 // Maps backend order/item statuses to KDS display statuses
 const KDS_STATUSES = ['QUEUED', 'PREPARING', 'READY'];

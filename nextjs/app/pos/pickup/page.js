@@ -3,6 +3,7 @@ import React from 'react';
 import OpsLayout from '@/components/OpsLayout';
 import { useTranslations } from 'next-intl';
 import { api } from '@/lib/client';
+import { useStore } from '@/lib/store';
 import { createHubConnection, startHub } from '@/lib/signalr';
 import { Loader2, RefreshCw, Wifi, WifiOff, Check } from 'lucide-react';
 import { toast } from 'sonner';
@@ -23,6 +24,22 @@ export default function CashierPickup() {
   const [bills, setBills] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [live, setLive] = React.useState(false);
+  const [{ user }] = useStore();
+  const restaurantId = user.restaurantId;
+  const [tableMap, setTableMap] = React.useState({}); // tableId → label
+
+  // Resolve table GUIDs to human labels (B1/T1/…) for the open-table bill cards.
+  React.useEffect(() => {
+    if (!restaurantId) return;
+    api.get(`/api/restaurants/${restaurantId}/tables`)
+      .then(d => {
+        const list = Array.isArray(d) ? d : d?.items ?? [];
+        const map = {};
+        list.forEach(tb => { map[tb.id] = tb.label || tb.tableNumber || String(tb.id).slice(-4); });
+        setTableMap(map);
+      })
+      .catch(() => {});
+  }, [restaurantId]);
 
   const load = React.useCallback(async () => {
     try {
@@ -125,7 +142,7 @@ export default function CashierPickup() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {bills.map(b => (
                   <div key={b.tableId} className="bg-white border border-border rounded-xl p-4">
-                    <div className="text-xs text-ink-muted font-mono">{t('cashier.table')} {String(b.tableId).slice(0, 6)}</div>
+                    <div className="text-xs text-ink-muted font-mono">{t('cashier.table')} {tableMap[b.tableId] || String(b.tableId).slice(-4)}</div>
                     <div className="font-display text-2xl mt-1">{money(b.totalAmount)}</div>
                     <div className="text-xs text-ink-muted">{t('cashier.openOrders', { count: b.openOrderCount })}</div>
                   </div>
