@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { CreditCard, Banknote, SplitSquareHorizontal, Receipt, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -61,7 +61,7 @@ export default function POS() {
 
     startHub(conn).then(ok => { if (ok) setHubConnected(true); });
 
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [restaurantId, load]);
 
   // Poll as a fallback only while the hub is disconnected.

@@ -84,20 +84,47 @@ export function createHubConnection(hub) {
  * Start a hub connection with graceful error handling.
  * Returns true on success, false if the hub is not yet available.
  *
+ * The in-flight start is tracked on the connection (`_startPromise`) so that
+ * teardown (`stopHub`) can await it instead of aborting a negotiate that is
+ * still in progress. The call is single-flight: while a start is pending,
+ * repeat calls share the same attempt; a failed attempt clears the marker so a
+ * later retry can start fresh.
+ *
  * @param {signalR.HubConnection} connection
  * @returns {Promise<boolean>}
  */
-export async function startHub(connection) {
-  try {
-    await connection.start();
-    return true;
-  } catch (err) {
-    // Hub not yet implemented in backend — log quietly and fall back to polling
-    if (process.env.NODE_ENV === 'development') {
-      console.info(`[SignalR] Hub not available (${connection.baseUrl}) — polling fallback active.`, err?.message);
-    }
-    return false;
+export function startHub(connection) {
+  if (!connection._startPromise) {
+    connection._startPromise = connection.start()
+      .then(() => true)
+      .catch((err) => {
+        // Hub not yet available / negotiate failed — log quietly, fall back to polling
+        if (process.env.NODE_ENV === 'development') {
+          console.info(`[SignalR] Hub not available (${connection.baseUrl}) — polling fallback active.`, err?.message);
+        }
+        connection._startPromise = null; // allow a fresh retry
+        return false;
+      });
   }
+  return connection._startPromise;
+}
+
+/**
+ * Stop a hub connection safely.
+ *
+ * Waits for any in-flight `startHub` to settle *before* calling stop(). Calling
+ * stop() mid-negotiate throws "The connection was stopped during negotiation"
+ * and — under React StrictMode's mount→unmount→mount in dev — aborts the very
+ * first connection, leaving the UI stuck on polling. Awaiting the start makes
+ * teardown order-independent, so use this in every effect cleanup instead of a
+ * bare `connection.stop()`.
+ *
+ * @param {signalR.HubConnection} connection
+ * @returns {Promise<void>}
+ */
+export async function stopHub(connection) {
+  try { await connection._startPromise; } catch { /* start already failed */ }
+  try { await connection.stop(); } catch { /* not started / already stopped */ }
 }
 
 /**
@@ -143,7 +170,7 @@ export function useHub(hubName, enabled = true) {
 
     return () => {
       cancelled = true;
-      conn.stop().catch(() => {});
+      stopHub(conn);
     };
   }, [hubName, enabled]);
 

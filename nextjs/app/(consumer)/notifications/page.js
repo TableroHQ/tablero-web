@@ -2,7 +2,7 @@
 import React from 'react';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { Check, CheckCheck, Mail, MessageSquare, BellRing, Megaphone, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { SkeletonRow } from '@/components/Skeleton';
 import { useTranslations } from 'next-intl';
@@ -100,7 +100,7 @@ export default function Notifications() {
       if (ok) setHubConnected(true);
     });
 
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [user.id]);
 
   // Merge server + local; local first (most recent actions)
