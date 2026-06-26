@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Check, Clock, Loader2, Wallet, ChevronLeft, Wifi, WifiOff } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { toast } from 'sonner';
 
 const RESTAURANT_ID = process.env.NEXT_PUBLIC_RESTAURANT_ID;
@@ -48,7 +48,7 @@ export default function PickupDetail() {
     conn.onclose(() => setLive(false));
     conn.onreconnected(() => setLive(true));
     startHub(conn).then(ok => setLive(ok));
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [load]);
 
   React.useEffect(() => {
