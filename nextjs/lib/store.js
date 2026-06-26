@@ -27,6 +27,9 @@ function userFromToken(token) {
     phone:        claims.phone    || '',
     avatar:       claims.avatar   || null,
     role:         claims.role     || 'GUEST',
+    // The authenticated role from the JWT. `role` can be overridden locally by
+    // the dev "Preview as" switcher; authRole always reflects who you really are.
+    authRole:     claims.role     || 'GUEST',
     restaurantId: claims.restaurantId || process.env.NEXT_PUBLIC_RESTAURANT_ID || '',
     loyaltyPoints: 0,
     balance:      0,
@@ -36,7 +39,7 @@ function userFromToken(token) {
 
 const guestUser = {
   id: '', name: '', email: '', username: '', phone: '',
-  avatar: null, role: 'GUEST',
+  avatar: null, role: 'GUEST', authRole: 'GUEST',
   restaurantId: process.env.NEXT_PUBLIC_RESTAURANT_ID || '',
   loyaltyPoints: 0, balance: 0, heldBalance: 0,
 };
@@ -126,6 +129,7 @@ export function StoreProvider({ children }) {
           phone:        profile.phoneNumber  ?? profile.PhoneNumber  ?? profile.phone ?? s.user.phone,
           avatar:       profile.avatarUrl    ?? profile.AvatarUrl    ?? profile.avatar ?? s.user.avatar,
           role:         profile.role         ?? profile.Role         ?? s.user.role,
+          authRole:     profile.role         ?? profile.Role         ?? s.user.authRole,
           restaurantId: profile.restaurantId ?? profile.RestaurantId ?? s.user.restaurantId,
           id:           profile.id           ?? profile.Id           ?? s.user.id,
         },

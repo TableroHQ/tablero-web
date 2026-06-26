@@ -10,8 +10,12 @@ export default function RoleSwitcher() {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
 
-  // Dev-only preview tool — never visible in production builds
-  if (process.env.NODE_ENV !== 'development') return null;
+  // Dev-only preview tool, and only for privileged roles — customers and
+  // line staff should never see it. Gate on the authenticated JWT role
+  // (authRole), which setRole leaves untouched, so an admin/director previewing
+  // as another role can still switch back.
+  const privileged = user.authRole === 'ADMIN' || user.authRole === 'DIRECTOR';
+  if (process.env.NODE_ENV !== 'development' || !privileged) return null;
 
   const change = (r) => {
     s.setRole(r);
