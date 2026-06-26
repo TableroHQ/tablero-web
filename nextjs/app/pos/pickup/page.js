@@ -67,7 +67,7 @@ export default function CashierPickup() {
     conn.onclose(() => setLive(false));
     conn.onreconnected(() => setLive(true));
     startHub(conn).then(ok => setLive(ok));
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [load, t]);
 
   React.useEffect(() => {

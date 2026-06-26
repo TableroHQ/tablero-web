@@ -297,7 +297,10 @@
     "notConfigured": "Ресторан не настроен",
     "couldNotPlace": "Не удалось оформить заказ",
     "paymentFailed": "Платёж не прошёл. Повторите попытку.",
-    "addressRequired": "Пожалуйста, укажите адрес доставки."
+    "addressRequired": "Пожалуйста, укажите адрес доставки.",
+    "tableLabel": "Ваш столик",
+    "selectTablePlaceholder": "Выберите столик",
+    "tableRequired": "Пожалуйста, выберите столик"
   },
   "loyalty": {
     "eyebrow": "Каталог бонусов",

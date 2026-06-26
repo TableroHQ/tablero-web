@@ -3,7 +3,7 @@ import React from 'react';
 import OpsLayout from '@/components/OpsLayout';
 import { useTranslations } from 'next-intl';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { Loader2, RefreshCw, Wifi, WifiOff, ChefHat } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -39,7 +39,7 @@ export default function ChefPickup() {
     conn.onclose(() => setLive(false));
     conn.onreconnected(() => setLive(true));
     startHub(conn).then(ok => setLive(ok));
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [load, t]);
 
   React.useEffect(() => {

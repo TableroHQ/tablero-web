@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { Bell, Plus, CheckCircle2, Calendar, UtensilsCrossed, Check, X as XIcon, UserCheck, Loader2, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -89,7 +89,7 @@ export default function Waiter() {
       // Hub auto-joins this connection to restaurant-{id} from the JWT claim.
     });
 
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [restaurantId, user.id, loadData]);
 
   const actOnReservation = async (id, status) => {

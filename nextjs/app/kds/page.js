@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { Bell, Volume2, Printer, Loader2, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -140,7 +140,7 @@ export default function KDS() {
       // on connect using the restaurantId claim in the JWT — no client-side join needed.
     });
 
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [restaurantId, loadQueue]);
 
   // Poll every 15s as a fallback when SignalR is not connected

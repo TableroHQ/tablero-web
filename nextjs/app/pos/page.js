@@ -4,12 +4,15 @@ import { useTranslations } from 'next-intl';
 import OpsLayout from '@/components/OpsLayout';
 import { useStore } from '@/lib/store';
 import { api } from '@/lib/client';
-import { createHubConnection, startHub } from '@/lib/signalr';
+import { createHubConnection, startHub, stopHub } from '@/lib/signalr';
 import { CreditCard, Banknote, SplitSquareHorizontal, Receipt, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Show all in-flight orders on the POS floor; cashier selects which table to bill
 const BILL_STATUSES = ['CREATED', 'ACCEPTED', 'PREPARING', 'READY', 'SERVED'];
+
+// Payment statuses that can't be settled or reused — a new payment is needed.
+const TERMINAL_PAYMENT_STATUSES = ['FAILED', 'CANCELLED', 'REFUNDED'];
 
 export default function POS() {
   const t = useTranslations('pos');
@@ -19,7 +22,6 @@ export default function POS() {
 
   const [tables, setTables] = React.useState([]);
   const [orders, setOrders] = React.useState([]);
-  const [payments, setPayments] = React.useState({});
   const [active, setActive] = React.useState(null);
   const [tendered, setTendered] = React.useState('');
   const [loading, setLoading] = React.useState(true);
@@ -29,13 +31,19 @@ export default function POS() {
   const load = React.useCallback(async () => {
     if (!restaurantId) { setLoading(false); return; }
     try {
-      const [tablesData, ordersData] = await Promise.all([
+      const [tablesData, ordersData, paidData] = await Promise.all([
         api.get(`/api/restaurants/${restaurantId}/tables`),
         api.get(`/api/restaurants/${restaurantId}/orders`),
+        // Already-settled orders keep their order status (SERVED/READY/…), so the
+        // payment status is the only signal that a bill is closed. Pull the PAID
+        // payments (restaurant-scoped) and drop those orders from the floor.
+        api.get('/api/payments', { params: { status: 'PAID', pageSize: 500 } }).catch(() => ({ items: [] })),
       ]);
       const tList = Array.isArray(tablesData) ? tablesData : tablesData?.items ?? [];
       const oList = Array.isArray(ordersData) ? ordersData : ordersData?.items ?? [];
-      const activeOrders = oList.filter(o => BILL_STATUSES.includes(o.status));
+      const pList = Array.isArray(paidData) ? paidData : paidData?.items ?? [];
+      const paidOrderIds = new Set(pList.filter(p => p.status === 'PAID').map(p => p.orderId));
+      const activeOrders = oList.filter(o => BILL_STATUSES.includes(o.status) && !paidOrderIds.has(o.id));
       setTables(tList);
       setOrders(activeOrders);
     } catch {
@@ -61,7 +69,7 @@ export default function POS() {
 
     startHub(conn).then(ok => { if (ok) setHubConnected(true); });
 
-    return () => { conn.stop().catch(() => {}); };
+    return () => { stopHub(conn); };
   }, [restaurantId, load]);
 
   // Poll as a fallback only while the hub is disconnected.
@@ -93,12 +101,19 @@ export default function POS() {
   };
 
   const getOrCreatePayment = async (order, provider) => {
-    // Check if pending payment already exists for this order
+    // Look up ALL payments for this order, not just PENDING ones. An order may
+    // already carry a PAID payment (prepaid/pickup) or a non-PENDING active one;
+    // filtering to PENDING misses those, so the create below 400s with
+    // "An active STANDARD payment already exists for this order." Reconcile
+    // instead: reuse a PAID/active payment, and only create when none exists.
     try {
-      const existing = await api.get('/api/payments', { params: { orderId: order.id, status: 'PENDING' } });
+      const existing = await api.get('/api/payments', { params: { orderId: order.id } });
       const items = Array.isArray(existing) ? existing : existing?.items ?? [];
-      const found = items.find(p => p.orderId === order.id && p.status === 'PENDING');
-      if (found) return found;
+      const mine = items.filter(p => p.orderId === order.id);
+      const paid = mine.find(p => p.status === 'PAID');
+      if (paid) return paid; // already settled — markPaid short-circuits
+      const reusable = mine.find(p => !TERMINAL_PAYMENT_STATUSES.includes(p.status));
+      if (reusable) return reusable;
     } catch {}
     // Create new payment
     return api.post('/api/payments', {
@@ -115,7 +130,11 @@ export default function POS() {
     setPaying(true);
     try {
       const payment = await getOrCreatePayment(active.order, provider);
-      await api.patch(`/api/payments/${payment.id}/paid`);
+      // Already-paid orders need no further action — just settle the UI and
+      // refresh so the floor drops the closed bill.
+      if (payment.status !== 'PAID') {
+        await api.patch(`/api/payments/${payment.id}/paid`);
+      }
       toast.success(t('billPaid', { table: active.table?.label || active.table?.id, provider }));
       setActive(null);
       setTendered('');

@@ -28,7 +28,9 @@ export default function Admin() {
   React.useEffect(() => {
     if (!restaurantId) { setLoadingStats(false); return; }
     Promise.allSettled([
-      api.get('/api/payments'),
+      // All-time revenue must sum every PAID payment, not just the default
+      // first page — fetch them server-side filtered with a high page size.
+      api.get('/api/payments', { params: { status: 'PAID', pageSize: 1000 } }),
       api.get(`/api/restaurants/${restaurantId}/orders`),
       api.get('/api/users'),
     ]).then(([paymentsRes, ordersRes, usersRes]) => {
